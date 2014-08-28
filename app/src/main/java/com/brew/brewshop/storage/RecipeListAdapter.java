@@ -29,15 +29,19 @@ public class RecipeListAdapter extends ArrayAdapter<Recipe> {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.list_item_recipe, parent, false);
 
-        ImageView iconView = (ImageView) rowView.findViewById(R.id.icon);
-        TextView nameView = (TextView) rowView.findViewById(R.id.name);
-        TextView descriptionView = (TextView) rowView.findViewById(R.id.description);
+        ImageView iconView = (ImageView) rowView.findViewById(R.id.recipe_icon);
+        TextView nameView = (TextView) rowView.findViewById(R.id.recipe_name);
+        TextView descriptionView = (TextView) rowView.findViewById(R.id.recipe_description);
 
         Recipe recipe = mRecipes.get(position);
         iconView.setBackgroundColor(new SrmHelper().getColor(recipe.getSrm()));
         nameView.setText(recipe.getName() + " (" + recipe.getStyle() + ")");
-        String description = "OG: " + recipe.getGravity() + " IBU: " + recipe.getIbu() + " SRM: " + recipe.getSrm();
-        descriptionView.setText(description);
+        descriptionView.setText(getDescription(recipe));
         return rowView;
+    }
+
+    private String getDescription(Recipe recipe) {
+        return "OG: " + recipe.getGravity() + " IBU: " + recipe.getIbu() + " SRM: " + recipe.getSrm();
+
     }
 }

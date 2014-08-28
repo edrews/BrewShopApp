@@ -5,4 +5,13 @@
     <string name="action_settings">Settings</string>
     <string name="action_new">New</string>
     <string name="action_search">Search</string>
+    <string name="drawer_open">Open Drawer</string>
+    <string name="drawer_close">Close Drawer</string>
+    <string-array name="locations">
+        <item>Beer</item>
+        <item>Wine</item>
+        <item>Coffee</item>
+        <item>Homebrew Supplies</item>
+        <item>Homebrew Recipes</item>
+    </string-array>
 </resources>
