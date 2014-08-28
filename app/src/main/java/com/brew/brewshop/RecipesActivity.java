@@ -7,7 +7,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,11 +19,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RecipesActivity extends Activity {
-    private static final String CURRENT_FRAGMENT = "CurrentFragment";
+    private static final String KEY_CURRENT_FRAGMENT = "CurrentFragment";
+    private static final String KEY_TITLE = "Title";
+    private static final String KEY_DRAWER_OPEN = "DrawerOpen";
+
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private String[] mLocations;
     private ActionBarDrawerToggle mDrawerToggle;
+    private CharSequence mFragmentTitle;
 
     private Fragment mBeerFragment, mWineFragment, mCoffeeFragment, mHomebrewFragment, mRecipesFragment;
     private Map<FragmentType, Fragment> mFragments;
@@ -42,13 +45,29 @@ public class RecipesActivity extends Activity {
         mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.list_item_drawer, mLocations));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
+        mFragmentTitle = getTitle();
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
                 mDrawerLayout,         /* DrawerLayout object */
                 R.drawable.ic_drawer,  /* nav drawer icon to replace 'Up' caret */
                 R.string.drawer_open,  /* "open drawer" description */
                 R.string.drawer_close  /* "close drawer" description */
-        );
+        ) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                getActionBar().setTitle(mFragmentTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                getActionBar().setTitle(getApplicationName());
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
@@ -57,11 +76,16 @@ public class RecipesActivity extends Activity {
 
         if (savedInstanceState == null) {
             mCurrentFragment = FragmentType.HOMEBREW_RECIPES;
+            showCurrentFragment();
         } else {
-            String current = savedInstanceState.getString(CURRENT_FRAGMENT);
+            String current = savedInstanceState.getString(KEY_CURRENT_FRAGMENT);
             mCurrentFragment = FragmentType.valueOf(current);
+            mFragmentTitle = savedInstanceState.getString(KEY_TITLE);
+            showCurrentFragment();
+            if (savedInstanceState.getBoolean(KEY_DRAWER_OPEN)) {
+                setTitle(getApplicationName());
+            }
         }
-        showCurrentFragment();
     }
 
     private void createFragments() {
@@ -118,7 +142,9 @@ public class RecipesActivity extends Activity {
         if (savedInstanceState == null) {
             savedInstanceState = new Bundle();
         }
-        savedInstanceState.putString(CURRENT_FRAGMENT, mCurrentFragment.toString());
+        savedInstanceState.putBoolean(KEY_DRAWER_OPEN, mDrawerLayout.isDrawerOpen(mDrawerList));
+        savedInstanceState.putCharSequence(KEY_TITLE, mFragmentTitle);
+        savedInstanceState.putString(KEY_CURRENT_FRAGMENT, mCurrentFragment.toString());
     }
 
     @Override
@@ -140,7 +166,6 @@ public class RecipesActivity extends Activity {
         mCurrentFragment = FragmentType.values()[position];
         showCurrentFragment();
         mDrawerList.setItemChecked(position, true);
-        setTitle(mLocations[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
@@ -151,5 +176,18 @@ public class RecipesActivity extends Activity {
                 .replace(R.id.content_frame, fragment)
                 .commit();
         setTitle(mLocations[mCurrentFragment.ordinal()]);
+    }
+
+    private String getApplicationName() {
+        int stringId = getApplicationInfo().labelRes;
+        return getString(stringId);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        if (!title.equals(getApplicationName())) {
+            mFragmentTitle = title;
+        }
+        getActionBar().setTitle(title);
     }
 }
