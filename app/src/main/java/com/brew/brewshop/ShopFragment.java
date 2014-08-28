@@ -22,7 +22,7 @@ public class ShopFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mProductStorage = new ProductStorage();
+        mProductStorage = new ProductStorage(this);
 
         View rootView = inflater.inflate(R.layout.fragment_shop, container, false);
 

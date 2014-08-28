@@ -1,25 +1,78 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:padding="5dp" >
+    android:layout_height="wrap_content"
+    android:padding="5dp">
 
     <ImageView
         android:id="@+id/product_icon"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_centerVertical="true"
-        android:layout_margin="5dp"
-        android:background="#000000"/>
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp" />
 
     <TextView
         android:id="@+id/product_name"
         android:layout_width="fill_parent"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@id/product_icon"
-        android:gravity="center_vertical"
-        android:layout_height="fill_parent"
+        android:layout_toLeftOf="@+id/product_price_layout"
+        android:layout_height="wrap_content"
         android:text="Product"
-        android:textSize="20sp" />
+        android:textSize="14sp"
+        android:textStyle="bold"/>
 
+    <TextView
+        android:id="@+id/product_manufacturer"
+        android:layout_width="fill_parent"
+        android:layout_below="@id/product_name"
+        android:layout_toRightOf="@id/product_icon"
+        android:layout_toLeftOf="@+id/product_price_layout"
+        android:layout_height="wrap_content"
+        android:text="Manufacturer"
+        android:textSize="12sp"
+        android:textStyle="italic"/>
+
+    <TextView
+        android:id="@+id/product_description"
+        android:layout_width="fill_parent"
+        android:layout_below="@id/product_manufacturer"
+        android:layout_toRightOf="@id/product_icon"
+        android:layout_toLeftOf="@id/product_price_layout"
+        android:layout_height="wrap_content"
+        android:text="Product description. Product description. Product description. Product description. Product description. Product description."
+        android:textSize="12sp"
+        android:scrollHorizontally="true"
+        android:ellipsize="end"
+        android:maxLines="2"/>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/product_price_layout"
+        android:layout_width="50dp"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="5dp">
+
+        <TextView
+            android:id="@+id/product_price"
+            android:layout_width="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_height="wrap_content"
+            android:text="$10.00"
+            android:textSize="12sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/product_price_unit"
+            android:layout_width="wrap_content"
+            android:layout_below="@id/product_price"
+            android:layout_alignParentRight="true"
+            android:layout_height="wrap_content"
+            android:text="12 oz."
+            android:textSize="12sp"
+            android:textStyle="italic"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

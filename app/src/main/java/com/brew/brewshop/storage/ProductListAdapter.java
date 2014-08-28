@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.brew.brewshop.R;
+import com.brew.brewshop.storage.models.Product;
 
 import java.util.List;
 
@@ -30,9 +31,18 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
 
         ImageView iconView = (ImageView) rowView.findViewById(R.id.product_icon);
         TextView nameView = (TextView) rowView.findViewById(R.id.product_name);
+        TextView manufacturerView = (TextView) rowView.findViewById(R.id.product_manufacturer);
+        TextView descriptionView = (TextView) rowView.findViewById(R.id.product_description);
+        TextView priceView = (TextView) rowView.findViewById(R.id.product_price);
+        TextView priceUnitView = (TextView) rowView.findViewById(R.id.product_price_unit);
 
         Product product = mProducts.get(position);
+        iconView.setImageBitmap(product.getIcon());
         nameView.setText(product.getName());
+        manufacturerView.setText(product.getManufacturer());
+        descriptionView.setText(product.getDescription());
+        priceView.setText(product.getPriceString());
+        priceUnitView.setText(product.getPriceUnit());
         return rowView;
     }
 }

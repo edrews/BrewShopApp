@@ -7,11 +7,10 @@
     <string name="action_search">Search</string>
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
-    <string-array name="locations">
-        <item>Beer</item>
-        <item>Wine</item>
-        <item>Coffee</item>
-        <item>Homebrew Supplies</item>
-        <item>Homebrew Recipes</item>
-    </string-array>
+
+    <string name="beer">Beer</string>
+    <string name="wine">Wine</string>
+    <string name="coffee">Coffee</string>
+    <string name="homebrew_supplies">Homebrew Supplies</string>
+    <string name="homebrew_recipes">Homebrew Recipes</string>
 </resources>
