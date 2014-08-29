@@ -1,11 +1,25 @@
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:text="New Text"
-    android:textSize="20sp"
-    android:textColor="#FFFFFFFF"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
-    android:id="@+id/textView"/>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:text="New Text"
+        android:textSize="18sp"
+        android:textColor="#FFFFFFFF"
+        android:layout_toRightOf="@id/icon"
+        android:paddingLeft="10dp"
+        android:paddingRight="5dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:id="@+id/name"/>
+
+</RelativeLayout>

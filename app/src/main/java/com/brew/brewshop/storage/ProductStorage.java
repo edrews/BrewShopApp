@@ -19,8 +19,7 @@ public class ProductStorage {
     }
 
     public List<Product> getProducts(ProductType type) {
-        Bitmap icon = BitmapFactory.decodeResource(mContext.getResources(),
-                R.drawable.logo);
+        Bitmap icon = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.logo);
 
         List<Product> products = new ArrayList<Product>();
         for (int i = 0; i < 20; i++) {

@@ -11,6 +11,9 @@
     <string name="beer">Beer</string>
     <string name="wine">Wine</string>
     <string name="coffee">Coffee</string>
-    <string name="homebrew_supplies">Homebrew Supplies</string>
-    <string name="homebrew_recipes">Homebrew Recipes</string>
+    <string name="homebrew_supplies">Brew Supplies</string>
+    <string name="homebrew_recipes">Recipe Manager</string>
+
+    <string name="homebrew_tools">Homebrew</string>
+    <string name="homebrew_shop">Shop</string>
 </resources>

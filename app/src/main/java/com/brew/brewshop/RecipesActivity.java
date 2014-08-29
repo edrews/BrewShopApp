@@ -8,13 +8,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.List;
+
 public class RecipesActivity extends Activity {
+    private static final String TAG = RecipesActivity.class.getName();
     private static final String KEY_DRAWER_OPEN = "DrawerOpen";
 
-    private ListView mDrawerList;
+    private View mDrawer;
+    private ListView mToolsList, mShopList;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private FragmentHandler mFragmentHelper;
@@ -26,12 +29,18 @@ public class RecipesActivity extends Activity {
 
         mFragmentHelper = new FragmentHandler(this, getApplicationName());
 
+        mDrawer = findViewById(R.id.drawer);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mToolsList = (ListView) findViewById(R.id.tools_drawer);
+        mShopList = (ListView) findViewById(R.id.shop_drawer);
 
-        String[] locations = mFragmentHelper.getLocations();
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.list_item_drawer, locations));
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        List<DrawerItem> toolNames = mFragmentHelper.getToolOptions();
+        mToolsList.setAdapter(new DrawerItemAdapter(this, toolNames));
+        mToolsList.setOnItemClickListener(new DrawerItemClickListener());
+
+        List<DrawerItem> shopNames = mFragmentHelper.getShopOptions();
+        mShopList.setAdapter(new DrawerItemAdapter(this, shopNames));
+        mShopList.setOnItemClickListener(new DrawerItemClickListener());
 
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
@@ -90,7 +99,7 @@ public class RecipesActivity extends Activity {
             savedInstanceState = new Bundle();
         }
         mFragmentHelper.saveState(savedInstanceState);
-        savedInstanceState.putBoolean(KEY_DRAWER_OPEN, mDrawerLayout.isDrawerOpen(mDrawerList));
+        savedInstanceState.putBoolean(KEY_DRAWER_OPEN, mDrawerLayout.isDrawerOpen(mDrawer));
     }
 
     @Override
@@ -104,15 +113,14 @@ public class RecipesActivity extends Activity {
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
-            selectItem(position);
-        }
-    }
-
-    private void selectItem(int position) {
-        mFragmentHelper.selectLocation(position);
-        setTitle(mFragmentHelper.getCurrentTitle());
-        mDrawerList.setItemChecked(position, true);
-        mDrawerLayout.closeDrawer(mDrawerList);
+            if (parent.getId() == R.id.tools_drawer) {
+                mFragmentHelper.selectTool(position);
+            } else if (parent.getId() == R.id.shop_drawer) {
+                mFragmentHelper.selectShop(position);
+            }
+            setTitle(mFragmentHelper.getCurrentTitle());
+            mToolsList.setItemChecked(position, true);
+            mDrawerLayout.closeDrawers();        }
     }
 
     private String getApplicationName() {

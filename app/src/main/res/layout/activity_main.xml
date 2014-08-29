@@ -7,12 +7,52 @@
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-    <ListView android:id="@+id/left_drawer"
+
+    <LinearLayout
+        android:id="@+id/drawer"
         android:layout_width="240dp"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:layout_gravity="start"
-        android:choiceMode="singleChoice"
-        android:divider="#10FFFFFF"
-        android:dividerHeight="1dp"
-        android:background="#111"/>
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:background="#FF202020">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:textSize="18sp"
+            android:textColor="#FFFFFFFF"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/homebrew_tools"
+            android:textStyle="bold"/>
+
+        <ListView android:id="@+id/tools_drawer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:choiceMode="singleChoice"
+            android:divider="#10FFFFFF"
+            android:dividerHeight="0dp"/>
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:textSize="18sp"
+            android:textColor="#FFFFFFFF"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/homebrew_shop"
+            android:textStyle="bold"/>
+
+        <ListView android:id="@+id/shop_drawer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:choiceMode="singleChoice"
+            android:divider="#10FFFFFF"
+            android:dividerHeight="0dp"/>
+
+    </LinearLayout>
 </android.support.v4.widget.DrawerLayout>

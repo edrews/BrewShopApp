@@ -2,6 +2,8 @@ package com.brew.brewshop;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import com.brew.brewshop.storage.ProductType;
@@ -12,21 +14,44 @@ import java.util.List;
 import java.util.Map;
 
 public class FragmentHandler {
+    private static final String TAG = FragmentHandler.class.getName();
     private static final String KEY_CURRENT_FRAGMENT = "CurrentFragment";
 
     private FragmentType mCurrentFragment;
     private Fragment mBeerFragment, mWineFragment, mCoffeeFragment, mHomebrewFragment, mRecipesFragment;
-    private Map<FragmentType, Fragment> mFragments;
+    private Map<FragmentType, Fragment> mToolFragments;
+    private Map<FragmentType, Fragment> mShopFragments;
+    private Map<FragmentType, String> mTitles;
     private Activity mActivity;
-    private List<String> mFragmentNames;
+    private List<DrawerItem> mToolOptions, mShopOptions;
 
     public FragmentHandler(Activity activity, String applicationName) {
-        mFragmentNames = new ArrayList<String>();
-        mFragmentNames.add(activity.getResources().getString(R.string.beer));
-        mFragmentNames.add(activity.getResources().getString(R.string.wine));
-        mFragmentNames.add(activity.getResources().getString(R.string.coffee));
-        mFragmentNames.add(activity.getResources().getString(R.string.homebrew_supplies));
-        mFragmentNames.add(activity.getResources().getString(R.string.homebrew_recipes));
+        mTitles = new HashMap<FragmentType, String>();
+        mTitles.put(FragmentType.HOMEBREW_RECIPES, activity.getResources().getString(R.string.homebrew_recipes));
+        mTitles.put(FragmentType.BEER, activity.getResources().getString(R.string.beer));
+        mTitles.put(FragmentType.WINE, activity.getResources().getString(R.string.wine));
+        mTitles.put(FragmentType.COFFEE, activity.getResources().getString(R.string.coffee));
+        mTitles.put(FragmentType.HOMEBREW_SUPPLIES, activity.getResources().getString(R.string.homebrew_supplies));
+
+        Bitmap icon;
+
+        mToolOptions = new ArrayList<DrawerItem>();
+        icon = BitmapFactory.decodeResource(activity.getResources(), R.drawable.folder);
+        mToolOptions.add(new DrawerItem(icon, mTitles.get(FragmentType.HOMEBREW_RECIPES)));
+
+        mShopOptions = new ArrayList<DrawerItem>();
+
+        icon = BitmapFactory.decodeResource(activity.getResources(), R.drawable.beer);
+        mShopOptions.add(new DrawerItem(icon, mTitles.get(FragmentType.BEER)));
+
+        icon = BitmapFactory.decodeResource(activity.getResources(), R.drawable.wine);
+        mShopOptions.add(new DrawerItem(icon, mTitles.get(FragmentType.WINE)));
+
+        icon = BitmapFactory.decodeResource(activity.getResources(), R.drawable.coffee);
+        mShopOptions.add(new DrawerItem(icon, mTitles.get(FragmentType.COFFEE)));
+
+        icon = BitmapFactory.decodeResource(activity.getResources(), R.drawable.hops);
+        mShopOptions.add(new DrawerItem(icon, mTitles.get(FragmentType.HOMEBREW_SUPPLIES)));
 
         mActivity = activity;
         createFragments();
@@ -47,21 +72,35 @@ public class FragmentHandler {
         bundle.putString(KEY_CURRENT_FRAGMENT, mCurrentFragment.toString());
     }
 
-    public void selectLocation(int index) {
-        mCurrentFragment = FragmentType.values()[index];
+    public void selectTool(int index) {
+        mCurrentFragment = FragmentType.HOMEBREW_RECIPES;
+        showCurrentFragment();
+    }
+
+    public void selectShop(int index) {
+        mCurrentFragment = FragmentType.values()[index + 1];
         showCurrentFragment();
     }
 
     public CharSequence getCurrentTitle() {
-        return mFragmentNames.get(mCurrentFragment.ordinal());
+        return mTitles.get(mCurrentFragment);
     }
 
-    public String[] getLocations() {
-        return mFragmentNames.toArray(new String[mFragmentNames.size()]);
+    public List<DrawerItem> getToolOptions() {
+        return mToolOptions;
+    }
+
+    public List<DrawerItem> getShopOptions() {
+        return mShopOptions;
     }
 
     private void showCurrentFragment() {
-        Fragment fragment = mFragments.get(mCurrentFragment);
+        Fragment fragment;
+        if (mCurrentFragment == FragmentType.HOMEBREW_RECIPES) {
+            fragment = mToolFragments.get(mCurrentFragment);
+        } else {
+            fragment = mShopFragments.get(mCurrentFragment);
+        }
         android.app.FragmentManager fragmentManager = mActivity.getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, fragment)
@@ -96,11 +135,13 @@ public class FragmentHandler {
         mRecipesFragment = new RecipesFragment();
         mRecipesFragment.setHasOptionsMenu(true);
 
-        mFragments = new HashMap<FragmentType, Fragment>();
-        mFragments.put(FragmentType.BEER, mBeerFragment);
-        mFragments.put(FragmentType.WINE, mWineFragment);
-        mFragments.put(FragmentType.COFFEE, mCoffeeFragment);
-        mFragments.put(FragmentType.HOMEBREW_SUPPLIES, mHomebrewFragment);
-        mFragments.put(FragmentType.HOMEBREW_RECIPES, mRecipesFragment);
+        mToolFragments = new HashMap<FragmentType, Fragment>();
+        mToolFragments.put(FragmentType.HOMEBREW_RECIPES, mRecipesFragment);
+
+        mShopFragments = new HashMap<FragmentType, Fragment>();
+        mShopFragments.put(FragmentType.BEER, mBeerFragment);
+        mShopFragments.put(FragmentType.WINE, mWineFragment);
+        mShopFragments.put(FragmentType.COFFEE, mCoffeeFragment);
+        mShopFragments.put(FragmentType.HOMEBREW_SUPPLIES, mHomebrewFragment);
     }
 }
