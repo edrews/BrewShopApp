@@ -41,7 +41,7 @@ public class FragmentHandler {
 
         mShopOptions = new ArrayList<DrawerItem>();
 
-        icon = BitmapFactory.decodeResource(activity.getResources(), R.drawable.beer);
+        icon = BitmapFactory.decodeResource(activity.getResources(), R.drawable.beer2);
         mShopOptions.add(new DrawerItem(icon, mTitles.get(FragmentType.BEER)));
 
         icon = BitmapFactory.decodeResource(activity.getResources(), R.drawable.wine);

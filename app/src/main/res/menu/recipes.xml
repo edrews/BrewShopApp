@@ -6,4 +6,9 @@
         android:title="@string/action_new"
         android:orderInCategory="100"
         android:showAsAction="ifRoom" />
+    <item android:id="@+id/action_search"
+        android:icon="@drawable/ic_action_search"
+        android:title="@string/action_search"
+        android:orderInCategory="101"
+        android:showAsAction="ifRoom" />
 </menu>

@@ -10,6 +10,7 @@
         android:layout_centerVertical="true"/>
 
     <TextView
+        android:gravity="center_vertical"
         android:layout_width="fill_parent"
         android:layout_height="48dp"
         android:text="New Text"
