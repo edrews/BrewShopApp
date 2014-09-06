@@ -1,6 +1,7 @@
 <resources>
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="android:activatedBackgroundIndicator">@drawable/listitem_background</item>
     </style>
 
     <style name="CustomActionBarTheme"

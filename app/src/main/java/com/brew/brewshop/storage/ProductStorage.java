@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import com.brew.brewshop.R;
 import com.brew.brewshop.storage.models.IProductRetrievedHandler;
 import com.brew.brewshop.storage.models.Product;
 import com.parse.FindCallback;

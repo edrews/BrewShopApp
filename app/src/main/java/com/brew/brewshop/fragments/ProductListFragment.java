@@ -1,8 +1,8 @@
 package com.brew.brewshop.fragments;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -38,8 +38,11 @@ public class ProductListFragment extends Fragment implements IProductRetrievedHa
     public void onCreate(Bundle inState) {
         super.onCreate(inState);
         if (inState == null) {
-            String typeStr = getArguments().getString(PRODUCT_TYPE_KEY);
-            mCurrentType = ProductType.valueOf(typeStr);
+            Bundle args = getArguments();
+            if (args != null) {
+                String typeStr = getArguments().getString(PRODUCT_TYPE_KEY);
+                mCurrentType = ProductType.valueOf(typeStr);
+            }
         } else {
             mProducts = inState.getParcelableArrayList(PRODUCTS_KEY);
             mCurrentType = ProductType.valueOf(inState.getString(PRODUCT_TYPE_KEY));
@@ -49,7 +52,7 @@ public class ProductListFragment extends Fragment implements IProductRetrievedHa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle inState) {
         Log.d(TAG, "onCreateView");
-        View root = inflater.inflate(R.layout.fragment_shop, container, false);
+        View root = inflater.inflate(R.layout.fragment_products, container, false);
         mProductList = (ListView) root.findViewById(R.id.product_list);
         mProgressView = root.findViewById(R.id.progress_layout);
         mErrorView = root.findViewById(R.id.error_layout);

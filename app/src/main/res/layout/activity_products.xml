@@ -1,0 +1,45 @@
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    style="@style/AppLayout">
+
+    <RelativeLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".HomeActivity">
+
+        <fragment
+            android:id="@+id/products_fragment"
+            android:name="com.brew.brewshop.fragments.ProductListFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_products" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="start"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:background="#FF201000">
+
+        <TextView style="@style/NavigationCategory"
+            android:text="@string/homebrew_tools" />
+
+        <ListView android:id="@+id/tools_drawer"
+            style="@style/NavigationList"/>
+
+        <TextView style="@style/NavigationCategory"
+            android:text="@string/homebrew_shop"/>
+
+        <ListView style="@style/NavigationList"
+            android:id="@+id/shop_drawer"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+</android.support.v4.widget.DrawerLayout>
