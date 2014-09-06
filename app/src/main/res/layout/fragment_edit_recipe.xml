@@ -1,0 +1,118 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/AppLayout">
+
+    <TextView
+        android:id="@+id/recipe_name"
+        android:layout_width="fill_parent"
+        android:layout_alignParentTop="true"
+        android:layout_height="48dp"
+        android:layout_margin="5dp"
+        android:text="Recipe Name"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:background="#10000000"
+        android:textSize="24sp"/>
+
+    <Spinner
+        android:id="@+id/recipe_style"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:layout_below="@id/recipe_name"
+        android:layout_margin="5dp"
+        android:background="#10000000"
+        android:spinnerMode="dropdown" />
+
+    <RelativeLayout
+        android:id="@+id/stats_layout"
+        android:layout_width="fill_parent"
+        android:layout_below="@id/recipe_style"
+        android:layout_height="wrap_content"
+        android:background="#10000000"
+        android:layout_margin="5dp">
+
+        <TextView
+            android:id="@+id/batch_size_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:textSize="20sp"
+            android:layout_margin="5dp"
+            android:text="Batch Size (gal.)"/>
+
+        <TextView
+            android:id="@+id/batch_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:textSize="20sp"
+            android:layout_margin="5dp"
+            android:text="5.0"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_margin="5dp"
+            android:layout_below="@id/batch_size_label"
+            android:text="Efficiency (%)"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_below="@id/batch_size_label"
+            android:layout_margin="5dp"
+            android:layout_alignParentRight="true"
+            android:text="70"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/add_ingredients_layout"
+        android:layout_width="fill_parent"
+        android:layout_below="@id/stats_layout"
+        android:layout_height="wrap_content"
+        android:background="#10000000"
+        android:orientation="horizontal"
+        android:layout_margin="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:text="Ingredients"
+            android:gravity="center_vertical"
+            android:textSize="20sp"/>
+
+        <Button
+            android:id="@+id/yeast_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:text="Y"
+            android:layout_alignParentRight="true" />
+
+        <Button
+            android:id="@+id/water_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:text="W"
+            android:layout_toLeftOf="@id/yeast_button"/>
+
+        <Button
+            android:id="@+id/hops_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:text="H"
+            android:layout_toLeftOf="@id/water_button"/>
+
+        <Button
+            android:id="@+id/malt_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:text="M"
+            android:layout_toLeftOf="@id/hops_button"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,14 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".HomeActivity" >
-    <item android:id="@+id/action_new"
+    <item android:id="@+id/action_new_recipe"
         android:icon="@drawable/ic_action_new"
-        android:title="@string/action_new"
+        android:title="@string/new_recipe"
         android:orderInCategory="100"
-        android:showAsAction="ifRoom" />
-    <item android:id="@+id/action_search"
-        android:icon="@drawable/ic_action_search"
-        android:title="@string/action_search"
-        android:orderInCategory="101"
         android:showAsAction="ifRoom" />
 </menu>

@@ -1,4 +1,4 @@
-package com.brew.brewshop;
+package com.brew.brewshop.storage.models;
 
 public class Recipe {
     private String mName;

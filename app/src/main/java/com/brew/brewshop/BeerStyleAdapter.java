@@ -5,31 +5,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
+
 import java.util.List;
 
-public class DrawerItemAdapter extends ArrayAdapter<DrawerItem> {
+public class BeerStyleAdapter extends ArrayAdapter<String> {
     private Context mContext;
-    private List<DrawerItem> mItems;
+    private List<String> mStyles;
 
-    public DrawerItemAdapter(Context context, List<DrawerItem> item) {
-        super(context, R.layout.list_item_drawer, item);
+    public BeerStyleAdapter(Context context, List<String> styles) {
+        super(context, R.layout.list_item_beer_style, styles);
         mContext = context;
-        mItems = item;
+        mStyles = styles;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.list_item_drawer, parent, false);
+        View rowView = inflater.inflate(R.layout.list_item_beer_style, parent, false);
 
-        ImageView iconView = (ImageView) rowView.findViewById(R.id.icon);
         TextView nameView = (TextView) rowView.findViewById(R.id.name);
 
-        DrawerItem product = mItems.get(position);
-        iconView.setImageBitmap(product.getIcon());
-        nameView.setText(product.getName());
+        String style = mStyles.get(position);
+        nameView.setText(style);
         return rowView;
+
     }
 }

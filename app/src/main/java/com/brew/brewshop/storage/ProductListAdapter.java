@@ -13,7 +13,6 @@ import com.brew.brewshop.storage.models.Product;
 
 import java.util.List;
 
-
 public class ProductListAdapter extends ArrayAdapter<Product> {
     private Context mContext;
     private List<Product> mProducts;

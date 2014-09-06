@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.brew.brewshop.R;
-import com.brew.brewshop.Recipe;
+import com.brew.brewshop.storage.models.Recipe;
 import com.brew.brewshop.util.SrmHelper;
 
 import java.util.List;

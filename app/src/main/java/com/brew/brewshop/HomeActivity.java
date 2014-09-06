@@ -1,19 +1,21 @@
 package com.brew.brewshop;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.List;
 
-public class RecipesActivity extends Activity {
-    private static final String TAG = RecipesActivity.class.getName();
+public class HomeActivity extends Activity {
+    private static final String TAG = HomeActivity.class.getName();
     private static final String KEY_DRAWER_OPEN = "DrawerOpen";
 
     private View mDrawer;
@@ -25,9 +27,10 @@ public class RecipesActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_main);
 
-        mFragmentHelper = new FragmentHandler(this, getApplicationName());
+        mFragmentHelper = new FragmentHandler(this);
 
         mDrawer = findViewById(R.id.drawer);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -120,7 +123,8 @@ public class RecipesActivity extends Activity {
             }
             setTitle(mFragmentHelper.getCurrentTitle());
             mToolsList.setItemChecked(position, true);
-            mDrawerLayout.closeDrawers();        }
+            mDrawerLayout.closeDrawers();
+        }
     }
 
     private String getApplicationName() {

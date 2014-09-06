@@ -2,10 +2,16 @@ package com.brew.brewshop;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.brew.brewshop.fragments.EditRecipeFragment;
+import com.brew.brewshop.fragments.ProductListFragment;
+import com.brew.brewshop.fragments.RecipeListFragment;
 import com.brew.brewshop.storage.ProductType;
 
 import java.util.ArrayList;
@@ -13,35 +19,38 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FragmentHandler {
+public class FragmentHandler implements IRecipeManager {
     private static final String TAG = FragmentHandler.class.getName();
-    private static final String KEY_CURRENT_FRAGMENT = "CurrentFragment";
+    private static final String TITLE_KEY = "Title";
+    private static final String CURRENT_FRAGMENT_KEY = "CurrentFragment";
+    private static final String PRODUCTS_FRAGMENT_KEY = "ProductsFragment";
 
-    private FragmentType mCurrentFragment;
-    private Fragment mBeerFragment, mWineFragment, mCoffeeFragment, mHomebrewFragment, mRecipesFragment;
-    private Map<FragmentType, Fragment> mToolFragments;
-    private Map<FragmentType, Fragment> mShopFragments;
+    private Fragment mCurrentFragment;
+    private ProductListFragment mProductsFragment;
+    private RecipeListFragment mRecipesFragment;
+    private EditRecipeFragment mEditRecipeFragment;
+
     private Map<FragmentType, String> mTitles;
-    private Activity mActivity;
+    private FragmentManager mFragmentManager;
     private List<DrawerItem> mToolOptions, mShopOptions;
+    private String mTitle;
 
-    public FragmentHandler(Activity activity, String applicationName) {
+    public FragmentHandler(Activity activity) {
         mTitles = new HashMap<FragmentType, String>();
         mTitles.put(FragmentType.HOMEBREW_RECIPES, activity.getResources().getString(R.string.homebrew_recipes));
+        mTitles.put(FragmentType.EDIT_RECIPE, activity.getResources().getString(R.string.edit_recipe));
         mTitles.put(FragmentType.BEER, activity.getResources().getString(R.string.beer));
         mTitles.put(FragmentType.WINE, activity.getResources().getString(R.string.wine));
         mTitles.put(FragmentType.COFFEE, activity.getResources().getString(R.string.coffee));
         mTitles.put(FragmentType.HOMEBREW_SUPPLIES, activity.getResources().getString(R.string.homebrew_supplies));
 
-        Bitmap icon;
-
         mToolOptions = new ArrayList<DrawerItem>();
-        icon = BitmapFactory.decodeResource(activity.getResources(), R.drawable.folder);
+        Bitmap icon = BitmapFactory.decodeResource(activity.getResources(), R.drawable.folder);
         mToolOptions.add(new DrawerItem(icon, mTitles.get(FragmentType.HOMEBREW_RECIPES)));
 
         mShopOptions = new ArrayList<DrawerItem>();
 
-        icon = BitmapFactory.decodeResource(activity.getResources(), R.drawable.beer2);
+        icon = BitmapFactory.decodeResource(activity.getResources(), R.drawable.beer);
         mShopOptions.add(new DrawerItem(icon, mTitles.get(FragmentType.BEER)));
 
         icon = BitmapFactory.decodeResource(activity.getResources(), R.drawable.wine);
@@ -53,37 +62,50 @@ public class FragmentHandler {
         icon = BitmapFactory.decodeResource(activity.getResources(), R.drawable.hops);
         mShopOptions.add(new DrawerItem(icon, mTitles.get(FragmentType.HOMEBREW_SUPPLIES)));
 
-        mActivity = activity;
-        createFragments();
+        mFragmentManager = activity.getFragmentManager();
     }
 
     public void resumeState(Bundle bundle) {
         if (bundle == null) {
-            mCurrentFragment = FragmentType.HOMEBREW_RECIPES;
-            showCurrentFragment();
+            createFragments();
+            showFragment(mRecipesFragment);
+            mTitle = mTitles.get(FragmentType.HOMEBREW_RECIPES);
         } else {
-            String current = bundle.getString(KEY_CURRENT_FRAGMENT);
-            mCurrentFragment = FragmentType.valueOf(current);
-            showCurrentFragment();
+            mProductsFragment = (ProductListFragment) mFragmentManager.getFragment(bundle, PRODUCTS_FRAGMENT_KEY);
+            mTitle = bundle.getString(TITLE_KEY);
+            createFragments();
         }
     }
 
     public void saveState(Bundle bundle) {
-        bundle.putString(KEY_CURRENT_FRAGMENT, mCurrentFragment.toString());
+        if (mCurrentFragment == mProductsFragment) {
+            mFragmentManager.putFragment(bundle, PRODUCTS_FRAGMENT_KEY, mProductsFragment);
+        }
+        bundle.putString(TITLE_KEY, mTitle);
     }
 
     public void selectTool(int index) {
-        mCurrentFragment = FragmentType.HOMEBREW_RECIPES;
-        showCurrentFragment();
+        mTitle = mToolOptions.get(index).getName();
+        showFragment(mRecipesFragment);
     }
 
     public void selectShop(int index) {
-        mCurrentFragment = FragmentType.values()[index + 1];
-        showCurrentFragment();
+        mTitle = mShopOptions.get(index).getName();
+        ProductType type = ProductType.values()[index];
+        if (mProductsFragment != mCurrentFragment) {
+            Bundle bundle = new Bundle();
+            bundle.putString(ProductListFragment.PRODUCT_TYPE_KEY, type.toString());
+            mProductsFragment.setArguments(bundle);
+            showFragment(mProductsFragment);
+        } else {
+            if (type != mProductsFragment.getCurrentType()) {
+                mProductsFragment.loadProducts(type);
+            }
+        }
     }
 
     public CharSequence getCurrentTitle() {
-        return mTitles.get(mCurrentFragment);
+        return mTitle;
     }
 
     public List<DrawerItem> getToolOptions() {
@@ -94,54 +116,40 @@ public class FragmentHandler {
         return mShopOptions;
     }
 
-    private void showCurrentFragment() {
-        Fragment fragment;
-        if (mCurrentFragment == FragmentType.HOMEBREW_RECIPES) {
-            fragment = mToolFragments.get(mCurrentFragment);
-        } else {
-            fragment = mShopFragments.get(mCurrentFragment);
+    private void showFragment(Fragment fragment) {
+        if (fragment != mEditRecipeFragment) {
+            mFragmentManager.popBackStack();
         }
-        android.app.FragmentManager fragmentManager = mActivity.getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.content_frame, fragment)
-                .commit();
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(R.id.content_frame, fragment);
+        if (fragment == mEditRecipeFragment) {
+            transaction.setCustomAnimations(
+                    R.animator.card_flip_right_in, R.animator.card_flip_right_out,
+                    R.animator.card_flip_left_in, R.animator.card_flip_left_out);
+            transaction.addToBackStack(null);
+        }
+        transaction.commit();
+        mCurrentFragment = fragment;
     }
 
     private void createFragments() {
-        mBeerFragment = new ShopFragment();
-        Bundle beerBundle = new Bundle();
-        beerBundle.putString(ShopFragment.PRODUCT_TYPE, ProductType.BEER.toString());
-        mBeerFragment.setArguments(beerBundle);
-        mBeerFragment.setHasOptionsMenu(true);
+        mProductsFragment = new ProductListFragment();
+        mProductsFragment.setHasOptionsMenu(true);
 
-        mWineFragment = new ShopFragment();
-        Bundle wineBundle = new Bundle();
-        wineBundle.putString(ShopFragment.PRODUCT_TYPE, ProductType.WINE.toString());
-        mWineFragment.setArguments(wineBundle);
-        mWineFragment.setHasOptionsMenu(true);
+        if (mRecipesFragment == null) {
+            mRecipesFragment = new RecipeListFragment();
+            mRecipesFragment.setHasOptionsMenu(true);
+            mRecipesFragment.setRecipeManager(this);
+        }
 
-        mCoffeeFragment = new ShopFragment();
-        Bundle coffeeBundle = new Bundle();
-        coffeeBundle.putString(ShopFragment.PRODUCT_TYPE, ProductType.COFFEE.toString());
-        mCoffeeFragment.setArguments(coffeeBundle);
-        mCoffeeFragment.setHasOptionsMenu(true);
+        if (mEditRecipeFragment == null) {
+            mEditRecipeFragment = new EditRecipeFragment();
+            mEditRecipeFragment.setHasOptionsMenu(true);
+        }
+    }
 
-        mHomebrewFragment = new ShopFragment();
-        Bundle homebrewBundle = new Bundle();
-        homebrewBundle.putString(ShopFragment.PRODUCT_TYPE, ProductType.HOMEBREW_SUPPLY.toString());
-        mHomebrewFragment.setArguments(homebrewBundle);
-        mHomebrewFragment.setHasOptionsMenu(true);
-
-        mRecipesFragment = new RecipesFragment();
-        mRecipesFragment.setHasOptionsMenu(true);
-
-        mToolFragments = new HashMap<FragmentType, Fragment>();
-        mToolFragments.put(FragmentType.HOMEBREW_RECIPES, mRecipesFragment);
-
-        mShopFragments = new HashMap<FragmentType, Fragment>();
-        mShopFragments.put(FragmentType.BEER, mBeerFragment);
-        mShopFragments.put(FragmentType.WINE, mWineFragment);
-        mShopFragments.put(FragmentType.COFFEE, mCoffeeFragment);
-        mShopFragments.put(FragmentType.HOMEBREW_SUPPLIES, mHomebrewFragment);
+    @Override
+    public void OnCreateNewRecipe() {
+        showFragment(mEditRecipeFragment);
     }
 }

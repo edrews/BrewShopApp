@@ -1,6 +1,6 @@
 package com.brew.brewshop.storage;
 
-import com.brew.brewshop.Recipe;
+import com.brew.brewshop.storage.models.Recipe;
 
 import java.util.ArrayList;
 import java.util.List;

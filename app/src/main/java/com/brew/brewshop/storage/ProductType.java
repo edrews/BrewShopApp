@@ -4,6 +4,7 @@ public enum ProductType {
     BEER,
     WINE,
     COFFEE,
-    HOMEBREW_SUPPLY,
-    ALL
+    HOMEBREW,
+    ALL,
+    NONE
 }
