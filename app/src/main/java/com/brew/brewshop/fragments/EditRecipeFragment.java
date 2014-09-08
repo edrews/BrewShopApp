@@ -21,9 +21,14 @@ public class EditRecipeFragment extends Fragment {
     private List<String> mStyles;
 
     @Override
+    public void onCreate(Bundle inState) {
+        super.onCreate(inState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         if (savedInstanceState != null) {
             //Restore the fragment's state here
         }
@@ -53,6 +58,6 @@ public class EditRecipeFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.edit_recipe, menu);
+        inflater.inflate(R.menu.edit_recipe_menu, menu);
     }
 }

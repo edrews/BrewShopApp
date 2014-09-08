@@ -15,7 +15,7 @@
         android:layout_height="48dp"
         android:text="New Text"
         android:textSize="18sp"
-        android:textColor="#FFFFFFFF"
+        android:textColor="@color/white"
         android:layout_toRightOf="@id/icon"
         android:paddingLeft="10dp"
         android:paddingRight="5dp"

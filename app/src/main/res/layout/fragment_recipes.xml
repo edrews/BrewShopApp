@@ -1,3 +1,28 @@
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/recipes_list"
-    style="@style/ItemList"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_weight="1"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/message_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+        <TextView
+            android:id="@+id/error_message"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/gray"
+            android:text="@string/no_recipes"/>
+    </LinearLayout>
+
+    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/recipes_list"
+        android:longClickable="true"
+        style="@style/ItemList"/>
+
+</LinearLayout>

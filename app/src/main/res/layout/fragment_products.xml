@@ -30,7 +30,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="#808080"
+            android:textColor="@color/gray"
             android:text="@string/retrieve_error"/>
     </LinearLayout>
 

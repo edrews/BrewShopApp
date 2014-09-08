@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_light">#a276eb</color>
-    <color name="purple_middle">#8658ce</color>
-    <color name="purple_dark">#6a3ab2</color>
+    <color name="dim_white">#10ffffff</color>
+    <color name="dim_black">#10000000</color>
+    <color name="burgandy">#58290c</color>
+    <color name="gold">#EFB20D</color>
+    <color name="light_gold">#80EFB20D</color>
+    <color name="gray">#808080</color>
+
+    <color name="burgandy_light">#905030</color>
+    <color name="burgandy_middle">#58290c</color>
+    <color name="burgandy_dark">#201000</color>
+
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
 </resources>

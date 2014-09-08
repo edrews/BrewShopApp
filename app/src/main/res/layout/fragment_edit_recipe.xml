@@ -10,7 +10,7 @@
         android:text="Recipe Name"
         android:gravity="center"
         android:textStyle="bold"
-        android:background="#10000000"
+        android:background="@color/dim_black"
         android:textSize="24sp"/>
 
     <Spinner
@@ -19,7 +19,7 @@
         android:layout_height="48dp"
         android:layout_below="@id/recipe_name"
         android:layout_margin="5dp"
-        android:background="#10000000"
+        android:background="@color/dim_black"
         android:spinnerMode="dropdown" />
 
     <RelativeLayout
@@ -27,7 +27,7 @@
         android:layout_width="fill_parent"
         android:layout_below="@id/recipe_style"
         android:layout_height="wrap_content"
-        android:background="#10000000"
+        android:background="@color/dim_black"
         android:layout_margin="5dp">
 
         <TextView
@@ -73,7 +73,7 @@
         android:layout_width="fill_parent"
         android:layout_below="@id/stats_layout"
         android:layout_height="wrap_content"
-        android:background="#10000000"
+        android:background="@color/dim_black"
         android:orientation="horizontal"
         android:layout_margin="5dp">
 

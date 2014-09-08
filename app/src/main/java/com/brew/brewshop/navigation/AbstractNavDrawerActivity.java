@@ -4,6 +4,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -71,7 +72,7 @@ public abstract class AbstractNavDrawerActivity extends FragmentActivity {
     }
 
     protected void initDrawerShadow() {
-        //mDrawerLayout.setDrawerShadow(navConf.getDrawerShadow(), GravityCompat.START);
+        mDrawerLayout.setDrawerShadow(navConf.getDrawerShadow(), GravityCompat.START);
     }
 
     protected int getDrawerIcon() {

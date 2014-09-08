@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@color/purple_dark">
+    android:background="@color/burgandy_dark">
 
     <TextView
         android:id="@+id/navmenusection_label"
@@ -10,10 +10,15 @@
         android:layout_height="wrap_content"
         android:text="Section"
         android:textSize="18sp"
-        android:paddingTop="7dp"
-        android:paddingBottom="7dp"
-        android:textColor="#FFFFFF"
-        style="?android:attr/listSeparatorTextViewStyle"
-        android:background="@color/purple_dark"/>
+        android:padding="5dp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:background="@color/burgandy_dark"/>
+    <FrameLayout android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:background="@color/dim_white"
+        android:layout_below="@id/navmenusection_label"/>
 
 </RelativeLayout>

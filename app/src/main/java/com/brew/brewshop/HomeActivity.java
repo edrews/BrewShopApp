@@ -2,6 +2,7 @@ package com.brew.brewshop;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.brew.brewshop.fragments.EditRecipeFragment;
 import com.brew.brewshop.fragments.ProductListFragment;
@@ -13,6 +14,8 @@ import com.brew.brewshop.navigation.NavDrawerItem;
 import com.brew.brewshop.navigation.NavMenuItem;
 import com.brew.brewshop.navigation.NavMenuSection;
 import com.brew.brewshop.storage.ProductType;
+import com.brew.brewshop.storage.recipes.Recipe;
+import com.google.gson.Gson;
 
 public class HomeActivity extends AbstractNavDrawerActivity implements IRecipeManager {
     private static final String TAG = HomeActivity.class.getName();
@@ -41,7 +44,7 @@ public class HomeActivity extends AbstractNavDrawerActivity implements IRecipeMa
         navDrawerActivityConfiguration.setDrawerLayoutId(R.id.drawer_layout);
         navDrawerActivityConfiguration.setLeftDrawerId(R.id.left_drawer);
         navDrawerActivityConfiguration.setNavItems(menu);
-        //navDrawerActivityConfiguration.setDrawerShadow(R.drawable.drawer_shadow);
+        navDrawerActivityConfiguration.setDrawerShadow(R.drawable.drawer_shadow);
         navDrawerActivityConfiguration.setDrawerOpenDesc(R.string.drawer_open);
         navDrawerActivityConfiguration.setDrawerCloseDesc(R.string.drawer_close);
         navDrawerActivityConfiguration.setBaseAdapter(
@@ -80,7 +83,6 @@ public class HomeActivity extends AbstractNavDrawerActivity implements IRecipeMa
 
     private void showRecipeManager() {
         RecipeListFragment fragment = new RecipeListFragment();
-        fragment.setRecipeManager(this);
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
     }
 

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -33,10 +34,13 @@ public class ProductListFragment extends Fragment implements IProductRetrievedHa
     private TextView mErrorMessage;
     private List<Product> mProducts;
     private ProductType mCurrentType = ProductType.NONE;
+    private String mRetrieveError, mNoProducts;
+    private Menu mMenu;
 
     @Override
     public void onCreate(Bundle inState) {
         super.onCreate(inState);
+        setHasOptionsMenu(true);
         if (inState == null) {
             Bundle args = getArguments();
             if (args != null) {
@@ -51,37 +55,42 @@ public class ProductListFragment extends Fragment implements IProductRetrievedHa
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle inState) {
-        Log.d(TAG, "onCreateView");
         View root = inflater.inflate(R.layout.fragment_products, container, false);
         mProductList = (ListView) root.findViewById(R.id.product_list);
         mProgressView = root.findViewById(R.id.progress_layout);
         mErrorView = root.findViewById(R.id.error_layout);
         mErrorMessage = (TextView) root.findViewById(R.id.error_message);
 
+        mRetrieveError = getResources().getString(R.string.retrieve_error);
+        mNoProducts = getResources().getString(R.string.no_products);
+
+        return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         if (mProducts != null) {
             mErrorView.setVisibility(View.GONE);
             productsRetrieved(mProducts);
         } else {
             loadProducts(mCurrentType);
         }
-        return root;
-    }
-
-    public ProductType getCurrentType() {
-        return mCurrentType;
     }
 
     public void loadProducts(ProductType type) {
         mCurrentType = type;
         mErrorView.setVisibility(View.GONE);
         mProgressView.setVisibility(View.VISIBLE);
+        setRefreshEnabled(false);
         new ProductStorage(getActivity()).retrieveProducts(this, type);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        mMenu = menu;
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.shopping, menu);
+        inflater.inflate(R.menu.products_menu, menu);
     }
 
     @Override
@@ -95,13 +104,14 @@ public class ProductListFragment extends Fragment implements IProductRetrievedHa
 
     @Override
     public void productsRetrieved(List<Product> products) {
+        setRefreshEnabled(true);
         mProducts = products;
         mProgressView.setVisibility(View.GONE);
         if (products == null) {
-            mErrorMessage.setText(getResources().getString(R.string.retrieve_error));
+            mErrorMessage.setText(mRetrieveError);
             mErrorView.setVisibility(View.VISIBLE);
         } else if (products.isEmpty()) {
-            mErrorMessage.setText(getResources().getString(R.string.no_products));
+            mErrorMessage.setText(mNoProducts);
             mErrorView.setVisibility(View.VISIBLE);
         } else {
             Context context = getActivity();
@@ -109,6 +119,29 @@ public class ProductListFragment extends Fragment implements IProductRetrievedHa
                 ProductListAdapter adapter = new ProductListAdapter(context, products);
                 mProductList.setAdapter(adapter);
             }
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.action_refresh) {
+            loadProducts(mCurrentType);
+            return true;
+        }
+        return false;
+    }
+
+    private void setRefreshEnabled(boolean enabled) {
+        if (mMenu != null) {
+            MenuItem refresh = mMenu.findItem(R.id.action_refresh);
+            if (refresh != null) {
+                refresh.setEnabled(enabled);
+                //getActivity().invalidateOptionsMenu();
+            } else {
+                Log.d(TAG, "Cannot access refresh menu item");
+            }
+        } else {
+            Log.d(TAG, "Cannot access menu");
         }
     }
 }

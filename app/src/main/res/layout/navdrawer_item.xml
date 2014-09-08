@@ -5,24 +5,24 @@
     android:background="?android:attr/activatedBackgroundIndicator"
     android:textAppearance="?android:attr/textAppearanceListItemSmall"
     android:gravity="center_vertical"
-    android:paddingRight="10dp"
     android:minHeight="?android:attr/listPreferredItemHeightSmall"
     >
 
     <ImageView
         android:id="@+id/navmenuitem_icon"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_height="24dp"
         android:layout_centerVertical="true"
-        android:paddingLeft="15dp"/>
+        android:padding="0dp"/>
 
     <TextView
         android:id="@+id/navmenuitem_label"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="48dp"
+        android:textSize="18dp"
         android:layout_toRightOf="@id/navmenuitem_icon"
         android:gravity="center_vertical"
         android:text="TextView"
-        android:textColor="#FFFFFF"/>
+        android:textColor="@color/white"/>
 
 </RelativeLayout>
