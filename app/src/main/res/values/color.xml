@@ -3,8 +3,9 @@
     <color name="dim_white">#10ffffff</color>
     <color name="dim_black">#10000000</color>
     <color name="burgandy">#58290c</color>
-    <color name="gold">#EFB20D</color>
-    <color name="light_gold">#80EFB20D</color>
+    <color name="gold">#F0B010</color>
+    <color name="light_gold">#A0F0B010</color>
+    <color name="lighter_gold">#40F0B010</color>
     <color name="gray">#808080</color>
 
     <color name="burgandy_light">#905030</color>

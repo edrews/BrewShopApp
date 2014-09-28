@@ -4,6 +4,11 @@ android {
     compileSdkVersion 20
     buildToolsVersion '20.0.0'
 
+    lintOptions {
+        abortOnError false
+    }
+
+
     defaultConfig {
         applicationId "com.brew.brewshop"
         minSdkVersion 15

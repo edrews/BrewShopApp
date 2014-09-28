@@ -38,14 +38,6 @@ public class EditRecipeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_edit_recipe, container, false);
 
-        Spinner styleSpinner = (Spinner) root.findViewById(R.id.recipe_style);
-        Context context = getActivity().getApplicationContext();
-
-        mStyles = new ArrayList<String>();
-        mStyles.add("American Lager");
-        mStyles.add("India Pale Ale");
-        mStyles.add("Irish Stout");
-        styleSpinner.setAdapter(new BeerStyleAdapter(context, mStyles));
         return root;
     }
 

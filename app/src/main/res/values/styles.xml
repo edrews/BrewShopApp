@@ -46,4 +46,46 @@
         <item name="android:divider">@color/dim_black</item>
         <item name="android:dividerHeight">1dp</item>
     </style>
+
+    <style name="RecipeStat" parent="AppTheme">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:layout_marginTop">1dp</item>
+        <item name="android:layout_marginBottom">1dp</item>
+    </style>
+
+    <style name="RecipeStatRight" parent="RecipeStat">
+        <item name="android:layout_gravity">right</item>
+    </style>
+
+    <style name="RecipeRating">
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:src">@drawable/hops</item>
+    </style>
+
+    <style name="RecipeGroupLayout">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">1dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:background">@drawable/border</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="RecipeIngredient">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:layout_margin">1dp</item>
+        <item name="android:background">@drawable/border</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
 </resources>
