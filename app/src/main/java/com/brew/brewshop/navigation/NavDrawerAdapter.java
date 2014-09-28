@@ -23,7 +23,7 @@ public class NavDrawerAdapter extends ArrayAdapter<NavDrawerItem> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = null ;
         NavDrawerItem menuItem = this.getItem(position);
-        if ( menuItem.getType() == NavMenuItem.ITEM_TYPE ) {
+        if ( menuItem.getType() == NavMenuEntry.ITEM_TYPE ) {
             view = getItemView(convertView, parent, menuItem );
         }
         else {
@@ -34,7 +34,7 @@ public class NavDrawerAdapter extends ArrayAdapter<NavDrawerItem> {
 
     public View getItemView( View convertView, ViewGroup parentView, NavDrawerItem navDrawerItem ) {
 
-        NavMenuItem menuItem = (NavMenuItem) navDrawerItem ;
+        NavMenuEntry menuItem = (NavMenuEntry) navDrawerItem ;
         NavMenuItemHolder navMenuItemHolder = null;
 
         if (convertView == null) {

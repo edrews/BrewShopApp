@@ -1,302 +1,193 @@
 <ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-
-<LinearLayout android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:padding="1dp">
-
-    <LinearLayout style="@style/RecipeGroupLayout">
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/recipe_name"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:text="Recipe Name"
-                android:gravity="top"
-                android:layout_marginTop="2dp"
-                android:layout_marginLeft="2dp"
+    style="@style/FillParent">
+    <LinearLayout style="@style/FillParent"
+        android:orientation="vertical"
+        android:padding="1dp">
+        <LinearLayout style="@style/RecipeGroupLayout">
+            <LinearLayout style="@style/FillParent"
                 android:layout_weight="1"
-                android:textStyle="bold"
-                android:textSize="22sp"/>
-
-            <TextView
-                android:id="@+id/style"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:text="Dry Irish Stout"
-                android:gravity="bottom"
-                android:layout_marginLeft="2dp"
-                android:layout_marginBottom="2dp"
-                android:layout_weight="2"
-                android:textStyle="italic"
-                android:textSize="14sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:orientation="horizontal">
-
-            <ImageView style="@style/RecipeRating"/>
-            <ImageView style="@style/RecipeRating"/>
-            <ImageView style="@style/RecipeRating"/>
-            <ImageView style="@style/RecipeRating"/>
-            <ImageView style="@style/RecipeRating"/>
-
-        </LinearLayout>
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:text="97 Reviews"
-                android:layout_weight="1.5"
-                android:textSize="14sp"
-                android:gravity="bottom|right"
-                android:layout_gravity="bottom"
-                android:layout_margin="2dp"/>
-
-    </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout style="@style/RecipeGroupLayout">
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView style="@style/RecipeStat"
-                android:text="Batch Vol."/>
-
-            <TextView style="@style/RecipeStat"
-                android:text="Boil Vol."/>
-
+                android:orientation="vertical">
+                <TextView style="@style/RecipeHeader"
+                    android:id="@+id/recipe_name"
+                    android:text="Recipe Name"
+                    android:gravity="top"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginLeft="2dp"/>
+                <TextView style="@style/FillParent"
+                    android:id="@+id/style"
+                    android:text="Dry Irish Stout"
+                    android:gravity="bottom"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_weight="2"
+                    android:textStyle="italic"
+                    android:textSize="14sp"/>
             </LinearLayout>
-
+            <LinearLayout style="@style/FillParent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <LinearLayout style="@style/FillParent"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:orientation="horizontal">
+                    <ImageView style="@style/RecipeRating"/>
+                    <ImageView style="@style/RecipeRating"/>
+                    <ImageView style="@style/RecipeRating"/>
+                    <ImageView style="@style/RecipeRating"/>
+                    <ImageView style="@style/RecipeRating"/>
+                </LinearLayout>
+                <TextView style="@style/FillParent"
+                    android:text="97 Reviews"
+                    android:layout_weight="1.5"
+                    android:textSize="14sp"
+                    android:gravity="bottom|right"
+                    android:layout_gravity="bottom"
+                    android:layout_margin="2dp"/>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout style="@style/RecipeGroupLayout">
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView style="@style/RecipeStat"
+                    android:text="Batch Vol."/>
+                <TextView style="@style/RecipeStat"
+                    android:text="Boil Vol."/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView style="@style/RecipeStatRight"
+                    android:text="5.0 gal"/>
+                <TextView style="@style/RecipeStatRight"
+                    android:text="5.5 gal"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
+                android:orientation="vertical">
+                <TextView style="@style/RecipeStat"
+                    android:text="Boil Time"/>
+                <TextView style="@style/RecipeStat"
+                    android:text="Efficiency"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView style="@style/RecipeStatRight"
+                    android:text="60 min"/>
+                <TextView style="@style/RecipeStatRight"
+                    android:text="70%"/>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout style="@style/RecipeGroupLayout">
+            <LinearLayout style="@style/FillParent"
+                android:layout_weight=".96"
+                android:orientation="vertical">
+                <TextView style="@style/RecipeStat"
+                    android:text="OG"/>
+                <TextView style="@style/RecipeStat"
+                    android:text="Bitterness"/>
+                <TextView style="@style/RecipeStat"
+                    android:text="Color"/>
+                <TextView style="@style/RecipeStat"
+                    android:text="Target FG"/>
+                <TextView style="@style/RecipeStat"
+                    android:text="Est. ABV"/>
+                <TextView style="@style/RecipeStat"
+                    android:text="Est. Calories"/>
+            </LinearLayout>
+            <LinearLayout style="@style/FillParent"
+                android:layout_weight="1.05"
+                android:layout_marginRight="5dp"
+                android:orientation="vertical">
+                <TextView style="@style/RecipeStatRight"
+                    android:text="1.050"/>
+                <TextView style="@style/RecipeStatRight"
+                    android:text="20 IBU"/>
+                <TextView style="@style/RecipeStatRight"
+                    android:text="10 SRM"/>
+                <TextView style="@style/RecipeStatRight"
+                    android:text="1.012"/>
+                <TextView style="@style/RecipeStatRight"
+                    android:text="4.7%"/>
+                <TextView style="@style/RecipeStatRight"
+                    android:text="110 kcal"/>
+            </LinearLayout>
+            <LinearLayout style="@style/FillParent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight=".95"
+                android:orientation="vertical">
+                <TextView style="@style/RecipeStat"
+                    android:text="Style OG"/>
+                <TextView style="@style/RecipeStat"
+                    android:text="Style IBU"/>
+                <TextView style="@style/RecipeStat"
+                    android:text="Style SRM"/>
+            </LinearLayout>
+            <LinearLayout style="@style/FillParent"
+                android:layout_weight="1.05"
+                android:orientation="vertical">
+                <TextView style="@style/RecipeStatRight"
+                    android:text="1.055±5"/>
+                <TextView style="@style/RecipeStatRight"
+                    android:text="10±5"/>
+                <TextView style="@style/RecipeStatRight"
+                    android:text="10±3"/>
+            </LinearLayout>
+        </LinearLayout>
+        <RelativeLayout android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <TextView style="@style/RecipeHeader"
+                android:text="Ingredients"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="1dp"/>
+            <ImageView android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:gravity="right"
+                android:layout_alignParentRight="true"
+                android:layout_weight="1"
+                android:background="@drawable/border"
+                android:layout_margin="1dp"
+                android:src="@drawable/ic_action_new_dark"/>
+        </RelativeLayout>
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
             android:orientation="vertical">
-
-            <TextView style="@style/RecipeStatRight"
-                android:text="5.0 gal"/>
-
-            <TextView style="@style/RecipeStatRight"
-                android:text="5.5 gal"/>
-
+            <TextView style="@style/RecipeIngredient"
+                android:text="Ingredient"/>
+            <TextView style="@style/RecipeIngredient"
+                android:text="Ingredient"/>
+            <TextView style="@style/RecipeIngredient"
+                android:text="Ingredient"/>
+            <TextView style="@style/RecipeIngredient"
+                android:text="Ingredient"/>
+            <TextView style="@style/RecipeIngredient"
+                android:text="Ingredient"/>
+            <TextView style="@style/RecipeIngredient"
+                android:text="Ingredient"/>
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
+        <TextView style="@style/RecipeHeader"
+            android:text="Notes"
+            android:layout_margin="1dp"/>
+        <TextView android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:layout_marginLeft="5dp"
-            android:orientation="vertical">
-
-            <TextView style="@style/RecipeStat"
-                android:text="Boil Time"/>
-
-            <TextView style="@style/RecipeStat"
-                android:text="Efficiency"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView style="@style/RecipeStatRight"
-                android:text="60 min"/>
-
-            <TextView style="@style/RecipeStatRight"
-                android:text="70%"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout style="@style/RecipeGroupLayout">
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight=".96"
-            android:orientation="vertical">
-
-        <TextView style="@style/RecipeStat"
-            android:text="OG"/>
-
-        <TextView style="@style/RecipeStat"
-            android:text="Bitterness"/>
-
-        <TextView style="@style/RecipeStat"
-            android:text="Color"/>
-
-        <TextView style="@style/RecipeStat"
-            android:text="Target FG"/>
-
-        <TextView style="@style/RecipeStat"
-            android:text="Est. ABV"/>
-
-        <TextView style="@style/RecipeStat"
-            android:text="Est. Calories"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1.05"
-            android:layout_marginRight="5dp"
-            android:orientation="vertical">
-
-            <TextView style="@style/RecipeStatRight"
-                android:text="1.050"/>
-
-            <TextView style="@style/RecipeStatRight"
-                android:text="20 IBU"/>
-
-            <TextView style="@style/RecipeStatRight"
-                android:text="10 SRM"/>
-
-            <TextView style="@style/RecipeStatRight"
-                android:text="1.012"/>
-
-            <TextView style="@style/RecipeStatRight"
-                android:text="4.7%"/>
-
-            <TextView style="@style/RecipeStatRight"
-                android:text="110 kcal"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_marginLeft="5dp"
-            android:layout_weight=".95"
-            android:orientation="vertical">
-
-            <TextView style="@style/RecipeStat"
-                android:text="Style OG"/>
-
-            <TextView style="@style/RecipeStat"
-                android:text="Style IBU"/>
-
-            <TextView style="@style/RecipeStat"
-                android:text="Style SRM"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1.05"
-            android:orientation="vertical">
-
-            <TextView style="@style/RecipeStatRight"
-                android:text="1.055±5"/>
-
-            <TextView style="@style/RecipeStatRight"
-                android:text="10±5"/>
-
-            <TextView style="@style/RecipeStatRight"
-                android:text="10±3"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:text="Ingredients"
-            android:textStyle="bold"
-            android:layout_alignParentBottom="true"
-            android:layout_weight="1"
+            android:text="Notes"
             android:layout_margin="1dp"
-            android:textSize="22sp"/>
-
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:gravity="right"
-            android:layout_alignParentRight="true"
-            android:layout_weight="1"
             android:background="@drawable/border"
-            android:layout_margin="1dp"
-            android:src="@drawable/ic_action_new_dark"/>
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView style="@style/RecipeIngredient"
-            android:text="Ingredient"/>
-        <TextView style="@style/RecipeIngredient"
-            android:text="Ingredient"/>
-        <TextView style="@style/RecipeIngredient"
-            android:text="Ingredient"/>
-        <TextView style="@style/RecipeIngredient"
-            android:text="Ingredient"/>
-        <TextView style="@style/RecipeIngredient"
-            android:text="Ingredient"/>
-        <TextView style="@style/RecipeIngredient"
-            android:text="Ingredient"/>
-
+            android:minHeight="48dp"
+            android:padding="5dp"
+            android:textSize="14sp"/>
     </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:text="Notes"
-        android:textStyle="bold"
-        android:layout_weight="1"
-        android:layout_margin="1dp"
-        android:textSize="22sp"/>
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Notes"
-        android:layout_margin="1dp"
-        android:background="@drawable/border"
-        android:minHeight="48dp"
-        android:padding="5dp"
-        android:textSize="14sp"/>
-
-</LinearLayout>
-
 </ScrollView>

@@ -72,12 +72,15 @@ public class RecipeListAdapter extends BaseAdapter {
         return rowView;
     }
 
-    public void deleteSelected() {
+    public int deleteSelected() {
+        int deleted = 0;
         for (int i = mRecipes.size() - 1; i >= 0; i--) {
             if (mView.isItemChecked(i)) {
                 mRecipes.remove(i);
+                deleted++;
             }
         }
+        return deleted;
     }
 
     private String getDescription(Recipe recipe) {

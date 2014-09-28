@@ -46,15 +46,6 @@ public class NavDrawerActivityConfiguration {
         this.leftDrawerId = leftDrawerId;
     }
 
-    public int[] getActionMenuItemsToHideWhenDrawerOpen() {
-        return actionMenuItemsToHideWhenDrawerOpen;
-    }
-
-    public void setActionMenuItemsToHideWhenDrawerOpen(
-            int[] actionMenuItemsToHideWhenDrawerOpen) {
-        this.actionMenuItemsToHideWhenDrawerOpen = actionMenuItemsToHideWhenDrawerOpen;
-    }
-
     public NavDrawerItem[] getNavItems() {
         return navItems;
     }

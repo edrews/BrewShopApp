@@ -1,19 +1,9 @@
 package com.brew.brewshop.navigation;
 
 public class NavMenuSection implements NavDrawerItem {
-
     public static final int SECTION_TYPE = 0;
     private int id;
     private String label;
-
-    private NavMenuSection() {
-    }
-
-    public static NavMenuSection create( int id, String label ) {
-        NavMenuSection section = new NavMenuSection();
-        section.setLabel(label);
-        return section;
-    }
 
     @Override
     public int getType() {

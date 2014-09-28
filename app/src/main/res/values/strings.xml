@@ -16,13 +16,16 @@
     <string name="select_recipes">Select Recipes</string>
     <string name="selected">selected</string>
     <string name="no_recipes">You have no recipes yet.</string>
+    <string name="deleted_recipes">Deleted %d recipes</string>
+    <string name="deleted_recipe">Deleted recipe</string>
 
+    <!-- Navigation -->
+    <string name="homebrew_tools">Homebrew Tools</string>
+    <string name="homebrew_recipes">Recipes</string>
+    <string name="homebrew_shop">Shop Inventory</string>
     <string name="beer">Beer</string>
     <string name="wine">Wine</string>
     <string name="coffee">Coffee</string>
     <string name="homebrew_supplies">Brew Supplies</string>
-    <string name="homebrew_recipes">Recipe Manager</string>
 
-    <string name="homebrew_tools">Homebrew</string>
-    <string name="homebrew_shop">Shop</string>
 </resources>

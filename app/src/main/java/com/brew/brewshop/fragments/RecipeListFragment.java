@@ -2,12 +2,10 @@ package com.brew.brewshop.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.ActionMode;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,8 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.brew.brewshop.IRecipeManager;
 import com.brew.brewshop.R;
@@ -26,6 +24,9 @@ import com.brew.brewshop.storage.RecipeStorage;
 
 public class RecipeListFragment extends Fragment implements AdapterView.OnItemClickListener, ListView.MultiChoiceModeListener, ListView.OnItemLongClickListener {
     private static final String TAG = RecipeListFragment.class.getName();
+    private static final String ACTION_MODE = "ActionMode";
+    private static final String SELECTED_INDEXES = "Selected";
+
     private RecipeStorage mRecipeStorage;
     private IRecipeManager mRecipeManager;
     private ActionMode mActionMode;
@@ -57,8 +58,16 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
         mRecipeList.setAdapter(mAdapter);
 
         checkEmpty();
+        checkResumeActionMode(savedInstanceState);
 
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        bundle.putBoolean(ACTION_MODE, mActionMode != null);
+        bundle.putIntArray(SELECTED_INDEXES, getSelectedIndexes());
     }
 
     @Override
@@ -75,7 +84,7 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         if (mActionMode != null) {
             setSelected(i, mRecipeList.isItemChecked(i));
-            updateActionBarTitle();
+            updateActionBar();
         } else {
             if (mRecipeManager != null) {
                 mRecipeManager.OnCreateNewRecipe();
@@ -88,19 +97,41 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         if (mActionMode != null) {
-            updateActionBarTitle();
+            updateActionBar();
             return false;
         } else {
-            mRecipeList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-            setSelected(position, true);
-            getActivity().startActionMode(this);
+            startActionMode(new int[] {position});
         }
         return true;
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+    private int[] getSelectedIndexes() {
+        int[] indexes = new int[mRecipeList.getCheckedItemCount()];
+        int indexOffset = 0;
+        for (int i = 0; i < mRecipeList.getCount(); i++) {
+            if (mRecipeList.isItemChecked(i)) {
+                indexes[indexOffset] = i;
+                indexOffset++;
+            }
+        }
+        return indexes;
+    }
 
+    private void checkResumeActionMode(Bundle bundle) {
+        if (bundle != null) {
+            if (bundle.getBoolean(ACTION_MODE)) {
+                int[] selected = bundle.getIntArray(SELECTED_INDEXES);
+                startActionMode(selected);
+            }
+        }
+    }
+
+    private void startActionMode(int[] selectedIndexes) {
+        mRecipeList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        for (int i : selectedIndexes) {
+            setSelected(i, true);
+        }
+        getActivity().startActionMode(this);
     }
 
     @Override
@@ -135,8 +166,12 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
         int checked = mRecipeList.getCheckedItemCount();
         mActionMode.setTitle(getResources().getString(R.string.select_recipes));
         mActionMode.setSubtitle(checked + " " + getResources().getString(R.string.selected));
+
         MenuInflater inflater = actionMode.getMenuInflater();
         inflater.inflate(R.menu.context_menu, menu);
+        boolean itemsChecked = (mRecipeList.getCheckedItemCount() > 0);
+        mActionMode.getMenu().findItem(R.id.action_delete).setVisible(itemsChecked);
+
         return true;
     }
 
@@ -149,12 +184,13 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
                 } else {
                     setAllSelected(true);
                 }
-                updateActionBarTitle();
+                updateActionBar();
                 return true;
             case R.id.action_delete:
-                mAdapter.deleteSelected();
+                int deleted = mAdapter.deleteSelected();
                 actionMode.finish();
                 checkEmpty();
+                toastDeleted(deleted);
                 return true;
             default:
                 return false;
@@ -164,7 +200,6 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
     @Override
     public void onDestroyActionMode(ActionMode actionMode) {
         setAllSelected(false);
-
         mRecipeList.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
         mActionMode = null;
     }
@@ -186,7 +221,7 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
         mRecipeList.setItemChecked(position, selected);
     }
 
-    private void updateActionBarTitle() {
+    private void updateActionBar() {
         if (mActionMode != null) {
             mActionMode.invalidate();
         }
@@ -198,5 +233,16 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
         } else {
             mMessageView.setVisibility(View.GONE);
         }
+    }
+
+    private void toastDeleted(int deleted) {
+        Context context = getActivity();
+        String message;
+        if (deleted > 1) {
+            message = String.format(context.getResources().getString(R.string.deleted_recipes), deleted);
+        } else {
+            message = context.getResources().getString(R.string.deleted_recipe);
+        }
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 }

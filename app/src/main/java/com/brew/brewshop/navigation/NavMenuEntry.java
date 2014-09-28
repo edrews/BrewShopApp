@@ -1,27 +1,12 @@
 package com.brew.brewshop.navigation;
 
-import android.content.Context;
-
-public class NavMenuItem implements NavDrawerItem {
-
+public class NavMenuEntry implements NavDrawerItem {
     public static final int ITEM_TYPE = 1 ;
 
     private int id ;
     private String label ;
     private int icon ;
     private boolean updateActionBarTitle ;
-
-    private NavMenuItem() {
-    }
-
-    public static NavMenuItem create(int id, String label, String icon, boolean updateActionBarTitle, Context context) {
-        NavMenuItem item = new NavMenuItem();
-        item.setId(id);
-        item.setLabel(label);
-        item.setIcon(context.getResources().getIdentifier( icon, "drawable", context.getPackageName()));
-        item.setUpdateActionBarTitle(updateActionBarTitle);
-        return item;
-    }
 
     @Override
     public int getType() {

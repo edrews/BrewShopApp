@@ -5,6 +5,12 @@
         <item name="android:activatedBackgroundIndicator">@drawable/listitem_background</item>
     </style>
 
+    <style name="FillParent">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+    </style>
+
+
     <style name="CustomActionBarTheme"
         parent="@android:style/Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
@@ -87,5 +93,11 @@
         <item name="android:background">@drawable/border</item>
         <item name="android:textSize">14sp</item>
         <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="RecipeHeader" parent="FillParent">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:layout_weight">1</item>
     </style>
 </resources>

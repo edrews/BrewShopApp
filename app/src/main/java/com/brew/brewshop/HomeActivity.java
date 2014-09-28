@@ -1,8 +1,9 @@
 package com.brew.brewshop;
 
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v4.app.FragmentManager;
 
 import com.brew.brewshop.fragments.EditRecipeFragment;
 import com.brew.brewshop.fragments.ProductListFragment;
@@ -11,49 +12,47 @@ import com.brew.brewshop.navigation.AbstractNavDrawerActivity;
 import com.brew.brewshop.navigation.NavDrawerActivityConfiguration;
 import com.brew.brewshop.navigation.NavDrawerAdapter;
 import com.brew.brewshop.navigation.NavDrawerItem;
-import com.brew.brewshop.navigation.NavMenuItem;
-import com.brew.brewshop.navigation.NavMenuSection;
+import com.brew.brewshop.navigation.NavItemFactory;
 import com.brew.brewshop.storage.ProductType;
-import com.brew.brewshop.storage.recipes.Recipe;
-import com.google.gson.Gson;
 
 public class HomeActivity extends AbstractNavDrawerActivity implements IRecipeManager {
     private static final String TAG = HomeActivity.class.getName();
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState == null) {
-            showRecipeManager();
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        if (bundle == null) {
+            selectNavItem(1);
         }
     }
 
     @Override
     protected NavDrawerActivityConfiguration getNavDrawerConfiguration() {
+        NavItemFactory factory = new NavItemFactory(this);
         NavDrawerItem[] menu = new NavDrawerItem[] {
-                NavMenuSection.create( 100, "Homebrew Tools"),
-                NavMenuItem.create(101, "Recipe Manager", "folder", true, this),
-                NavMenuSection.create(200, "Shop Inventory"),
-                NavMenuItem.create(201, "Beer", "beer", true, this),
-                NavMenuItem.create(202, "Wine", "wine", true, this),
-                NavMenuItem.create(203, "Coffee", "coffee", true, this),
-                NavMenuItem.create(204, "Homebrew Supplies", "hops", true, this)};
-
-        NavDrawerActivityConfiguration navDrawerActivityConfiguration = new NavDrawerActivityConfiguration();
-        navDrawerActivityConfiguration.setMainLayout(R.layout.main);
-        navDrawerActivityConfiguration.setDrawerLayoutId(R.id.drawer_layout);
-        navDrawerActivityConfiguration.setLeftDrawerId(R.id.left_drawer);
-        navDrawerActivityConfiguration.setNavItems(menu);
-        navDrawerActivityConfiguration.setDrawerShadow(R.drawable.drawer_shadow);
-        navDrawerActivityConfiguration.setDrawerOpenDesc(R.string.drawer_open);
-        navDrawerActivityConfiguration.setDrawerCloseDesc(R.string.drawer_close);
-        navDrawerActivityConfiguration.setBaseAdapter(
-                new NavDrawerAdapter(this, R.layout.navdrawer_item, menu ));
-        return navDrawerActivityConfiguration;
+                factory.newSection(R.string.homebrew_tools),
+                factory.newEntry(101, R.string.homebrew_recipes, R.drawable.folder),
+                factory.newSection(R.string.homebrew_shop),
+                factory.newEntry(201, R.string.beer, R.drawable.beer),
+                factory.newEntry(202, R.string.wine, R.drawable.wine),
+                factory.newEntry(203, R.string.coffee, R.drawable.coffee),
+                factory.newEntry(204, R.string.homebrew_supplies, R.drawable.hops)
+        };
+        NavDrawerActivityConfiguration navConfig = new NavDrawerActivityConfiguration();
+        navConfig.setMainLayout(R.layout.main);
+        navConfig.setDrawerLayoutId(R.id.drawer_layout);
+        navConfig.setLeftDrawerId(R.id.left_drawer);
+        navConfig.setNavItems(menu);
+        navConfig.setDrawerShadow(R.drawable.drawer_shadow);
+        navConfig.setDrawerOpenDesc(R.string.drawer_open);
+        navConfig.setDrawerCloseDesc(R.string.drawer_close);
+        navConfig.setBaseAdapter(new NavDrawerAdapter(this, R.layout.navdrawer_item, menu));
+        return navConfig;
     }
 
     @Override
     protected void onNavItemSelected(int id) {
+        clearBackStack();
         switch (id) {
             case 101:
                 showRecipeManager();
@@ -73,12 +72,26 @@ public class HomeActivity extends AbstractNavDrawerActivity implements IRecipeMa
         }
     }
 
+    @Override
+    public void OnCreateNewRecipe() {
+        Fragment fragment = new EditRecipeFragment();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .addToBackStack(null)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN | FragmentTransaction.TRANSIT_ENTER_MASK)
+                .commit();
+    }
+
     private void showProducts(ProductType type) {
         Fragment fragment = new ProductListFragment();
         Bundle args = new Bundle();
         args.putString(ProductListFragment.PRODUCT_TYPE_KEY, type.toString());
         fragment.setArguments(args);
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .commit();
     }
 
     private void showRecipeManager() {
@@ -86,13 +99,11 @@ public class HomeActivity extends AbstractNavDrawerActivity implements IRecipeMa
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
     }
 
-    @Override
-    public void OnCreateNewRecipe() {
-        Fragment fragment = new EditRecipeFragment();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.content_frame, fragment)
-                .addToBackStack("asdf")
-                .commit();
+    private void clearBackStack() {
+        FragmentManager manager = getSupportFragmentManager();
+        if (manager.getBackStackEntryCount() > 0) {
+            FragmentManager.BackStackEntry first = manager.getBackStackEntryAt(0);
+            manager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
     }
 }
