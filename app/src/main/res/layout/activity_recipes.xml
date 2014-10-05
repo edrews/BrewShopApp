@@ -33,8 +33,7 @@
         android:orientation="vertical"
         android:layout_gravity="start"
         android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:background="#FF201000">
+        android:paddingRight="5dp">
 
         <TextView style="@style/NavigationCategory"
             android:text="@string/homebrew_tools" />

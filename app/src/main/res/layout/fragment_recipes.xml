@@ -16,7 +16,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="@color/gray"
+            android:textColor="@color/text_dark_hint"
             android:text="@string/no_recipes"/>
     </LinearLayout>
 

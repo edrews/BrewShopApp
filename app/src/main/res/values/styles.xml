@@ -1,7 +1,7 @@
 <resources>
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
-        <item name="android:actionModeBackground">@color/burgandy</item>
+        <item name="android:actionModeBackground">@color/color_primary</item>
         <item name="android:activatedBackgroundIndicator">@drawable/listitem_background</item>
     </style>
 
@@ -17,7 +17,7 @@
     </style>
 
     <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/burgandy</item>
+        <item name="android:background">@color/color_primary</item>
     </style>
 
     <style name="AppLayout" parent="AppTheme">
@@ -30,7 +30,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/text_light_primary</item>
         <item name="android:paddingTop">10dp</item>
         <item name="android:paddingBottom">10dp</item>
         <item name="android:textStyle">bold</item>
@@ -39,9 +39,9 @@
     <style name="NavigationList" parent="AppTheme">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:divider">@color/dim_white</item>
-        <item name="android:dividerHeight">0dp</item>
         <item name="android:choiceMode">singleChoice</item>
+        <item name="android:divider">@color/color_primary_dark</item>
+        <item name="android:dividerHeight">1dp</item>
     </style>
 
     <style name="ItemList" parent="AppTheme">
@@ -49,7 +49,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_gravity">start</item>
         <item name="android:choiceMode">none</item>
-        <item name="android:divider">@color/dim_black</item>
+        <item name="android:divider">@color/text_dark_divider</item>
         <item name="android:dividerHeight">1dp</item>
     </style>
 

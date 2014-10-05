@@ -1,33 +1,49 @@
 package com.brew.brewshop;
 
 import android.app.FragmentTransaction;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.brew.brewshop.fragments.EditRecipeFragment;
 import com.brew.brewshop.fragments.ProductListFragment;
 import com.brew.brewshop.fragments.RecipeListFragment;
-import com.brew.brewshop.navigation.AbstractNavDrawerActivity;
-import com.brew.brewshop.navigation.NavDrawerActivityConfiguration;
+import com.brew.brewshop.navigation.NavDrawer;
 import com.brew.brewshop.navigation.NavDrawerAdapter;
+import com.brew.brewshop.navigation.NavDrawerConfig;
 import com.brew.brewshop.navigation.NavDrawerItem;
 import com.brew.brewshop.navigation.NavItemFactory;
+import com.brew.brewshop.navigation.NavSelectionHandler;
 import com.brew.brewshop.storage.ProductType;
+import com.brew.brewshop.storage.recipes.Recipe;
 
-public class HomeActivity extends AbstractNavDrawerActivity implements IRecipeManager {
+public class HomeActivity extends FragmentActivity implements IRecipeManager,
+        NavSelectionHandler,
+        FragmentManager.OnBackStackChangedListener
+{
     private static final String TAG = HomeActivity.class.getName();
+    private NavDrawer mNavDrawer;
 
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mNavDrawer = new NavDrawer(this, getNavDrawerConfig(), this);
         if (bundle == null) {
-            selectNavItem(1);
+            mNavDrawer.selectNavItem(1);
         }
+
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
     }
 
-    @Override
-    protected NavDrawerActivityConfiguration getNavDrawerConfiguration() {
+    private NavDrawerConfig getNavDrawerConfig() {
         NavItemFactory factory = new NavItemFactory(this);
         NavDrawerItem[] menu = new NavDrawerItem[] {
                 factory.newSection(R.string.homebrew_tools),
@@ -38,7 +54,7 @@ public class HomeActivity extends AbstractNavDrawerActivity implements IRecipeMa
                 factory.newEntry(203, R.string.coffee, R.drawable.coffee),
                 factory.newEntry(204, R.string.homebrew_supplies, R.drawable.hops)
         };
-        NavDrawerActivityConfiguration navConfig = new NavDrawerActivityConfiguration();
+        NavDrawerConfig navConfig = new NavDrawerConfig();
         navConfig.setMainLayout(R.layout.main);
         navConfig.setDrawerLayoutId(R.id.drawer_layout);
         navConfig.setLeftDrawerId(R.id.left_drawer);
@@ -51,7 +67,7 @@ public class HomeActivity extends AbstractNavDrawerActivity implements IRecipeMa
     }
 
     @Override
-    protected void onNavItemSelected(int id) {
+    public void onNavItemSelected(int id) {
         clearBackStack();
         switch (id) {
             case 101:
@@ -73,8 +89,47 @@ public class HomeActivity extends AbstractNavDrawerActivity implements IRecipeMa
     }
 
     @Override
-    public void OnCreateNewRecipe() {
-        Fragment fragment = new EditRecipeFragment();
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mNavDrawer.onPostCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mNavDrawer.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        mNavDrawer.onPrepareOptionsMenu(menu);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        boolean result = false;
+        FragmentManager manager = getSupportFragmentManager();
+        if (manager.getBackStackEntryCount() == 0) {
+            result = mNavDrawer.onOptionsItemSelected(item);
+        } else {
+            manager.popBackStack();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (mNavDrawer.onKeyDown(keyCode, event)) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void editRecipe(Recipe recipe) {
+        EditRecipeFragment fragment = new EditRecipeFragment();
+        fragment.setRecipe(recipe);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_frame, fragment)
@@ -105,5 +160,16 @@ public class HomeActivity extends AbstractNavDrawerActivity implements IRecipeMa
             FragmentManager.BackStackEntry first = manager.getBackStackEntryAt(0);
             manager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        FragmentManager manager = getSupportFragmentManager();
+        if (manager.getBackStackEntryCount() > 0) {
+            getActionBar().setHomeAsUpIndicator(null);
+        } else {
+            getActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
+        }
+        invalidateOptionsMenu();
     }
 }

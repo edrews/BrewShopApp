@@ -3,10 +3,9 @@ package com.brew.brewshop.navigation;
 public class NavMenuEntry implements NavDrawerItem {
     public static final int ITEM_TYPE = 1 ;
 
-    private int id ;
-    private String label ;
-    private int icon ;
-    private boolean updateActionBarTitle ;
+    private int id;
+    private String label;
+    private int icon;
 
     @Override
     public int getType() {
@@ -40,14 +39,5 @@ public class NavMenuEntry implements NavDrawerItem {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    @Override
-    public boolean updateActionBarTitle() {
-        return this.updateActionBarTitle;
-    }
-
-    public void setUpdateActionBarTitle(boolean updateActionBarTitle) {
-        this.updateActionBarTitle = updateActionBarTitle;
     }
 }

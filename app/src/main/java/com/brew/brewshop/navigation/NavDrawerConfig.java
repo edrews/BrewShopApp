@@ -2,7 +2,7 @@ package com.brew.brewshop.navigation;
 
 import android.widget.BaseAdapter;
 
-public class NavDrawerActivityConfiguration {
+public class NavDrawerConfig {
 
     private int mainLayout;
     private int drawerShadow;

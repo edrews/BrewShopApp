@@ -1,5 +1,10 @@
 package com.brew.brewshop.storage.recipes;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,26 +15,17 @@ public class Recipe {
     private BeerStyle style;
     private double batchSize;
     private double efficiency;
-    private double estimatedFg;
-    private double estimagedAbv;
-    private double originalGravity;
-    private int srm;
-    private int ibu;
     private int version = VERSION;
+    private int id;
 
     private List<MaltAddition> malts;
     private List<HopAddition> hops;
     private Yeast yeast;
-    private Water water;
-
     private String notes;
 
     public Recipe() {
-        name = "Recipe";
+        name = "New Recipe";
         style = new BeerStyle();
-        originalGravity = 1.050;
-        srm = 10;
-        ibu = 20;
 
         malts = new ArrayList<MaltAddition>();
         malts.add(new MaltAddition());
@@ -37,7 +33,6 @@ public class Recipe {
         hops = new ArrayList<HopAddition>();
         hops.add(new HopAddition());
         yeast = new Yeast();
-        water = new Water();
         notes = "";
     }
 
@@ -47,12 +42,12 @@ public class Recipe {
     public BeerStyle getStyle() { return style; }
     public void setStyle(BeerStyle value) { style = value; }
 
-    public double getGravity() { return originalGravity; }
-    public void setGravity(double value) { originalGravity = value; }
+    public double getGravity() { return 1.050; }
 
-    public int getSrm() { return srm; }
-    public void setSrm(int value) { srm = value; }
+    public int getSrm() { return 10; }
 
-    public int getIbu() { return ibu; }
-    public void setIbu(int value) { ibu = value; }
+    public int getIbu() { return 10; }
+
+    public int getId() { return id; }
+    public void setId(int value) { id = value; }
 }

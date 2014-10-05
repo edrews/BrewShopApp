@@ -6,5 +6,5 @@
     android:text="Beer Style"
     android:textSize="18sp"
     android:padding="5dp"
-    android:textColor="@color/black"
+    android:textColor="@color/text_dark_primary"
     android:id="@+id/name"/>

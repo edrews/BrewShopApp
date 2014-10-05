@@ -22,7 +22,6 @@ public class NavItemFactory {
         item.setId(id);
         item.setLabel(mContext.getResources().getString(label));
         item.setIcon(icon);
-        item.setUpdateActionBarTitle(true);
         return item;
     }
 }

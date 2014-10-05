@@ -1,5 +1,7 @@
 package com.brew.brewshop;
 
+import com.brew.brewshop.storage.recipes.Recipe;
+
 public interface IRecipeManager {
-    public void OnCreateNewRecipe();
+    public void editRecipe(Recipe recipe);
 }

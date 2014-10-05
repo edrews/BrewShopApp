@@ -19,27 +19,27 @@ import java.util.List;
 
 public class RecipeListAdapter extends BaseAdapter {
     private Context mContext;
-    private List<Recipe> mRecipes;
     SparseBooleanArray mSparseBooleanArray;
     ListView mView;
+    BrewStorage mStorage;
     int mSelectedColor;
 
-    public RecipeListAdapter(Context context, List<Recipe> recipes, ListView view) {
+    public RecipeListAdapter(Context context, ListView view) {
         mContext = context;
-        mRecipes = recipes;
+        mStorage = new BrewStorage(context);
         mSparseBooleanArray = new SparseBooleanArray();
         mView = view;
-        mSelectedColor = mContext.getResources().getColor(R.color.light_gold);
+        mSelectedColor = mContext.getResources().getColor(R.color.color_primary_light);
     }
 
     @Override
     public int getCount() {
-        return mRecipes.size();
+        return mStorage.retrieveRecipes().size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mRecipes.get(position);
+        return mStorage.retrieveRecipes().get(position);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class RecipeListAdapter extends BaseAdapter {
         TextView nameView = (TextView) rowView.findViewById(R.id.recipe_name);
         TextView descriptionView = (TextView) rowView.findViewById(R.id.recipe_description);
 
-        Recipe recipe = mRecipes.get(position);
+        Recipe recipe = mStorage.retrieveRecipes().get(position);
         iconView.setBackgroundColor(new SrmHelper().getColor(recipe.getSrm()));
         nameView.setText(recipe.getName() + " (" + recipe.getStyle().getName() + ")");
         descriptionView.setText(getDescription(recipe));
@@ -74,13 +74,18 @@ public class RecipeListAdapter extends BaseAdapter {
 
     public int deleteSelected() {
         int deleted = 0;
-        for (int i = mRecipes.size() - 1; i >= 0; i--) {
+        List<Recipe> recipes = getRecipes();
+        for (int i = recipes.size() - 1; i >= 0; i--) {
             if (mView.isItemChecked(i)) {
-                mRecipes.remove(i);
+                mStorage.deleteRecipe(recipes.get(i));
                 deleted++;
             }
         }
         return deleted;
+    }
+
+    private List<Recipe> getRecipes() {
+        return mStorage.retrieveRecipes();
     }
 
     private String getDescription(Recipe recipe) {

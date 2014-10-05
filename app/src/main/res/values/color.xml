@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="dim_white">#10ffffff</color>
-    <color name="dim_black">#10000000</color>
-    <color name="burgandy">#58290c</color>
-    <color name="gold">#F0B010</color>
-    <color name="light_gold">#A0F0B010</color>
-    <color name="lighter_gold">#40F0B010</color>
-    <color name="gray">#808080</color>
 
-    <color name="burgandy_light">#905030</color>
-    <color name="burgandy_middle">#58290c</color>
-    <color name="burgandy_dark">#201000</color>
+    <!-- Material Design Choices-->
+    <color name="color_primary">#5d4037</color>
+    <color name="color_primary_light">#d7ccc8</color>
+    <color name="color_primary_dark">#2e1713</color>
+    <color name="color_accent">#ffc107</color>
 
-    <color name="white">#ffffff</color>
-    <color name="black">#000000</color>
+    <color name="text_dark_primary">#DF000000</color>
+    <color name="text_dark_secondary">#8A000000</color>
+    <color name="text_dark_hint">#42000000</color>
+    <color name="text_dark_divider">#1F000000</color>
+
+    <color name="text_light_primary">#DFFFFFFF</color>
+    <color name="text_light_secondary">#8AFFFFFF</color>
+    <color name="text_light_hint">#42FFFFFF</color>
+    <color name="text_light_divider">#1FFFFFFF</color>
+
 </resources>

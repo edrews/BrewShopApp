@@ -38,7 +38,7 @@ public class ProductListFragment extends Fragment implements IProductRetrievedHa
     private Menu mMenu;
 
     @Override
-    public void onCreate(Bundle inState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle inState) {
         super.onCreate(inState);
         setHasOptionsMenu(true);
         if (inState == null) {
@@ -51,10 +51,9 @@ public class ProductListFragment extends Fragment implements IProductRetrievedHa
             mProducts = inState.getParcelableArrayList(PRODUCTS_KEY);
             mCurrentType = ProductType.valueOf(inState.getString(PRODUCT_TYPE_KEY));
         }
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle inState) {
+        setTitle(mCurrentType);
+
         View root = inflater.inflate(R.layout.fragment_products, container, false);
         mProductList = (ListView) root.findViewById(R.id.product_list);
         mProgressView = root.findViewById(R.id.progress_layout);
@@ -136,12 +135,35 @@ public class ProductListFragment extends Fragment implements IProductRetrievedHa
             MenuItem refresh = mMenu.findItem(R.id.action_refresh);
             if (refresh != null) {
                 refresh.setEnabled(enabled);
-                //getActivity().invalidateOptionsMenu();
             } else {
                 Log.d(TAG, "Cannot access refresh menu item");
             }
         } else {
             Log.d(TAG, "Cannot access menu");
         }
+    }
+
+    private void setTitle(ProductType type) {
+        int id = 0;
+        switch (type) {
+            case BEER:
+                id = R.string.beer;
+                break;
+            case WINE:
+                id = R.string.wine;
+                break;
+            case COFFEE:
+                id = R.string.coffee;
+                break;
+            case HOMEBREW:
+                id = R.string.homebrew_supplies;
+                break;
+            case NONE:
+            default:
+                //TODO change default
+                id = R.string.homebrew_supplies;
+                break;
+        }
+        getActivity().getActionBar().setTitle(getActivity().getResources().getString(id));
     }
 }

@@ -15,9 +15,10 @@
     <string name="no_products">No products available.</string>
     <string name="select_recipes">Select Recipes</string>
     <string name="selected">selected</string>
-    <string name="no_recipes">You have no recipes yet.</string>
+    <string name="no_recipes">You have no recipes</string>
     <string name="deleted_recipes">Deleted %d recipes</string>
     <string name="deleted_recipe">Deleted recipe</string>
+    <string name="max_recipes_reached">App has a %d recipe limit</string>
 
     <!-- Navigation -->
     <string name="homebrew_tools">Homebrew Tools</string>

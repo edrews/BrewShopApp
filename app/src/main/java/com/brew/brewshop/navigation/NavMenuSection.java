@@ -30,9 +30,4 @@ public class NavMenuSection implements NavDrawerItem {
     public void setId(int id) {
         this.id = id;
     }
-
-    @Override
-    public boolean updateActionBarTitle() {
-        return false;
-    }
 }

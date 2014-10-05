@@ -5,8 +5,7 @@
     android:background="?android:attr/activatedBackgroundIndicator"
     android:textAppearance="?android:attr/textAppearanceListItemSmall"
     android:gravity="center_vertical"
-    android:minHeight="?android:attr/listPreferredItemHeightSmall"
-    >
+    android:minHeight="?android:attr/listPreferredItemHeightSmall">
 
     <ImageView
         android:id="@+id/navmenuitem_icon"
@@ -23,6 +22,6 @@
         android:layout_toRightOf="@id/navmenuitem_icon"
         android:gravity="center_vertical"
         android:text="TextView"
-        android:textColor="@color/white"/>
+        android:textColor="@color/text_light_primary"/>
 
 </RelativeLayout>

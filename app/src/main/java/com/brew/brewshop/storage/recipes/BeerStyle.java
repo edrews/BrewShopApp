@@ -8,7 +8,7 @@ public class BeerStyle {
     private double minFinalGravity, maxFinalGravity;
 
     public BeerStyle() {
-        name = "Style";
+        name = "American Ale";
     }
 
     public String getName() {

@@ -14,7 +14,7 @@
                     android:layout_marginTop="2dp"
                     android:layout_marginLeft="2dp"/>
                 <TextView style="@style/FillParent"
-                    android:id="@+id/style"
+                    android:id="@+id/recipe_style"
                     android:text="Dry Irish Stout"
                     android:gravity="bottom"
                     android:layout_marginLeft="2dp"

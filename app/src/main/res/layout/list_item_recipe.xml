@@ -9,7 +9,7 @@
         android:layout_height="40dp"
         android:layout_centerVertical="true"
         android:layout_margin="5dp"
-        android:background="@color/black"/>
+        android:background="@color/color_primary"/>
 
     <TextView
         android:id="@+id/recipe_name"
@@ -17,7 +17,7 @@
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@id/recipe_icon"
         android:gravity="center_vertical"
-        android:textColor="@color/black"
+        android:textColor="@color/text_dark_primary"
         android:layout_height="30dip"
         android:text="Recipe Name"
         android:textSize="20sp" />
@@ -27,7 +27,7 @@
         android:layout_below="@+id/recipe_name"
         android:layout_width="fill_parent"
         android:layout_height="30dp"
-        android:textColor="@color/black"
+        android:textColor="@color/text_dark_primary"
         android:gravity="center_vertical"
         android:layout_toRightOf="@id/recipe_icon"
         android:text="Description"

@@ -19,31 +19,28 @@ import android.widget.Toast;
 
 import com.brew.brewshop.IRecipeManager;
 import com.brew.brewshop.R;
+import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.RecipeListAdapter;
-import com.brew.brewshop.storage.RecipeStorage;
+import com.brew.brewshop.storage.recipes.Recipe;
 
 public class RecipeListFragment extends Fragment implements AdapterView.OnItemClickListener, ListView.MultiChoiceModeListener, ListView.OnItemLongClickListener {
     private static final String TAG = RecipeListFragment.class.getName();
     private static final String ACTION_MODE = "ActionMode";
     private static final String SELECTED_INDEXES = "Selected";
 
-    private RecipeStorage mRecipeStorage;
+    private BrewStorage mRecipeStorage;
     private IRecipeManager mRecipeManager;
     private ActionMode mActionMode;
     private View mMessageView;
 
     private ListView mRecipeList;
-    private RecipeListAdapter mAdapter;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
+    private RecipeListAdapter mRecipeAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recipes, container, false);
+
+        setHasOptionsMenu(true);
 
         mRecipeList = (ListView) rootView.findViewById(R.id.recipes_list);
         mRecipeList.setOnItemClickListener(this);
@@ -52,13 +49,15 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
 
         mMessageView = rootView.findViewById(R.id.message_layout);
 
-        mRecipeStorage = new RecipeStorage();
+        mRecipeStorage = new BrewStorage(getActivity());
         Context context = getActivity().getApplicationContext();
-        mAdapter = new RecipeListAdapter(context, mRecipeStorage.getRecipes(), mRecipeList);
-        mRecipeList.setAdapter(mAdapter);
+        mRecipeAdapter = new RecipeListAdapter(context, mRecipeList);
+        mRecipeList.setAdapter(mRecipeAdapter);
 
         checkEmpty();
         checkResumeActionMode(savedInstanceState);
+
+        getActivity().getActionBar().setTitle(getActivity().getResources().getString(R.string.homebrew_recipes));
 
         return rootView;
     }
@@ -67,7 +66,9 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putBoolean(ACTION_MODE, mActionMode != null);
-        bundle.putIntArray(SELECTED_INDEXES, getSelectedIndexes());
+        if (mActionMode != null) {
+            bundle.putIntArray(SELECTED_INDEXES, getSelectedIndexes());
+        }
     }
 
     @Override
@@ -87,7 +88,8 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
             updateActionBar();
         } else {
             if (mRecipeManager != null) {
-                mRecipeManager.OnCreateNewRecipe();
+                Recipe recipe = (Recipe) mRecipeAdapter.getItem(i);
+                mRecipeManager.editRecipe(recipe);
             } else {
                 Log.d(TAG, "Recipe manager is not set");
             }
@@ -142,11 +144,23 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
-        if (menuItem.getItemId() == R.id.action_new_recipe) {
-            mRecipeManager.OnCreateNewRecipe();
+        if (menuItem.getItemId() == R.id.action_new_recipe && canCreateRecipe()) {
+            Recipe recipe = new Recipe();
+            mRecipeStorage.createRecipe(recipe);
+            mRecipeManager.editRecipe(recipe);
             return true;
         }
         return false;
+    }
+
+    private boolean canCreateRecipe() {
+        int maxRecipes = getActivity().getResources().getInteger(R.integer.max_recipes);
+        if (mRecipeList.getCount() >= maxRecipes) {
+            String message = String.format(getActivity().getResources().getString(R.string.max_recipes_reached), maxRecipes);
+            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -187,7 +201,7 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
                 updateActionBar();
                 return true;
             case R.id.action_delete:
-                int deleted = mAdapter.deleteSelected();
+                int deleted = mRecipeAdapter.deleteSelected();
                 actionMode.finish();
                 checkEmpty();
                 toastDeleted(deleted);
@@ -228,7 +242,7 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
     }
 
     private void checkEmpty() {
-        if (mAdapter.getCount() == 0) {
+        if (mRecipeAdapter.getCount() == 0) {
             mMessageView.setVisibility(View.VISIBLE);
         } else {
             mMessageView.setVisibility(View.GONE);
