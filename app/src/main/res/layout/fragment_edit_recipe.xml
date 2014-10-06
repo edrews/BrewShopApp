@@ -3,7 +3,15 @@
     <LinearLayout style="@style/FillParent"
         android:orientation="vertical"
         android:padding="1dp">
-        <LinearLayout style="@style/RecipeGroupLayout">
+
+        <LinearLayout style="@style/ClickableRecipeGroupLayout"
+            android:id="@+id/recipe_stats_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <LinearLayout android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
             <LinearLayout style="@style/FillParent"
                 android:layout_weight="1"
                 android:orientation="vertical">
@@ -45,7 +53,9 @@
                     android:layout_margin="2dp"/>
             </LinearLayout>
         </LinearLayout>
-        <LinearLayout style="@style/RecipeGroupLayout">
+
+        <LinearLayout android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -64,8 +74,10 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 <TextView style="@style/RecipeStatRight"
+                    android:id="@+id/batch_volume"
                     android:text="5.0 gal"/>
                 <TextView style="@style/RecipeStatRight"
+                    android:id="@+id/boil_volume"
                     android:text="5.5 gal"/>
             </LinearLayout>
             <LinearLayout android:layout_width="fill_parent"
@@ -85,11 +97,16 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 <TextView style="@style/RecipeStatRight"
+                    android:id="@+id/boil_time"
                     android:text="60 min"/>
                 <TextView style="@style/RecipeStatRight"
+                    android:id="@+id/efficiency"
                     android:text="70%"/>
             </LinearLayout>
         </LinearLayout>
+
+        </LinearLayout>
+
         <LinearLayout style="@style/RecipeGroupLayout">
             <LinearLayout style="@style/FillParent"
                 android:layout_weight=".96"
@@ -149,10 +166,11 @@
         <RelativeLayout android:layout_width="fill_parent"
             android:layout_height="wrap_content">
             <TextView style="@style/RecipeHeader"
-                android:text="Ingredients"
+                android:text="@string/ingredients"
                 android:layout_alignParentBottom="true"
                 android:layout_margin="1dp"/>
             <ImageView android:layout_width="48dp"
+                android:id="@+id/new_ingredient_view"
                 android:layout_height="48dp"
                 android:gravity="right"
                 android:layout_alignParentRight="true"
@@ -166,22 +184,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <TextView style="@style/RecipeIngredient"
-                android:text="Ingredient"/>
-            <TextView style="@style/RecipeIngredient"
-                android:text="Ingredient"/>
-            <TextView style="@style/RecipeIngredient"
-                android:text="Ingredient"/>
-            <TextView style="@style/RecipeIngredient"
-                android:text="Ingredient"/>
-            <TextView style="@style/RecipeIngredient"
-                android:text="Ingredient"/>
-            <TextView style="@style/RecipeIngredient"
+                android:id="@+id/ingredient"
                 android:text="Ingredient"/>
         </LinearLayout>
         <TextView style="@style/RecipeHeader"
             android:text="Notes"
             android:layout_margin="1dp"/>
-        <TextView android:layout_width="fill_parent"
+        <TextView android:id="@+id/recipe_notes"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Notes"
             android:layout_margin="1dp"

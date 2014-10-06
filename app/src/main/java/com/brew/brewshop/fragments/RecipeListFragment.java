@@ -17,7 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.brew.brewshop.IRecipeManager;
+import com.brew.brewshop.FragmentSwitcher;
 import com.brew.brewshop.R;
 import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.RecipeListAdapter;
@@ -29,7 +29,7 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
     private static final String SELECTED_INDEXES = "Selected";
 
     private BrewStorage mRecipeStorage;
-    private IRecipeManager mRecipeManager;
+    private FragmentSwitcher mViewSwitcher;
     private ActionMode mActionMode;
     private View mMessageView;
 
@@ -75,9 +75,9 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mRecipeManager = (IRecipeManager) activity;
+            mViewSwitcher = (FragmentSwitcher) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement " + IRecipeManager.class.getName());
+            throw new ClassCastException(activity.toString() + " must implement " + FragmentSwitcher.class.getName());
         }
     }
 
@@ -87,9 +87,9 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
             setSelected(i, mRecipeList.isItemChecked(i));
             updateActionBar();
         } else {
-            if (mRecipeManager != null) {
+            if (mViewSwitcher != null) {
                 Recipe recipe = (Recipe) mRecipeAdapter.getItem(i);
-                mRecipeManager.editRecipe(recipe);
+                mViewSwitcher.showRecipeEditor(recipe);
             } else {
                 Log.d(TAG, "Recipe manager is not set");
             }
@@ -147,7 +147,7 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
         if (menuItem.getItemId() == R.id.action_new_recipe && canCreateRecipe()) {
             Recipe recipe = new Recipe();
             mRecipeStorage.createRecipe(recipe);
-            mRecipeManager.editRecipe(recipe);
+            mViewSwitcher.showRecipeEditor(recipe);
             return true;
         }
         return false;

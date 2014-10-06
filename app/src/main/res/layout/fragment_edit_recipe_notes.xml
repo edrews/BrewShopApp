@@ -1,0 +1,23 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/FillParent"
+    android:orientation="vertical"
+    android:background="@color/color_primary_light"
+    android:padding="5dp">
+
+        <TextView android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            android:text="Recipe Notes"
+            android:textSize="22sp"
+            android:gravity="center_vertical"/>
+
+        <EditText android:id="@+id/recipe_notes"
+            android:layout_width="fill_parent"
+            android:gravity="left|top"
+            android:hint="Add notes..."
+            android:textSize="16sp"
+            android:padding="3dp"
+            android:background="@android:color/white"
+            android:layout_height="fill_parent"
+            android:inputType="textCapSentences"/>
+
+</LinearLayout>

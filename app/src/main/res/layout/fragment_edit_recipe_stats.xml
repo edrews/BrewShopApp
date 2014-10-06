@@ -1,0 +1,132 @@
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/FillParent">
+
+    <LinearLayout style="@style/FillParent"
+        android:orientation="vertical"
+        android:padding="2dp">
+
+        <LinearLayout android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="2"
+                android:text="Recipe Name"
+                android:textSize="16sp"
+                android:gravity="center_vertical"/>
+
+            <EditText android:id="@+id/recipe_name"
+                android:layout_width="fill_parent"
+                android:hint="Enter name"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:layout_height="48dp"
+                android:inputType="textCapWords"/>
+
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="Style"
+                android:layout_weight="2"
+                android:textSize="16sp"
+                android:gravity="center_vertical"/>
+
+            <Spinner android:id="@+id/recipe_style"
+                android:layout_width="fill_parent"
+                android:layout_weight="1"
+                android:layout_height="48dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="2"
+                android:text="Batch vol."
+                android:textSize="16sp"
+                android:gravity="center_vertical"/>
+
+            <EditText android:id="@+id/batch_volume"
+                android:layout_width="fill_parent"
+                android:hint="Gallons"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:layout_height="48dp"
+                android:inputType="numberDecimal"/>
+
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="2"
+                android:text="Boil vol."
+                android:textSize="16sp"
+                android:gravity="center_vertical"/>
+
+            <EditText android:layout_width="fill_parent"
+                android:id="@+id/boil_volume"
+                android:hint="Gallons"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:layout_height="48dp"
+                android:inputType="numberDecimal"/>
+
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="2"
+                android:text="Boil Time"
+                android:textSize="16sp"
+                android:gravity="center_vertical"/>
+
+            <EditText android:layout_width="fill_parent"
+                android:id="@+id/boil_time"
+                android:hint="Minutes"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:layout_height="48dp"
+                android:inputType="number"/>
+
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="2"
+                android:text="Efficiency"
+                android:textSize="16sp"
+                android:gravity="center_vertical"/>
+
+            <EditText android:layout_width="fill_parent"
+                android:id="@+id/efficiency"
+                android:hint="Percent"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:layout_height="48dp"
+                android:inputType="numberDecimal"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

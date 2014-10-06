@@ -11,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.brew.brewshop.fragments.EditRecipeFragment;
+import com.brew.brewshop.fragments.EditRecipeNotesFragment;
+import com.brew.brewshop.fragments.EditRecipeStatsFragment;
 import com.brew.brewshop.fragments.ProductListFragment;
 import com.brew.brewshop.fragments.RecipeListFragment;
 import com.brew.brewshop.navigation.NavDrawer;
@@ -22,7 +24,7 @@ import com.brew.brewshop.navigation.NavSelectionHandler;
 import com.brew.brewshop.storage.ProductType;
 import com.brew.brewshop.storage.recipes.Recipe;
 
-public class HomeActivity extends FragmentActivity implements IRecipeManager,
+public class HomeActivity extends FragmentActivity implements FragmentSwitcher,
         NavSelectionHandler,
         FragmentManager.OnBackStackChangedListener
 {
@@ -108,14 +110,15 @@ public class HomeActivity extends FragmentActivity implements IRecipeManager,
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        boolean result = false;
         FragmentManager manager = getSupportFragmentManager();
-        if (manager.getBackStackEntryCount() == 0) {
-            result = mNavDrawer.onOptionsItemSelected(item);
-        } else {
-            manager.popBackStack();
+        if (item.getItemId() == android.R.id.home) {
+            if (manager.getBackStackEntryCount() == 0) {
+                mNavDrawer.onOptionsItemSelected(item);
+            } else {
+                manager.popBackStack();
+            }
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -127,7 +130,7 @@ public class HomeActivity extends FragmentActivity implements IRecipeManager,
     }
 
     @Override
-    public void editRecipe(Recipe recipe) {
+    public void showRecipeEditor(Recipe recipe) {
         EditRecipeFragment fragment = new EditRecipeFragment();
         fragment.setRecipe(recipe);
         getSupportFragmentManager()
@@ -138,7 +141,32 @@ public class HomeActivity extends FragmentActivity implements IRecipeManager,
                 .commit();
     }
 
-    private void showProducts(ProductType type) {
+    @Override
+    public void showRecipeStatsEditor(Recipe recipe) {
+        EditRecipeStatsFragment fragment = new EditRecipeStatsFragment();
+        fragment.setRecipe(recipe);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .addToBackStack(null)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN | FragmentTransaction.TRANSIT_ENTER_MASK)
+                .commit();
+    }
+
+    @Override
+    public void showRecipeNotesEditor(Recipe recipe) {
+        EditRecipeNotesFragment fragment = new EditRecipeNotesFragment();
+        fragment.setRecipe(recipe);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .addToBackStack(null)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN | FragmentTransaction.TRANSIT_ENTER_MASK)
+                .commit();
+    }
+
+    @Override
+    public void showProducts(ProductType type) {
         Fragment fragment = new ProductListFragment();
         Bundle args = new Bundle();
         args.putString(ProductListFragment.PRODUCT_TYPE_KEY, type.toString());
@@ -149,7 +177,8 @@ public class HomeActivity extends FragmentActivity implements IRecipeManager,
                 .commit();
     }
 
-    private void showRecipeManager() {
+    @Override
+    public void showRecipeManager() {
         RecipeListFragment fragment = new RecipeListFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
     }

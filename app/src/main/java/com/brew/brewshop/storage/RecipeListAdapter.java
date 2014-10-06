@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.brew.brewshop.R;
 import com.brew.brewshop.storage.recipes.Recipe;
-import com.brew.brewshop.util.SrmHelper;
+import com.brew.brewshop.util.Util;
 
 import java.util.List;
 
@@ -66,7 +66,7 @@ public class RecipeListAdapter extends BaseAdapter {
         TextView descriptionView = (TextView) rowView.findViewById(R.id.recipe_description);
 
         Recipe recipe = mStorage.retrieveRecipes().get(position);
-        iconView.setBackgroundColor(new SrmHelper().getColor(recipe.getSrm()));
+        iconView.setBackgroundColor(new Util().getColor(recipe.getSrm()));
         nameView.setText(recipe.getName() + " (" + recipe.getStyle().getName() + ")");
         descriptionView.setText(getDescription(recipe));
         return rowView;

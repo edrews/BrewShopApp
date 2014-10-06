@@ -19,6 +19,7 @@
     <string name="deleted_recipes">Deleted %d recipes</string>
     <string name="deleted_recipe">Deleted recipe</string>
     <string name="max_recipes_reached">App has a %d recipe limit</string>
+    <string name="ingredients">Ingredients</string>
 
     <!-- Navigation -->
     <string name="homebrew_tools">Homebrew Tools</string>
@@ -28,5 +29,9 @@
     <string name="wine">Wine</string>
     <string name="coffee">Coffee</string>
     <string name="homebrew_supplies">Brew Supplies</string>
+
+    <string-array name="beer_styles">
+        <item>American Ale</item>
+    </string-array>
 
 </resources>

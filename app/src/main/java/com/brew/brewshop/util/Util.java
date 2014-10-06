@@ -1,6 +1,6 @@
 package com.brew.brewshop.util;
 
-public class SrmHelper {
+public class Util {
 
     private static int[] COLOR_MAP = new int[] {
         0xF3F993,
@@ -47,5 +47,9 @@ public class SrmHelper {
         } else {
             return COLOR_MAP[srm - 1];
         }
+    }
+
+    public static String fromDouble(double d) {
+        return String.format("%.1f", d);
     }
 }
