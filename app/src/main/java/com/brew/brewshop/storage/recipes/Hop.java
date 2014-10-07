@@ -5,6 +5,9 @@ public class Hop {
     private double percentAlpha;
 
     public Hop() {
-        name = "";
+        name = "Hop";
     }
+
+    public String getName() { return name; }
+
 }

@@ -5,6 +5,8 @@ public class Yeast {
     private double avgAttenuation;
 
     public Yeast() {
-        name = "";
+        name = "Yeast";
     }
+
+    public String getName() { return name; }
 }

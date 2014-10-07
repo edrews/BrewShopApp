@@ -3,38 +3,25 @@ package com.brew.brewshop.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.brew.brewshop.R;
 import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.recipes.Recipe;
-import com.brew.brewshop.util.Util;
+import com.brew.brewshop.storage.recipes.Yeast;
 
-public class EditRecipeNotesFragment extends Fragment {
-    private static final String TAG = EditRecipeNotesFragment.class.getName();
+public class YeastFragment extends Fragment {
+    private static final String TAG = YeastFragment.class.getName();
     private static final String RECIPE_ID = "RecipeId";
 
     private Recipe mRecipe;
+    private Yeast mYeast;
     private BrewStorage mStorage;
-
-    private TextView mNotes;
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mRecipe.setNotes(mNotes.getText().toString());
-        mStorage.updateRecipe(mRecipe);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
-        View root = inflater.inflate(R.layout.fragment_edit_recipe_notes, container, false);
+        View root = inflater.inflate(R.layout.fragment_edit_yeast, container, false);
 
         setHasOptionsMenu(true);
         mStorage = new BrewStorage(getActivity());
@@ -47,11 +34,22 @@ public class EditRecipeNotesFragment extends Fragment {
         }
 
         if (mRecipe != null) {
-            mNotes = (TextView) root.findViewById(R.id.recipe_notes);
-            mNotes.setText(mRecipe.getNotes());
+            //todo
         }
 
         return root;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mStorage.updateRecipe(mRecipe);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mStorage.close();
     }
 
     @Override
@@ -63,13 +61,11 @@ public class EditRecipeNotesFragment extends Fragment {
         state.putInt(RECIPE_ID, mRecipe.getId());
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.edit_recipe_menu, menu);
-    }
-
     public void setRecipe(Recipe recipe) {
         mRecipe = recipe;
+    }
+
+    public void setYeast(Yeast yeast) {
+        mYeast = yeast;
     }
 }

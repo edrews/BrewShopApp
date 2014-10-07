@@ -28,7 +28,7 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
     private static final String ACTION_MODE = "ActionMode";
     private static final String SELECTED_INDEXES = "Selected";
 
-    private BrewStorage mRecipeStorage;
+    private BrewStorage mStorage;
     private FragmentSwitcher mViewSwitcher;
     private ActionMode mActionMode;
     private View mMessageView;
@@ -49,7 +49,7 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
 
         mMessageView = rootView.findViewById(R.id.message_layout);
 
-        mRecipeStorage = new BrewStorage(getActivity());
+        mStorage = new BrewStorage(getActivity());
         Context context = getActivity().getApplicationContext();
         mRecipeAdapter = new RecipeListAdapter(context, mRecipeList);
         mRecipeList.setAdapter(mRecipeAdapter);
@@ -60,6 +60,12 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
         getActivity().getActionBar().setTitle(getActivity().getResources().getString(R.string.homebrew_recipes));
 
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mStorage.close();
     }
 
     @Override
@@ -146,7 +152,7 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.action_new_recipe && canCreateRecipe()) {
             Recipe recipe = new Recipe();
-            mRecipeStorage.createRecipe(recipe);
+            mStorage.createRecipe(recipe);
             mViewSwitcher.showRecipeEditor(recipe);
             return true;
         }

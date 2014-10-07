@@ -8,4 +8,6 @@ public class MaltAddition {
         malt = new Malt();
         weight = new Weight();
     }
+
+    public Malt getMalt() { return malt; }
 }

@@ -10,9 +10,12 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.brew.brewshop.fragments.EditRecipeFragment;
-import com.brew.brewshop.fragments.EditRecipeNotesFragment;
-import com.brew.brewshop.fragments.EditRecipeStatsFragment;
+import com.brew.brewshop.fragments.HopsFragment;
+import com.brew.brewshop.fragments.MaltFragment;
+import com.brew.brewshop.fragments.RecipeFragment;
+import com.brew.brewshop.fragments.RecipeNotesFragment;
+import com.brew.brewshop.fragments.RecipeStatsFragment;
+import com.brew.brewshop.fragments.YeastFragment;
 import com.brew.brewshop.fragments.ProductListFragment;
 import com.brew.brewshop.fragments.RecipeListFragment;
 import com.brew.brewshop.navigation.NavDrawer;
@@ -22,7 +25,10 @@ import com.brew.brewshop.navigation.NavDrawerItem;
 import com.brew.brewshop.navigation.NavItemFactory;
 import com.brew.brewshop.navigation.NavSelectionHandler;
 import com.brew.brewshop.storage.ProductType;
+import com.brew.brewshop.storage.recipes.HopAddition;
+import com.brew.brewshop.storage.recipes.MaltAddition;
 import com.brew.brewshop.storage.recipes.Recipe;
+import com.brew.brewshop.storage.recipes.Yeast;
 
 public class HomeActivity extends FragmentActivity implements FragmentSwitcher,
         NavSelectionHandler,
@@ -131,7 +137,7 @@ public class HomeActivity extends FragmentActivity implements FragmentSwitcher,
 
     @Override
     public void showRecipeEditor(Recipe recipe) {
-        EditRecipeFragment fragment = new EditRecipeFragment();
+        RecipeFragment fragment = new RecipeFragment();
         fragment.setRecipe(recipe);
         getSupportFragmentManager()
                 .beginTransaction()
@@ -143,7 +149,7 @@ public class HomeActivity extends FragmentActivity implements FragmentSwitcher,
 
     @Override
     public void showRecipeStatsEditor(Recipe recipe) {
-        EditRecipeStatsFragment fragment = new EditRecipeStatsFragment();
+        RecipeStatsFragment fragment = new RecipeStatsFragment();
         fragment.setRecipe(recipe);
         getSupportFragmentManager()
                 .beginTransaction()
@@ -155,8 +161,47 @@ public class HomeActivity extends FragmentActivity implements FragmentSwitcher,
 
     @Override
     public void showRecipeNotesEditor(Recipe recipe) {
-        EditRecipeNotesFragment fragment = new EditRecipeNotesFragment();
+        RecipeNotesFragment fragment = new RecipeNotesFragment();
         fragment.setRecipe(recipe);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .addToBackStack(null)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN | FragmentTransaction.TRANSIT_ENTER_MASK)
+                .commit();
+    }
+
+    @Override
+    public void showMaltEditor(Recipe recipe, MaltAddition addition) {
+        MaltFragment fragment = new MaltFragment();
+        fragment.setRecipe(recipe);
+        fragment.setMaltAddition(addition);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .addToBackStack(null)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN | FragmentTransaction.TRANSIT_ENTER_MASK)
+                .commit();
+    }
+
+    @Override
+    public void showHopsEditor(Recipe recipe, HopAddition addition) {
+        HopsFragment fragment = new HopsFragment();
+        fragment.setRecipe(recipe);
+        fragment.setHopAddition(addition);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .addToBackStack(null)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN | FragmentTransaction.TRANSIT_ENTER_MASK)
+                .commit();
+    }
+
+    @Override
+    public void showYeastEditor(Recipe recipe, Yeast yeast) {
+        YeastFragment fragment = new YeastFragment();
+        fragment.setRecipe(recipe);
+        fragment.setYeast(yeast);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_frame, fragment)

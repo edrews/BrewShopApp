@@ -6,6 +6,9 @@ public class Malt {
     private double color; //in Lovibond
 
     public Malt() {
-        name = "";
+        name = "Malt";
     }
+
+    public String getName() { return name; }
+
 }

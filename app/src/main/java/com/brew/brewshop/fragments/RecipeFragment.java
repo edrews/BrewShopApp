@@ -1,6 +1,7 @@
 package com.brew.brewshop.fragments;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,44 +9,43 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.brew.brewshop.FragmentSwitcher;
+import com.brew.brewshop.IngredientListAdapter;
+import com.brew.brewshop.IngredientTypeAdapter;
 import com.brew.brewshop.R;
 import com.brew.brewshop.storage.BrewStorage;
+import com.brew.brewshop.storage.recipes.HopAddition;
+import com.brew.brewshop.storage.recipes.MaltAddition;
 import com.brew.brewshop.storage.recipes.Recipe;
+import com.brew.brewshop.storage.recipes.Yeast;
 import com.brew.brewshop.util.Util;
 
-public class EditRecipeFragment extends Fragment implements View.OnClickListener {
-    private static final String TAG = EditRecipeFragment.class.getName();
-    private static final String RECIPE_ID = "RecipeId";
+import java.util.Arrays;
+import java.util.List;
 
+public class RecipeFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener{
+    private static final String TAG = RecipeFragment.class.getName();
+    private static final String RECIPE_ID = "RecipeId";
     private static final String UNIT_GALLON = " gal";
     private static final String UNIT_MINUTES = " min";
     private static final String UNIT_PERCENT = "%";
 
-
     private Recipe mRecipe;
     private BrewStorage mStorage;
     private FragmentSwitcher mViewSwitcher;
-
-    /*
-    @Override
-    public void onPause() {
-        super.onPause();
-        mStorage.updateRecipe(mRecipe);
-    }
-    */
+    private Dialog mSelectIngredient;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
         View root = inflater.inflate(R.layout.fragment_edit_recipe, container, false);
-
         root.findViewById(R.id.recipe_stats_layout).setOnClickListener(this);
         root.findViewById(R.id.recipe_notes).setOnClickListener(this);
         root.findViewById(R.id.new_ingredient_view).setOnClickListener(this);
-        root.findViewById(R.id.ingredient).setOnClickListener(this);
 
         setHasOptionsMenu(true);
         mStorage = new BrewStorage(getActivity());
@@ -77,13 +77,25 @@ public class EditRecipeFragment extends Fragment implements View.OnClickListener
             textView = (TextView) root.findViewById(R.id.efficiency);
             textView.setText(Util.fromDouble(mRecipe.getEfficiency()) + UNIT_PERCENT);
 
+            LinearLayout ingredientList = (LinearLayout) root.findViewById(R.id.ingredient_list);
+            IngredientListAdapter adapter = new IngredientListAdapter(getActivity(), mRecipe.getIngredients());
+            for (int i = 0; i < adapter.getCount(); i++) {
+                ingredientList.addView(adapter.getView(i, null, ingredientList));
+            }
+
             textView = (TextView) root.findViewById(R.id.recipe_notes);
             textView.setText(mRecipe.getNotes());
         }
 
-        getActivity().getActionBar().setTitle(getActivity().getResources().getString(R.string.edit_recipe));
+        getActivity().getActionBar().setTitle(findString(R.string.edit_recipe));
 
         return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mStorage.close();
     }
 
     @Override
@@ -115,10 +127,17 @@ public class EditRecipeFragment extends Fragment implements View.OnClickListener
                 mViewSwitcher.showRecipeNotesEditor(mRecipe);
                 break;
             case R.id.new_ingredient_view:
-                Toast.makeText(getActivity(), "Add ingredients coming soon...", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.ingredient:
-                Toast.makeText(getActivity(), "Edit ingredients coming soon...", Toast.LENGTH_SHORT).show();
+                mSelectIngredient = new Dialog(getActivity());
+                mSelectIngredient.setContentView(R.layout.select_ingredient);
+
+                IngredientTypeAdapter adapter = new IngredientTypeAdapter(getActivity(), getIngredients());
+
+                ListView listView = (ListView) mSelectIngredient.findViewById(R.id.recipe_list);
+                listView.setAdapter(adapter);
+                listView.setOnItemClickListener(this);
+                mSelectIngredient.setCancelable(true);
+                mSelectIngredient.setTitle(findString(R.string.add_ingredient));
+                mSelectIngredient.show();
                 break;
         }
     }
@@ -131,5 +150,33 @@ public class EditRecipeFragment extends Fragment implements View.OnClickListener
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement " + FragmentSwitcher.class.getName());
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        mSelectIngredient.dismiss();
+        String ingredient = getIngredients().get(position);
+        if (findString(R.string.malt).equals(ingredient)) {
+            MaltAddition malt = new MaltAddition();
+            mRecipe.getMalts().add(malt);
+            mViewSwitcher.showMaltEditor(mRecipe, malt);
+        } else if (findString(R.string.hops).equals(ingredient)) {
+            HopAddition hop = new HopAddition();
+            mRecipe.getHops().add(hop);
+            mViewSwitcher.showHopsEditor(mRecipe, hop);
+        } else if (findString(R.string.yeast).equals(ingredient)) {
+            Yeast yeast = new Yeast();
+            mRecipe.getYeast().add(yeast);
+            mViewSwitcher.showYeastEditor(mRecipe, yeast);
+        }
+    }
+
+    private List<String> getIngredients() {
+        String[] ingredients = getActivity().getResources().getStringArray(R.array.ingredient_types);
+        return Arrays.asList(ingredients);
+    }
+
+    private String findString(int id) {
+        return getActivity().getResources().getString(id);
     }
 }

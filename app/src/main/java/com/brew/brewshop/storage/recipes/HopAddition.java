@@ -9,4 +9,6 @@ public class HopAddition {
         weight = new Weight();
         hop = new Hop();
     }
+
+    public Hop getHop() { return hop; }
 }

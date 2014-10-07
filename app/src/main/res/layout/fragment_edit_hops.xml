@@ -1,0 +1,12 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/FillParent"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+        <TextView android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            android:text="Hops"
+            android:textSize="22sp"
+            android:gravity="center_vertical"/>
+
+</LinearLayout>

@@ -179,14 +179,10 @@
                 android:layout_margin="1dp"
                 android:src="@drawable/ic_action_new_dark"/>
         </RelativeLayout>
-        <LinearLayout
+        <LinearLayout android:id="@+id/ingredient_list"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView style="@style/RecipeIngredient"
-                android:id="@+id/ingredient"
-                android:text="Ingredient"/>
-        </LinearLayout>
+            android:orientation="vertical"/>
         <TextView style="@style/RecipeHeader"
             android:text="Notes"
             android:layout_margin="1dp"/>

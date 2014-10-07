@@ -1,10 +1,5 @@
 package com.brew.brewshop.storage.recipes;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +17,7 @@ public class Recipe {
 
     private List<MaltAddition> malts;
     private List<HopAddition> hops;
-    private Yeast yeast;
+    private List<Yeast> yeast;
     private String notes;
 
     public Recipe() {
@@ -34,11 +29,9 @@ public class Recipe {
         efficiency = 70;
 
         malts = new ArrayList<MaltAddition>();
-        malts.add(new MaltAddition());
-
         hops = new ArrayList<HopAddition>();
-        hops.add(new HopAddition());
-        yeast = new Yeast();
+        yeast = new ArrayList<Yeast>();
+
         notes = "";
     }
 
@@ -65,6 +58,18 @@ public class Recipe {
 
     public String getNotes() { return notes; }
     public void setNotes(String value) { notes = value; }
+
+    public List<MaltAddition> getMalts() { return malts; }
+    public List<HopAddition> getHops() { return hops; }
+    public List<Yeast> getYeast() { return yeast; }
+
+    public List<Object> getIngredients() {
+        List<Object> ingredients = new ArrayList<Object>();
+        ingredients.addAll(malts);
+        ingredients.addAll(hops);
+        ingredients.addAll(yeast);
+        return ingredients;
+    }
 
     public double getGravity() { return 1.050; }
     public int getSrm() { return 10; }

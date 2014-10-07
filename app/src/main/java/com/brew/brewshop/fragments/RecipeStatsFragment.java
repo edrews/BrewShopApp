@@ -16,8 +16,8 @@ import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.util.Util;
 
-public class EditRecipeStatsFragment extends Fragment {
-    private static final String TAG = EditRecipeStatsFragment.class.getName();
+public class RecipeStatsFragment extends Fragment {
+    private static final String TAG = RecipeStatsFragment.class.getName();
     private static final String RECIPE_ID = "RecipeId";
 
     private Recipe mRecipe;
@@ -79,6 +79,12 @@ public class EditRecipeStatsFragment extends Fragment {
         }
 
         return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mStorage.close();
     }
 
     @Override

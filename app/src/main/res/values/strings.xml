@@ -20,6 +20,7 @@
     <string name="deleted_recipe">Deleted recipe</string>
     <string name="max_recipes_reached">App has a %d recipe limit</string>
     <string name="ingredients">Ingredients</string>
+    <string name="add_ingredient">Add Ingredient</string>
 
     <!-- Navigation -->
     <string name="homebrew_tools">Homebrew Tools</string>
@@ -30,8 +31,20 @@
     <string name="coffee">Coffee</string>
     <string name="homebrew_supplies">Brew Supplies</string>
 
+    <!-- Ingredient Types -->
+    <string name="malt">Malt</string>
+    <string name="hops">Hops</string>
+    <string name="yeast">Yeast</string>
+    <string-array name="ingredient_types">
+        <item>@string/malt</item>
+        <item>@string/hops</item>
+        <item>@string/yeast</item>
+    </string-array>
+
+    <!-- Beer Styles -->
+    <string name="american_ale">American Ale</string>
     <string-array name="beer_styles">
-        <item>American Ale</item>
+        <item>@string/american_ale</item>
     </string-array>
 
 </resources>
