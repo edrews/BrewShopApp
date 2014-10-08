@@ -13,7 +13,7 @@ import com.brew.brewshop.storage.recipes.Yeast;
 
 public class YeastFragment extends Fragment {
     private static final String TAG = YeastFragment.class.getName();
-    private static final String RECIPE_ID = "RecipeId";
+    private static final String RECIPE = "Recipe";
 
     private Recipe mRecipe;
     private Yeast mYeast;
@@ -27,15 +27,13 @@ public class YeastFragment extends Fragment {
         mStorage = new BrewStorage(getActivity());
 
         if (state != null) {
-            int recipeId = state.getInt(RECIPE_ID);
-            if (recipeId != 0) {
-                mRecipe = mStorage.retrieveRecipe(recipeId);
-            }
+            mRecipe = state.getParcelable(RECIPE);
         }
 
         if (mRecipe != null) {
             //todo
         }
+        getActivity().getActionBar().setTitle(getActivity().getResources().getString(R.string.edit_yeast_addition));
 
         return root;
     }
@@ -58,7 +56,7 @@ public class YeastFragment extends Fragment {
         if (state == null) {
             state = new Bundle();
         }
-        state.putInt(RECIPE_ID, mRecipe.getId());
+        state.putParcelable(RECIPE, mRecipe);
     }
 
     public void setRecipe(Recipe recipe) {

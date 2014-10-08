@@ -33,7 +33,8 @@
             </LinearLayout>
             <LinearLayout style="@style/FillParent"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
                 <LinearLayout style="@style/FillParent"
                     android:layout_weight="1"
                     android:gravity="right"
@@ -182,7 +183,16 @@
         <LinearLayout android:id="@+id/ingredient_list"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"/>
+            android:orientation="vertical">
+            <TextView android:id="@+id/no_ingredients"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:textColor="@color/text_dark_secondary"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:text="@string/no_ingredients"/>
+        </LinearLayout>
         <TextView style="@style/RecipeHeader"
             android:text="Notes"
             android:layout_margin="1dp"/>

@@ -21,6 +21,8 @@
     <string name="max_recipes_reached">App has a %d recipe limit</string>
     <string name="ingredients">Ingredients</string>
     <string name="add_ingredient">Add Ingredient</string>
+    <string name="max_ingredients_reached">Recipes have a %d ingredient limit</string>
+    <string name="no_ingredients">No ingredients yet</string>
 
     <!-- Navigation -->
     <string name="homebrew_tools">Homebrew Tools</string>
@@ -30,6 +32,13 @@
     <string name="wine">Wine</string>
     <string name="coffee">Coffee</string>
     <string name="homebrew_supplies">Brew Supplies</string>
+
+    <!-- Recipe Fragment Titles -->
+    <string name="edit_recipe_stats">Edit Recipe Stats</string>
+    <string name="edit_recipe_notes">Edit Notes</string>
+    <string name="edit_malt_addition">Edit Malt</string>
+    <string name="edit_hop_addition">Edit Hops</string>
+    <string name="edit_yeast_addition">Edit Yeast</string>
 
     <!-- Ingredient Types -->
     <string name="malt">Malt</string>

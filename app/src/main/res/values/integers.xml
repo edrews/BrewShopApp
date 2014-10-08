@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="max_recipes">50</integer>
+    <integer name="max_recipes">100</integer>
+    <integer name="max_ingredients">50</integer>
 </resources>

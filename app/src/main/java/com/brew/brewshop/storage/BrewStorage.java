@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +59,22 @@ public class BrewStorage extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(DATA_COLUMN, json);
         db.insert(RECIPES_TABLE, DATA_COLUMN, cv);
-        db.close();
+        readNewId(db, recipe);
         mRecipeCache = null;
+    }
+
+    private void readNewId(SQLiteDatabase db, Recipe recipe) {
+        StringBuilder builder = new StringBuilder()
+                .append("select ").append(ID_COLUMN)
+                .append(" from ").append(RECIPES_TABLE)
+                .append(" order by ").append(ID_COLUMN)
+                .append(" desc limit 1");
+        Cursor cursor = db.rawQuery(builder.toString(), new String[]{});
+        if (cursor.moveToFirst()) {
+            int id = cursor.getInt(cursor.getColumnIndex(ID_COLUMN));
+            recipe.setId(id);
+        }
+        db.close();
     }
 
     public List<Recipe> retrieveRecipes() {
@@ -86,19 +101,17 @@ public class BrewStorage extends SQLiteOpenHelper {
         return mRecipeCache;
     }
 
-    public Recipe retrieveRecipe(int id) {
-        Recipe recipe = null;
+    public Recipe retrieveRecipe(Recipe recipe) {
         Gson gson = new Gson();
         SQLiteDatabase db=this.getReadableDatabase();
         StringBuilder builder = new StringBuilder()
                 .append("select * from ").append(RECIPES_TABLE).append(" where " )
-                .append(ID_COLUMN).append("=").append(id);
+                .append(ID_COLUMN).append("=").append(recipe.getId());
         Cursor cursor = db.rawQuery(builder.toString(), new String[]{});
         if (cursor != null ) {
             if (cursor.moveToFirst()) {
                 String data = cursor.getString(cursor.getColumnIndex(DATA_COLUMN));
                 recipe = gson.fromJson(data, Recipe.class);
-                recipe.setId(id);
             }
         }
         cursor.close();
@@ -108,8 +121,7 @@ public class BrewStorage extends SQLiteOpenHelper {
     public void updateRecipe(Recipe recipe) {
         String filter = ID_COLUMN + "=" + recipe.getId();
         ContentValues args = new ContentValues();
-        Gson gson = new Gson();
-        String json = gson.toJson(recipe);
+        String json = getJson(recipe);
         args.put(DATA_COLUMN, json);
         SQLiteDatabase db = getWritableDatabase();
         db.update(RECIPES_TABLE, args, filter, null);
@@ -123,5 +135,13 @@ public class BrewStorage extends SQLiteOpenHelper {
         db.delete(RECIPES_TABLE, ID_COLUMN + "=" + id, null);
         db.close();
         mRecipeCache = null;
+    }
+
+    public String getJson(Recipe recipe) {
+        Gson gson = new Gson();
+        //Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String json = gson.toJson(recipe);
+        //Log.d(TAG, "Updating recipe: " + json);
+        return json;
     }
 }

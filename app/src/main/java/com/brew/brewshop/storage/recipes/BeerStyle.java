@@ -1,17 +1,30 @@
 package com.brew.brewshop.storage.recipes;
 
-public class BeerStyle {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class BeerStyle implements Parcelable {
     private String name;
-    private double minSrm, maxSrm;
-    private double minIbu, maxIbu;
-    private double minOriginalGravity, maxOriginalGravity;
-    private double minFinalGravity, maxFinalGravity;
 
     public BeerStyle() {
         name = "American Ale";
     }
 
+    public BeerStyle(Parcel parcel) {
+        name = parcel.readString();
+    }
+
     public String getName() {
         return name;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
     }
 }

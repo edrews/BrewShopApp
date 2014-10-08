@@ -18,7 +18,7 @@ import com.brew.brewshop.util.Util;
 
 public class RecipeStatsFragment extends Fragment {
     private static final String TAG = RecipeStatsFragment.class.getName();
-    private static final String RECIPE_ID = "RecipeId";
+    private static final String RECIPE = "RecipeId";
 
     private Recipe mRecipe;
     private BrewStorage mStorage;
@@ -49,10 +49,7 @@ public class RecipeStatsFragment extends Fragment {
         mStorage = new BrewStorage(getActivity());
 
         if (state != null) {
-            int recipeId = state.getInt(RECIPE_ID);
-            if (recipeId != 0) {
-                mRecipe = mStorage.retrieveRecipe(recipeId);
-            }
+            mRecipe = state.getParcelable(RECIPE);
         }
 
         if (mRecipe != null) {
@@ -77,6 +74,7 @@ public class RecipeStatsFragment extends Fragment {
             mEfficiency = (TextView) root.findViewById(R.id.efficiency);
             mEfficiency.setText(Util.fromDouble(mRecipe.getEfficiency()));
         }
+        getActivity().getActionBar().setTitle(getActivity().getResources().getString(R.string.edit_recipe_stats));
 
         return root;
     }
@@ -93,7 +91,7 @@ public class RecipeStatsFragment extends Fragment {
         if (state == null) {
             state = new Bundle();
         }
-        state.putInt(RECIPE_ID, mRecipe.getId());
+        state.putParcelable(RECIPE, mRecipe);
     }
 
     @Override

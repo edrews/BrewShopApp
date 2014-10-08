@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class IngredientTypeAdapter extends ArrayAdapter<String> {
@@ -16,7 +14,7 @@ public class IngredientTypeAdapter extends ArrayAdapter<String> {
     private List<String> mIngredients;
 
     public IngredientTypeAdapter(Context context, List<String> ingredients) {
-        super(context, R.layout.list_item_ingredient, ingredients);
+        super(context, R.layout.list_item_malt, ingredients);
         mContext = context;
         mIngredients = ingredients;
     }

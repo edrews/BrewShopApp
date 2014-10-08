@@ -15,31 +15,28 @@ import com.brew.brewshop.storage.recipes.Recipe;
 
 public class RecipeNotesFragment extends Fragment {
     private static final String TAG = RecipeNotesFragment.class.getName();
-    private static final String RECIPE_ID = "RecipeId";
+    private static final String RECIPE = "Recipe";
 
     private Recipe mRecipe;
     private BrewStorage mStorage;
-
     private TextView mNotes;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
         View root = inflater.inflate(R.layout.fragment_edit_recipe_notes, container, false);
+        mNotes = (TextView) root.findViewById(R.id.recipe_notes);
 
         setHasOptionsMenu(true);
         mStorage = new BrewStorage(getActivity());
 
         if (state != null) {
-            int recipeId = state.getInt(RECIPE_ID);
-            if (recipeId != 0) {
-                mRecipe = mStorage.retrieveRecipe(recipeId);
-            }
+            mRecipe= state.getParcelable(RECIPE);
         }
 
         if (mRecipe != null) {
-            mNotes = (TextView) root.findViewById(R.id.recipe_notes);
             mNotes.setText(mRecipe.getNotes());
         }
+        getActivity().getActionBar().setTitle(getActivity().getResources().getString(R.string.edit_recipe_notes));
 
         return root;
     }
@@ -63,7 +60,7 @@ public class RecipeNotesFragment extends Fragment {
         if (state == null) {
             state = new Bundle();
         }
-        state.putInt(RECIPE_ID, mRecipe.getId());
+        state.putParcelable(RECIPE, mRecipe);
     }
 
     @Override

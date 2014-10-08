@@ -1,9 +1,12 @@
 package com.brew.brewshop.storage.recipes;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Recipe {
+public class Recipe implements Parcelable {
     private static final int VERSION = 1;
 
     private int id;
@@ -33,6 +36,42 @@ public class Recipe {
         yeast = new ArrayList<Yeast>();
 
         notes = "";
+    }
+
+    public Recipe(Parcel parcel) {
+        id = parcel.readInt();
+        name = parcel.readString();
+        style = parcel.readParcelable(BeerStyle.class.getClassLoader());
+        batchVolume = parcel.readDouble();
+        boilVolume = parcel.readDouble();
+        boilTime = parcel.readDouble();
+        efficiency = parcel.readDouble();
+        version = parcel.readInt();
+        parcel.readTypedList(malts, MaltAddition.CREATOR);
+        parcel.readTypedList(hops, HopAddition.CREATOR);
+        parcel.readTypedList(yeast, Yeast.CREATOR);
+        notes = parcel.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(name);
+        parcel.writeParcelable(style, 0);
+        parcel.writeDouble(batchVolume);
+        parcel.writeDouble(boilVolume);
+        parcel.writeDouble(boilTime);
+        parcel.writeDouble(efficiency);
+        parcel.writeInt(version);
+        parcel.writeTypedList(malts);
+        parcel.writeTypedList(hops);
+        parcel.writeTypedList(yeast);
+        parcel.writeString(notes);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public int getId() { return id; }

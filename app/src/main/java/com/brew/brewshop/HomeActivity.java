@@ -30,12 +30,15 @@ import com.brew.brewshop.storage.recipes.MaltAddition;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.storage.recipes.Yeast;
 
-public class HomeActivity extends FragmentActivity implements FragmentSwitcher,
+public class HomeActivity extends FragmentActivity implements FragmentHandler,
         NavSelectionHandler,
         FragmentManager.OnBackStackChangedListener
 {
     private static final String TAG = HomeActivity.class.getName();
+    private static final String CURRENT_RECIPE = "Recipe";
+
     private NavDrawer mNavDrawer;
+    private Recipe mCurrentRecipe;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -46,6 +49,8 @@ public class HomeActivity extends FragmentActivity implements FragmentSwitcher,
         mNavDrawer = new NavDrawer(this, getNavDrawerConfig(), this);
         if (bundle == null) {
             mNavDrawer.selectNavItem(1);
+        } else {
+            mCurrentRecipe = bundle.getParcelable(CURRENT_RECIPE);
         }
 
         getSupportFragmentManager().addOnBackStackChangedListener(this);
@@ -72,6 +77,15 @@ public class HomeActivity extends FragmentActivity implements FragmentSwitcher,
         navConfig.setDrawerCloseDesc(R.string.drawer_close);
         navConfig.setBaseAdapter(new NavDrawerAdapter(this, R.layout.navdrawer_item, menu));
         return navConfig;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+        if (state == null) {
+            state = new Bundle();
+        }
+        state.putParcelable(CURRENT_RECIPE, mCurrentRecipe);
     }
 
     @Override
@@ -137,6 +151,7 @@ public class HomeActivity extends FragmentActivity implements FragmentSwitcher,
 
     @Override
     public void showRecipeEditor(Recipe recipe) {
+        mCurrentRecipe = recipe;
         RecipeFragment fragment = new RecipeFragment();
         fragment.setRecipe(recipe);
         getSupportFragmentManager()
@@ -226,6 +241,11 @@ public class HomeActivity extends FragmentActivity implements FragmentSwitcher,
     public void showRecipeManager() {
         RecipeListFragment fragment = new RecipeListFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+    }
+
+    @Override
+    public Recipe getCurrentRecipe() {
+        return mCurrentRecipe;
     }
 
     private void clearBackStack() {

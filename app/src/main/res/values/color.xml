@@ -17,4 +17,9 @@
     <color name="text_light_hint">#42FFFFFF</color>
     <color name="text_light_divider">#1FFFFFFF</color>
 
+    <!-- Other -->
+    <color name="hop_color">#106010</color>
+    <color name="yeast_color">#ffdab9</color>
+    <color name="malt_color">#b87333</color>
+
 </resources>

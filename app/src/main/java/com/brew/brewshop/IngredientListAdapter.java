@@ -8,9 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.brew.brewshop.storage.recipes.HopAddition;
-import com.brew.brewshop.storage.recipes.Ingredient;
+import com.brew.brewshop.storage.recipes.Malt;
 import com.brew.brewshop.storage.recipes.MaltAddition;
-import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.storage.recipes.Yeast;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public class IngredientListAdapter extends ArrayAdapter<Object> {
     private List<Object> mIngredients;
 
     public IngredientListAdapter(Context context, List<Object> ingredients) {
-        super(context, R.layout.list_item_ingredient, ingredients);
+        super(context, R.layout.list_item_malt, ingredients);
         mContext = context;
         mIngredients = ingredients;
     }
@@ -28,21 +27,67 @@ public class IngredientListAdapter extends ArrayAdapter<Object> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.list_item_ingredient, parent, false);
-
-        TextView nameView = (TextView) rowView.findViewById(R.id.ingredient_name);
-
         Object ingredient = mIngredients.get(position);
-
-        String name = null;
+        View rowView = null;
         if (ingredient instanceof MaltAddition) {
-            name = ((MaltAddition) ingredient).getMalt().getName();
+            rowView = inflater.inflate(R.layout.list_item_malt, parent, false);
+            populateView(rowView, (MaltAddition) ingredient);
         } else if (ingredient instanceof HopAddition) {
-            name = ((HopAddition) ingredient).getHop().getName();
+            rowView = inflater.inflate(R.layout.list_item_hops, parent, false);
+            populateView(rowView, (HopAddition) ingredient);
         } else if (ingredient instanceof Yeast) {
-            name = ((Yeast) ingredient).getName();
+            rowView = inflater.inflate(R.layout.list_item_yeast, parent, false);
+            populateView(rowView, (Yeast) ingredient);
         }
-        nameView.setText(name);
         return rowView;
+    }
+
+    public void populateView(View parent, MaltAddition addition) {
+        TextView view;
+
+        view = (TextView) parent.findViewById(R.id.weight);
+        double lbs = addition.getWeight().getPounds();
+        view.setText(String.format("%.1f lb.", lbs));
+
+        view = (TextView) parent.findViewById(R.id.name);
+        view.setText(addition.getMalt().getName());
+
+        view = (TextView) parent.findViewById(R.id.gravity);
+        double gravity = addition.getMalt().getGravity();
+        view.setText(String.format("%.3f/lb./gal", gravity));
+
+        view = (TextView) parent.findViewById(R.id.color);
+        double color = addition.getMalt().getColor();
+        view.setText(String.format("%.1f°L", gravity));
+    }
+
+    public void populateView(View parent, HopAddition addition) {
+        TextView view;
+
+        view = (TextView) parent.findViewById(R.id.weight);
+        double ounces = addition.getWeight().getOunces();
+        view.setText(String.format("%.1f oz.", ounces));
+
+        view = (TextView) parent.findViewById(R.id.name);
+        view.setText(addition.getHop().getName());
+
+        view = (TextView) parent.findViewById(R.id.alpha);
+        double alpha = addition.getHop().getAlpha();
+        view.setText(String.format("%.1f%% Alpha", alpha));
+
+        view = (TextView) parent.findViewById(R.id.time);
+        int minutes = addition.getTime();
+        view.setText(String.format("%d min", minutes));
+    }
+
+    public void populateView(View parent, Yeast yeast) {
+        TextView view;
+
+        view = (TextView) parent.findViewById(R.id.name);
+        view.setText(yeast.getName());
+
+        view = (TextView) parent.findViewById(R.id.attenuation);
+        double gravity = yeast.getAttenuation();
+        view.setText(String.format("~%.0f%% Attenuation", gravity));
     }
 }

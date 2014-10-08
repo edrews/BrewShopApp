@@ -91,11 +91,9 @@
     <style name="RecipeIngredient">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">48dp</item>
-        <item name="android:padding">5dp</item>
-        <item name="android:layout_margin">1dp</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:layout_margin">2dp</item>
         <item name="android:background">@drawable/border</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="RecipeHeader" parent="FillParent">

@@ -6,7 +6,7 @@ import com.brew.brewshop.storage.recipes.MaltAddition;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.storage.recipes.Yeast;
 
-public interface FragmentSwitcher {
+public interface FragmentHandler {
     public void showProducts(ProductType type);
     public void showRecipeManager();
     public void showRecipeEditor(Recipe recipe);
@@ -15,4 +15,5 @@ public interface FragmentSwitcher {
     public void showMaltEditor(Recipe recipe, MaltAddition malt);
     public void showHopsEditor(Recipe recipe, HopAddition hop);
     public void showYeastEditor(Recipe recipe, Yeast yeast);
+    public Recipe getCurrentRecipe();
 }

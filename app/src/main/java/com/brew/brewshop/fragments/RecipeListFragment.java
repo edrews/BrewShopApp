@@ -17,7 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.brew.brewshop.FragmentSwitcher;
+import com.brew.brewshop.FragmentHandler;
 import com.brew.brewshop.R;
 import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.RecipeListAdapter;
@@ -29,7 +29,7 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
     private static final String SELECTED_INDEXES = "Selected";
 
     private BrewStorage mStorage;
-    private FragmentSwitcher mViewSwitcher;
+    private FragmentHandler mViewSwitcher;
     private ActionMode mActionMode;
     private View mMessageView;
 
@@ -81,9 +81,9 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mViewSwitcher = (FragmentSwitcher) activity;
+            mViewSwitcher = (FragmentHandler) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement " + FragmentSwitcher.class.getName());
+            throw new ClassCastException(activity.toString() + " must implement " + FragmentHandler.class.getName());
         }
     }
 

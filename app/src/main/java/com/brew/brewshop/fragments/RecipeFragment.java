@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,8 +14,9 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.brew.brewshop.FragmentSwitcher;
+import com.brew.brewshop.FragmentHandler;
 import com.brew.brewshop.IngredientListAdapter;
 import com.brew.brewshop.IngredientTypeAdapter;
 import com.brew.brewshop.R;
@@ -30,14 +32,14 @@ import java.util.List;
 
 public class RecipeFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener{
     private static final String TAG = RecipeFragment.class.getName();
-    private static final String RECIPE_ID = "RecipeId";
+    private static final String RECIPE = "Recipe";
     private static final String UNIT_GALLON = " gal";
     private static final String UNIT_MINUTES = " min";
     private static final String UNIT_PERCENT = "%";
 
     private Recipe mRecipe;
     private BrewStorage mStorage;
-    private FragmentSwitcher mViewSwitcher;
+    private FragmentHandler mFragmentHandler;
     private Dialog mSelectIngredient;
 
     @Override
@@ -51,41 +53,47 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
         mStorage = new BrewStorage(getActivity());
 
         if (state != null) {
-            int recipeId = state.getInt(RECIPE_ID);
-            if (recipeId != 0) {
-                mRecipe = mStorage.retrieveRecipe(recipeId);
-            }
+            mRecipe = state.getParcelable(RECIPE);
+        }
+        if (mRecipe == null) {
+            Log.d(TAG, "Loading recipe from storage");
+            mRecipe = mFragmentHandler.getCurrentRecipe();
+            mStorage.retrieveRecipe(mRecipe);
         }
 
-        if (mRecipe != null) {
-            TextView textView;
-            textView = (TextView) root.findViewById(R.id.recipe_name);
-            textView.setText(mRecipe.getName());
+        TextView textView;
+        textView = (TextView) root.findViewById(R.id.recipe_name);
+        textView.setText(mRecipe.getName());
 
-            textView = (TextView) root.findViewById(R.id.recipe_style);
-            textView.setText(mRecipe.getStyle().getName());
+        textView = (TextView) root.findViewById(R.id.recipe_style);
+        textView.setText(mRecipe.getStyle().getName());
 
-            textView = (TextView) root.findViewById(R.id.batch_volume);
-            textView.setText(Util.fromDouble(mRecipe.getBatchVolume()) + UNIT_GALLON);
+        textView = (TextView) root.findViewById(R.id.batch_volume);
+        textView.setText(Util.fromDouble(mRecipe.getBatchVolume()) + UNIT_GALLON);
 
-            textView = (TextView) root.findViewById(R.id.boil_volume);
-            textView.setText(Util.fromDouble(mRecipe.getBoilVolume()) + UNIT_GALLON);
+        textView = (TextView) root.findViewById(R.id.boil_volume);
+        textView.setText(Util.fromDouble(mRecipe.getBoilVolume()) + UNIT_GALLON);
 
-            textView = (TextView) root.findViewById(R.id.boil_time);
-            textView.setText(Util.fromDouble(mRecipe.getBoilTime()) + UNIT_MINUTES);
+        textView = (TextView) root.findViewById(R.id.boil_time);
+        textView.setText(Util.fromDouble(mRecipe.getBoilTime()) + UNIT_MINUTES);
 
-            textView = (TextView) root.findViewById(R.id.efficiency);
-            textView.setText(Util.fromDouble(mRecipe.getEfficiency()) + UNIT_PERCENT);
+        textView = (TextView) root.findViewById(R.id.efficiency);
+        textView.setText(Util.fromDouble(mRecipe.getEfficiency()) + UNIT_PERCENT);
 
-            LinearLayout ingredientList = (LinearLayout) root.findViewById(R.id.ingredient_list);
-            IngredientListAdapter adapter = new IngredientListAdapter(getActivity(), mRecipe.getIngredients());
+        LinearLayout ingredientList = (LinearLayout) root.findViewById(R.id.ingredient_list);
+        IngredientListAdapter adapter = new IngredientListAdapter(getActivity(), mRecipe.getIngredients());
+        if (adapter.getCount() > 0) {
+            ingredientList.removeAllViews();
             for (int i = 0; i < adapter.getCount(); i++) {
-                ingredientList.addView(adapter.getView(i, null, ingredientList));
+                View view = adapter.getView(i, null, ingredientList);
+                view.setTag(R.string.ingredients, mRecipe.getIngredients().get(i));
+                view.setOnClickListener(this);
+                ingredientList.addView(view);
             }
-
-            textView = (TextView) root.findViewById(R.id.recipe_notes);
-            textView.setText(mRecipe.getNotes());
         }
+
+        textView = (TextView) root.findViewById(R.id.recipe_notes);
+        textView.setText(mRecipe.getNotes());
 
         getActivity().getActionBar().setTitle(findString(R.string.edit_recipe));
 
@@ -104,7 +112,7 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
         if (state == null) {
             state = new Bundle();
         }
-        state.putInt(RECIPE_ID, mRecipe.getId());
+        state.putParcelable(RECIPE, mRecipe);
     }
 
     @Override
@@ -121,34 +129,58 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.recipe_stats_layout:
-                mViewSwitcher.showRecipeStatsEditor(mRecipe);
+                mFragmentHandler.showRecipeStatsEditor(mRecipe);
                 break;
             case R.id.recipe_notes:
-                mViewSwitcher.showRecipeNotesEditor(mRecipe);
+                mFragmentHandler.showRecipeNotesEditor(mRecipe);
                 break;
             case R.id.new_ingredient_view:
-                mSelectIngredient = new Dialog(getActivity());
-                mSelectIngredient.setContentView(R.layout.select_ingredient);
-
-                IngredientTypeAdapter adapter = new IngredientTypeAdapter(getActivity(), getIngredients());
-
-                ListView listView = (ListView) mSelectIngredient.findViewById(R.id.recipe_list);
-                listView.setAdapter(adapter);
-                listView.setOnItemClickListener(this);
-                mSelectIngredient.setCancelable(true);
-                mSelectIngredient.setTitle(findString(R.string.add_ingredient));
-                mSelectIngredient.show();
+                addNewIngredient();
                 break;
         }
+        Object ingredient = view.getTag(R.string.ingredients);
+        if (ingredient != null) {
+            editIngredient(ingredient);
+        }
+    }
+
+    private void editIngredient(Object ingredient) {
+        if (ingredient instanceof MaltAddition) {
+            mFragmentHandler.showMaltEditor(mRecipe, (MaltAddition) ingredient);
+        } else if (ingredient instanceof HopAddition) {
+            mFragmentHandler.showHopsEditor(mRecipe, (HopAddition) ingredient);
+        } else if (ingredient instanceof Yeast) {
+            mFragmentHandler.showYeastEditor(mRecipe, (Yeast) ingredient);
+        }
+    }
+
+    private void addNewIngredient() {
+        int maxIngredients = getActivity().getResources().getInteger(R.integer.max_ingredients);
+        if (mRecipe.getIngredients().size() >= maxIngredients) {
+            String message = String.format(findString(R.string.max_ingredients_reached), maxIngredients);
+            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        mSelectIngredient = new Dialog(getActivity());
+        mSelectIngredient.setContentView(R.layout.select_ingredient);
+
+        IngredientTypeAdapter adapter = new IngredientTypeAdapter(getActivity(), getIngredients());
+
+        ListView listView = (ListView) mSelectIngredient.findViewById(R.id.recipe_list);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(this);
+        mSelectIngredient.setCancelable(true);
+        mSelectIngredient.setTitle(findString(R.string.add_ingredient));
+        mSelectIngredient.show();
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mViewSwitcher = (FragmentSwitcher) activity;
+            mFragmentHandler = (FragmentHandler) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement " + FragmentSwitcher.class.getName());
+            throw new ClassCastException(activity.toString() + " must implement " + FragmentHandler.class.getName());
         }
     }
 
@@ -159,15 +191,15 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
         if (findString(R.string.malt).equals(ingredient)) {
             MaltAddition malt = new MaltAddition();
             mRecipe.getMalts().add(malt);
-            mViewSwitcher.showMaltEditor(mRecipe, malt);
+            mFragmentHandler.showMaltEditor(mRecipe, malt);
         } else if (findString(R.string.hops).equals(ingredient)) {
             HopAddition hop = new HopAddition();
             mRecipe.getHops().add(hop);
-            mViewSwitcher.showHopsEditor(mRecipe, hop);
+            mFragmentHandler.showHopsEditor(mRecipe, hop);
         } else if (findString(R.string.yeast).equals(ingredient)) {
             Yeast yeast = new Yeast();
             mRecipe.getYeast().add(yeast);
-            mViewSwitcher.showYeastEditor(mRecipe, yeast);
+            mFragmentHandler.showYeastEditor(mRecipe, yeast);
         }
     }
 
