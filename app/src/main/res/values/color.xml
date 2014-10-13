@@ -7,6 +7,8 @@
     <color name="color_primary_dark">#2e1713</color>
     <color name="color_accent">#ffc107</color>
 
+    <color name="color_white">#ffffff</color>
+
     <color name="text_dark_primary">#DF000000</color>
     <color name="text_dark_secondary">#8A000000</color>
     <color name="text_dark_hint">#42000000</color>

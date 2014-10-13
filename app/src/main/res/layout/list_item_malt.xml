@@ -37,6 +37,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:gravity="center_vertical"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:text="Malt"
                 android:textColor="@color/text_dark_primary"
                 android:textSize="18sp" />

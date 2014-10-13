@@ -1,5 +1,7 @@
 package com.brew.brewshop.util;
 
+import java.math.BigDecimal;
+
 public class Util {
 
     private static int[] COLOR_MAP = new int[] {
@@ -49,7 +51,10 @@ public class Util {
         }
     }
 
-    public static String fromDouble(double d) {
-        return String.format("%.1f", d);
+    public static String fromDouble(double d, int precision) {
+        return new BigDecimal(d)
+                .setScale(precision, BigDecimal.ROUND_HALF_EVEN)
+                .stripTrailingZeros()
+                .toPlainString();
     }
 }

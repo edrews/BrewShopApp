@@ -69,16 +69,16 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
         textView.setText(mRecipe.getStyle().getName());
 
         textView = (TextView) root.findViewById(R.id.batch_volume);
-        textView.setText(Util.fromDouble(mRecipe.getBatchVolume()) + UNIT_GALLON);
+        textView.setText(Util.fromDouble(mRecipe.getBatchVolume(), 1) + UNIT_GALLON);
 
         textView = (TextView) root.findViewById(R.id.boil_volume);
-        textView.setText(Util.fromDouble(mRecipe.getBoilVolume()) + UNIT_GALLON);
+        textView.setText(Util.fromDouble(mRecipe.getBoilVolume(), 1) + UNIT_GALLON);
 
         textView = (TextView) root.findViewById(R.id.boil_time);
-        textView.setText(Util.fromDouble(mRecipe.getBoilTime()) + UNIT_MINUTES);
+        textView.setText(Util.fromDouble(mRecipe.getBoilTime(), 0) + UNIT_MINUTES);
 
         textView = (TextView) root.findViewById(R.id.efficiency);
-        textView.setText(Util.fromDouble(mRecipe.getEfficiency()) + UNIT_PERCENT);
+        textView.setText(Util.fromDouble(mRecipe.getEfficiency(), 1) + UNIT_PERCENT);
 
         LinearLayout ingredientList = (LinearLayout) root.findViewById(R.id.ingredient_list);
         IngredientListAdapter adapter = new IngredientListAdapter(getActivity(), mRecipe.getIngredients());

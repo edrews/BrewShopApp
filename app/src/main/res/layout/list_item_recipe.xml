@@ -18,6 +18,8 @@
         android:layout_toRightOf="@id/recipe_icon"
         android:gravity="center_vertical"
         android:textColor="@color/text_dark_primary"
+        android:singleLine="true"
+        android:ellipsize="end"
         android:layout_height="30dip"
         android:text="Recipe Name"
         android:textSize="20sp" />

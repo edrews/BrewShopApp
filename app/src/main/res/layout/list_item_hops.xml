@@ -37,6 +37,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:gravity="center_vertical"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:textColor="@color/text_dark_primary"
                 android:text="Hops"
                 android:textSize="18sp" />
