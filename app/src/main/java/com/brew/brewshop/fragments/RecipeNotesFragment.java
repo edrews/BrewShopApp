@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.brew.brewshop.R;
@@ -19,12 +21,12 @@ public class RecipeNotesFragment extends Fragment {
 
     private Recipe mRecipe;
     private BrewStorage mStorage;
-    private TextView mNotes;
+    private EditText mNotes;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
         View root = inflater.inflate(R.layout.fragment_edit_recipe_notes, container, false);
-        mNotes = (TextView) root.findViewById(R.id.recipe_notes);
+        mNotes = (EditText) root.findViewById(R.id.recipe_notes);
 
         setHasOptionsMenu(true);
         mStorage = new BrewStorage(getActivity());

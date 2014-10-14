@@ -1,14 +1,23 @@
 package com.brew.brewshop.storage;
 
 public class StyleInfo {
-    private String name;
-    private String description;
     private int id;
+    private String name;
+    private int categoryId;
+    private String description;
+    private double ibuMin;
+    private double ibuMax;
+    private double abvMin;
+    private double abvMax;
+    private int srmMin;
+    private int srmMax;
+    private double ogMin;
+    private double fgMin;
+    private double fgMax;
 
-    public StyleInfo(int id, String name, String description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
+    public StyleInfo() {
+        name = "";
+        description = "";
     }
 
     public int getId() { return id; }
@@ -19,6 +28,42 @@ public class StyleInfo {
 
     public String getDescription() {
         return description;
+    }
+
+    public double getOgMin() {
+        return ogMin;
+    }
+
+    public double getIbuMin() {
+        return ibuMin;
+    }
+
+    public double getIbuMax() {
+        return ibuMax;
+    }
+
+    public double getAbvMin() {
+        return abvMin;
+    }
+
+    public double getAbvMax() {
+        return abvMax;
+    }
+
+    public int getSrmMin() {
+        return srmMin;
+    }
+
+    public int getSrmMax() {
+        return srmMax;
+    }
+
+    public double getFgMin() {
+        return fgMin;
+    }
+
+    public double getFgMax() {
+        return fgMax;
     }
 
     @Override

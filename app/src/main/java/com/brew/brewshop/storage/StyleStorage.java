@@ -1,11 +1,9 @@
 package com.brew.brewshop.storage;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.brew.brewshop.R;
 import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,12 +13,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 public class StyleStorage {
     private static final String TAG = StyleStorage.class.getName();
+
+    private static StyleInfoList sStyleCache;
+
     private Context mContext;
 
     public StyleStorage(Context context) {
@@ -28,16 +27,19 @@ public class StyleStorage {
     }
 
     public StyleInfoList getStyles() {
-        StyleInfoList list = null;
+        if (sStyleCache != null) {
+            return sStyleCache;
+        }
+
         InputStream input = mContext.getResources().openRawResource(R.raw.styles);
         try {
-            list = readAllStyles(input);
+            sStyleCache = readAllStyles(input);
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return list;
+        return sStyleCache;
     }
 
     private StyleInfoList readAllStyles(InputStream input) throws IOException, JSONException {
@@ -49,15 +51,8 @@ public class StyleStorage {
         }
         JSONObject object = new JSONObject(total.toString());
         JSONArray styles = object.getJSONArray("data");
-        StyleInfoList list = new StyleInfoList();
-        for (int i = 0; i < styles.length(); i++) {
-            JSONObject style = styles.getJSONObject(i);
-            int id = style.getInt("id");
-            String name = style.getString("name");
-            String description = style.optString("description", "");
-            StyleInfo info = new StyleInfo(id, name, description);
-            list.add(info);
-        }
+        Gson gson = new Gson();
+        StyleInfoList list = gson.fromJson(styles.toString(), StyleInfoList.class);
         Collections.sort(list, new StyleInfoComparator());
         return list;
     }

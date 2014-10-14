@@ -83,7 +83,8 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
     }
 
     private void setStyle(BeerStyle style) {
-        int index = mStyleInfoList.findIndexById(style.getId());
+        StyleInfo info = mStyleInfoList.findById(style.getId());
+        int index = mStyleInfoList.indexOf(info);
         if (index < 0 ) {
             mStyle.setSelection(0);
         } else {
@@ -111,7 +112,7 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
         mRecipe.setEfficiency(efficiency);
 
         StyleInfo styleInfo = (StyleInfo) mStyle.getSelectedItem();
-        mRecipe.setStyle(new BeerStyle(styleInfo.getId(), styleInfo.getName()));
+        mRecipe.setStyle(new BeerStyle(styleInfo.getId()));
         mStorage.updateRecipe(mRecipe);
     }
 

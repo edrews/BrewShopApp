@@ -8,6 +8,7 @@ import java.util.List;
 
 public class Recipe implements Parcelable {
     private static final int VERSION = 1;
+    private static final int DEFAULT_BEER_STYLE = 1;
 
     private int id;
     private String name;
@@ -25,7 +26,7 @@ public class Recipe implements Parcelable {
 
     public Recipe() {
         name = "New Recipe";
-        style = new BeerStyle();
+        style = new BeerStyle(DEFAULT_BEER_STYLE);
         batchVolume = 5;
         boilVolume = 6.5;
         boilTime = 60;

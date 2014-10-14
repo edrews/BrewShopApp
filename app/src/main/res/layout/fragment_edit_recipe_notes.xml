@@ -1,23 +1,42 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/FillParent"
-    android:orientation="vertical"
-    android:background="@color/color_primary_light"
-    android:padding="5dp">
+    android:background="@color/color_gray">
 
-        <TextView android:layout_width="fill_parent"
-            android:layout_height="48dp"
-            android:text="Recipe Notes"
-            android:textSize="22sp"
-            android:gravity="center_vertical"/>
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/drop_shadow">
 
-        <EditText android:id="@+id/recipe_notes"
-            android:layout_width="fill_parent"
-            android:gravity="left|top"
-            android:hint="Add notes..."
-            android:textSize="16sp"
-            android:padding="3dp"
-            android:background="@android:color/white"
-            android:layout_height="fill_parent"
-            android:inputType="textCapSentences"/>
+        <LinearLayout
+            style="@style/FillParent"
+            android:background="@color/color_white"
+            android:orientation="vertical"
+            android:padding="5dp">
 
-</LinearLayout>
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Notes"
+                android:textSize="22sp" />
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/color_gray"/>
+
+            <EditText
+                android:id="@+id/recipe_notes"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="5dp"
+                android:background="@android:color/white"
+                android:gravity="left|top"
+                android:hint="@string/add_recipe_notes"
+                android:maxLength="@integer/max_notes_characters"
+                android:maxLines="@integer/max_notes_characters"
+                android:minLines="10"
+                android:inputType="textCapSentences|textMultiLine"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </FrameLayout>
+</ScrollView>

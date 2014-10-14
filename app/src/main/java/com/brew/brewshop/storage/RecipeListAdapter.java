@@ -55,20 +55,24 @@ public class RecipeListAdapter extends BaseAdapter {
             rowView = inflater.inflate(R.layout.list_item_recipe, parent, false);
         }
 
+        View container = rowView.findViewById(R.id.item_container);
+
         if (mView.isItemChecked(position)) {
-            rowView.setBackgroundColor(mSelectedColor);
+            container.setBackgroundColor(mSelectedColor);
         } else {
-            rowView.setBackgroundColor(Color.TRANSPARENT);
+            container.setBackgroundColor(Color.WHITE);
         }
 
         ImageView iconView = (ImageView) rowView.findViewById(R.id.recipe_icon);
         TextView nameView = (TextView) rowView.findViewById(R.id.recipe_name);
-        TextView descriptionView = (TextView) rowView.findViewById(R.id.recipe_description);
+        TextView descriptionView = (TextView) rowView.findViewById(R.id.recipe_style);
+
+        StyleInfoList styleInfoList = new StyleStorage(mContext).getStyles();
 
         Recipe recipe = mStorage.retrieveRecipes().get(position);
         iconView.setBackgroundColor(new Util().getColor(recipe.getSrm()));
-        nameView.setText(recipe.getName() + " (" + recipe.getStyle().getName() + ")");
-        descriptionView.setText(getDescription(recipe));
+        nameView.setText(recipe.getName());
+        descriptionView.setText(styleInfoList.findById(recipe.getStyle().getId()).getName());
         return rowView;
     }
 
@@ -86,9 +90,5 @@ public class RecipeListAdapter extends BaseAdapter {
 
     private List<Recipe> getRecipes() {
         return mStorage.retrieveRecipes();
-    }
-
-    private String getDescription(Recipe recipe) {
-        return "OG: " + recipe.getGravity() + " IBU: " + recipe.getIbu() + " SRM: " + recipe.getSrm();
     }
 }

@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,6 +22,8 @@ import com.brew.brewshop.IngredientListAdapter;
 import com.brew.brewshop.IngredientTypeAdapter;
 import com.brew.brewshop.R;
 import com.brew.brewshop.storage.BrewStorage;
+import com.brew.brewshop.storage.StyleInfo;
+import com.brew.brewshop.storage.StyleStorage;
 import com.brew.brewshop.storage.recipes.HopAddition;
 import com.brew.brewshop.storage.recipes.MaltAddition;
 import com.brew.brewshop.storage.recipes.Recipe;
@@ -35,6 +38,8 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
     private static final String RECIPE = "Recipe";
     private static final String UNIT_GALLON = " gal";
     private static final String UNIT_MINUTES = " min";
+    private static final String UNIT_IBU = " IBU";
+    private static final String UNIT_SRM = " SRM";
     private static final String UNIT_PERCENT = "%";
 
     private Recipe mRecipe;
@@ -61,12 +66,17 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
             mStorage.retrieveRecipe(mRecipe);
         }
 
+        StyleInfo styleInfo = new StyleStorage(getActivity()).getStyles().findById(mRecipe.getStyle().getId());
+
         TextView textView;
         textView = (TextView) root.findViewById(R.id.recipe_name);
         textView.setText(mRecipe.getName());
 
+        ImageView iconView = (ImageView) root.findViewById(R.id.recipe_icon);
+        iconView.setBackgroundColor(new Util().getColor(mRecipe.getSrm()));
+
         textView = (TextView) root.findViewById(R.id.recipe_style);
-        textView.setText(mRecipe.getStyle().getName());
+        textView.setText(styleInfo.getName());
 
         textView = (TextView) root.findViewById(R.id.batch_volume);
         textView.setText(Util.fromDouble(mRecipe.getBatchVolume(), 1) + UNIT_GALLON);
@@ -79,6 +89,37 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
 
         textView = (TextView) root.findViewById(R.id.efficiency);
         textView.setText(Util.fromDouble(mRecipe.getEfficiency(), 1) + UNIT_PERCENT);
+
+        textView = (TextView) root.findViewById(R.id.style_og);
+        textView.setText(Util.fromDouble(styleInfo.getOgMin(), 3, false) + "+");
+
+        textView = (TextView) root.findViewById(R.id.style_ibu);
+        String ibu = Util.fromDouble(styleInfo.getIbuMin(), 1);
+        if (styleInfo.getIbuMax() - styleInfo.getIbuMin() >= 0.1) {
+            ibu += " - " + Util.fromDouble(styleInfo.getIbuMax(), 1);
+        }
+        textView.setText(ibu + UNIT_IBU);
+
+        textView = (TextView) root.findViewById(R.id.style_srm);
+        String srm = String.valueOf(styleInfo.getSrmMin());
+        if (styleInfo.getSrmMin() != styleInfo.getSrmMax()) {
+            srm += " - " + styleInfo.getSrmMax();
+        }
+        textView.setText(srm + UNIT_SRM);
+
+        textView = (TextView) root.findViewById(R.id.style_fg);
+        String fg = Util.fromDouble(styleInfo.getFgMin(), 3, false);
+        if (styleInfo.getFgMax() - styleInfo.getFgMin() >= 0.001) {
+            fg += " - " + Util.fromDouble(styleInfo.getFgMax(), 3, false);
+        }
+        textView.setText(fg);
+
+        textView = (TextView) root.findViewById(R.id.style_abv);
+        String abv = Util.fromDouble(styleInfo.getAbvMin(), 1);
+        if (styleInfo.getAbvMax() - styleInfo.getAbvMin() >= 0.1) {
+            abv += " - " + Util.fromDouble(styleInfo.getAbvMax(), 1);
+        }
+        textView.setText(abv + UNIT_PERCENT);
 
         LinearLayout ingredientList = (LinearLayout) root.findViewById(R.id.ingredient_list);
         IngredientListAdapter adapter = new IngredientListAdapter(getActivity(), mRecipe.getIngredients());
@@ -93,7 +134,14 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
         }
 
         textView = (TextView) root.findViewById(R.id.recipe_notes);
-        textView.setText(mRecipe.getNotes());
+        String notes;
+        if (mRecipe.getNotes().isEmpty()) {
+            notes = getActivity().getResources().getString(R.string.add_recipe_notes);
+            textView.setTextColor(getActivity().getResources().getColor(R.color.text_dark_secondary));
+        } else {
+            notes = mRecipe.getNotes();
+        }
+        textView.setText(notes);
 
         getActivity().getActionBar().setTitle(findString(R.string.edit_recipe));
 

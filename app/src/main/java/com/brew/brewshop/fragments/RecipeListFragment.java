@@ -1,7 +1,9 @@
 package com.brew.brewshop.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -23,7 +25,10 @@ import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.RecipeListAdapter;
 import com.brew.brewshop.storage.recipes.Recipe;
 
-public class RecipeListFragment extends Fragment implements AdapterView.OnItemClickListener, ListView.MultiChoiceModeListener, ListView.OnItemLongClickListener {
+public class RecipeListFragment extends Fragment implements AdapterView.OnItemClickListener,
+        ListView.MultiChoiceModeListener,
+        ListView.OnItemLongClickListener,
+        DialogInterface.OnClickListener {
     private static final String TAG = RecipeListFragment.class.getName();
     private static final String ACTION_MODE = "ActionMode";
     private static final String SELECTED_INDEXES = "Selected";
@@ -91,6 +96,9 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         if (mActionMode != null) {
             setSelected(i, mRecipeList.isItemChecked(i));
+            if (mRecipeList.getCheckedItemCount() == 0) {
+                mActionMode.finish();
+            }
             updateActionBar();
         } else {
             if (mViewSwitcher != null) {
@@ -189,9 +197,10 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
 
         MenuInflater inflater = actionMode.getMenuInflater();
         inflater.inflate(R.menu.context_menu, menu);
+
         boolean itemsChecked = (mRecipeList.getCheckedItemCount() > 0);
         mActionMode.getMenu().findItem(R.id.action_delete).setVisible(itemsChecked);
-
+        mActionMode.getMenu().findItem(R.id.action_select_all).setVisible(!areAllSelected());
         return true;
     }
 
@@ -199,18 +208,15 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
     public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.action_select_all:
-                if (areAllSelected()) {
-                    setAllSelected(false);
-                } else {
-                    setAllSelected(true);
-                }
+                setAllSelected(true);
                 updateActionBar();
                 return true;
             case R.id.action_delete:
-                int deleted = mRecipeAdapter.deleteSelected();
-                actionMode.finish();
-                checkEmpty();
-                toastDeleted(deleted);
+                new AlertDialog.Builder(getActivity())
+                        .setMessage(R.string.delete_selected_recipes)
+                        .setPositiveButton(R.string.yes, this)
+                        .setNegativeButton(R.string.no, null)
+                        .show();
                 return true;
             default:
                 return false;
@@ -222,6 +228,14 @@ public class RecipeListFragment extends Fragment implements AdapterView.OnItemCl
         setAllSelected(false);
         mRecipeList.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
         mActionMode = null;
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        int deleted = mRecipeAdapter.deleteSelected();
+        mActionMode.finish();
+        checkEmpty();
+        toastDeleted(deleted);
     }
 
     private boolean areAllSelected() {

@@ -52,9 +52,14 @@ public class Util {
     }
 
     public static String fromDouble(double d, int precision) {
-        return new BigDecimal(d)
-                .setScale(precision, BigDecimal.ROUND_HALF_EVEN)
-                .stripTrailingZeros()
-                .toPlainString();
+        return fromDouble(d, precision, true);
+    }
+
+    public static String fromDouble(double d, int precision, boolean stripZeros) {
+        BigDecimal bd = new BigDecimal(d).setScale(precision, BigDecimal.ROUND_HALF_EVEN);
+        if (stripZeros) {
+            bd = bd.stripTrailingZeros();
+        }
+        return bd.toPlainString();
     }
 }

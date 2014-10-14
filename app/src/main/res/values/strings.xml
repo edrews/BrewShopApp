@@ -24,6 +24,10 @@
     <string name="max_ingredients_reached">Recipes have a %d ingredient limit</string>
     <string name="no_ingredients">No ingredients yet</string>
     <string name="unnamed_recipe">Unnamed Recipe</string>
+    <string name="add_recipe_notes">Add notes...</string>
+    <string name="delete_selected_recipes">Delete selected recipes?</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
 
     <!-- Navigation -->
     <string name="homebrew_tools">Homebrew Tools</string>

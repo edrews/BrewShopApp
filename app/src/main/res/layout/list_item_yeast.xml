@@ -1,6 +1,11 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/RecipeIngredient"
-    android:orientation="horizontal">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/drop_shadow">
+
+<LinearLayout style="@style/RecipeIngredient"
+    android:orientation="horizontal"
+    android:background="@color/color_white">
 
     <ImageView
         android:id="@+id/icon"
@@ -65,3 +70,4 @@
     </LinearLayout>
 
 </LinearLayout>
+    </FrameLayout>

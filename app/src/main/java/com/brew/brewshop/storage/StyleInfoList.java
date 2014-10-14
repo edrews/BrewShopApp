@@ -5,12 +5,12 @@ import java.util.List;
 
 public class StyleInfoList extends ArrayList<StyleInfo> {
 
-    public int findIndexById(int id) {
+    public StyleInfo findById(int id) {
         for(StyleInfo info : this) {
             if (info.getId() == id) {
-                return this.indexOf(info);
+                return info;
             }
         }
-        return -1;
+        return null;
     }
 }
