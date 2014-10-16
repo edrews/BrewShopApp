@@ -190,7 +190,7 @@ public class HomeActivity extends FragmentActivity implements FragmentHandler,
     public void showMaltEditor(Recipe recipe, MaltAddition addition) {
         MaltFragment fragment = new MaltFragment();
         fragment.setRecipe(recipe);
-        fragment.setMaltAddition(addition);
+        fragment.setMaltIndex(recipe.getMalts().indexOf(addition));
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_frame, fragment)

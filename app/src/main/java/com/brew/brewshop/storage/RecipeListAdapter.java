@@ -2,6 +2,7 @@ package com.brew.brewshop.storage;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,14 +23,12 @@ public class RecipeListAdapter extends BaseAdapter {
     SparseBooleanArray mSparseBooleanArray;
     ListView mView;
     BrewStorage mStorage;
-    int mSelectedColor;
 
     public RecipeListAdapter(Context context, ListView view) {
         mContext = context;
         mStorage = new BrewStorage(context);
         mSparseBooleanArray = new SparseBooleanArray();
         mView = view;
-        mSelectedColor = mContext.getResources().getColor(R.color.color_primary_light);
     }
 
     @Override
@@ -58,9 +57,9 @@ public class RecipeListAdapter extends BaseAdapter {
         View container = rowView.findViewById(R.id.item_container);
 
         if (mView.isItemChecked(position)) {
-            container.setBackgroundColor(mSelectedColor);
+            container.setBackgroundResource(R.color.color_accent);
         } else {
-            container.setBackgroundColor(Color.WHITE);
+            container.setBackgroundResource(R.drawable.touchable);
         }
 
         ImageView iconView = (ImageView) rowView.findViewById(R.id.recipe_icon);
@@ -70,7 +69,7 @@ public class RecipeListAdapter extends BaseAdapter {
         StyleInfoList styleInfoList = new StyleStorage(mContext).getStyles();
 
         Recipe recipe = mStorage.retrieveRecipes().get(position);
-        iconView.setBackgroundColor(new Util().getColor(recipe.getSrm()));
+        iconView.setBackgroundColor(Util.getColor(recipe.getSrm()));
         nameView.setText(recipe.getName());
         descriptionView.setText(styleInfoList.findById(recipe.getStyle().getId()).getName());
         return rowView;

@@ -2,9 +2,9 @@ package com.brew.brewshop.storage;
 
 import java.util.Comparator;
 
-public class StyleInfoComparator implements Comparator<StyleInfo> {
+public class NameComparator implements Comparator<Nameable> {
     @Override
-    public int compare(StyleInfo s1, StyleInfo s2) {
+    public int compare(Nameable s1, Nameable s2) {
         return s1.getName().compareTo(s2.getName());
     }
 }

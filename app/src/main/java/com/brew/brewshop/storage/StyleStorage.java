@@ -53,7 +53,7 @@ public class StyleStorage {
         JSONArray styles = object.getJSONArray("data");
         Gson gson = new Gson();
         StyleInfoList list = gson.fromJson(styles.toString(), StyleInfoList.class);
-        Collections.sort(list, new StyleInfoComparator());
+        Collections.sort(list, new NameComparator());
         return list;
     }
 }

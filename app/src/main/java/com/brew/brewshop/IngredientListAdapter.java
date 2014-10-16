@@ -5,12 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.brew.brewshop.storage.recipes.HopAddition;
 import com.brew.brewshop.storage.recipes.Malt;
 import com.brew.brewshop.storage.recipes.MaltAddition;
 import com.brew.brewshop.storage.recipes.Yeast;
+import com.brew.brewshop.util.Util;
 
 import java.util.List;
 
@@ -54,11 +56,14 @@ public class IngredientListAdapter extends ArrayAdapter<Object> {
 
         view = (TextView) parent.findViewById(R.id.gravity);
         double gravity = addition.getMalt().getGravity();
-        view.setText(String.format("%.3f/lb./gal", gravity));
+        view.setText(String.format("%1.3f", gravity));
 
         view = (TextView) parent.findViewById(R.id.color);
         double color = addition.getMalt().getColor();
-        view.setText(String.format("%.1f°L", gravity));
+        view.setText(String.format("%.0f SRM", color));
+
+        ImageView image = (ImageView) parent.findViewById(R.id.icon);
+        image.setBackgroundColor(Util.getColor(color));
     }
 
     public void populateView(View parent, HopAddition addition) {

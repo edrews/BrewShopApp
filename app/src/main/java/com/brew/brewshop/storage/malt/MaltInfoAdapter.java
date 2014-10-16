@@ -1,4 +1,4 @@
-package com.brew.brewshop.storage;
+package com.brew.brewshop.storage.malt;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,15 +7,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.brew.brewshop.storage.malt.MaltInfo;
+import com.brew.brewshop.storage.StyleInfo;
 
 import java.util.List;
 
-public class StyleInfoAdapter extends ArrayAdapter<StyleInfo> {
+public class MaltInfoAdapter extends ArrayAdapter<MaltInfo> {
     private Context mContext;
-    private List<StyleInfo> mNames;
+    private List<MaltInfo> mNames;
 
-    public StyleInfoAdapter(Context context, List<StyleInfo> styles) {
+    public MaltInfoAdapter(Context context, List<MaltInfo> styles) {
         super(context, android.R.layout.simple_spinner_item, styles);
         mContext = context;
         mNames = styles;

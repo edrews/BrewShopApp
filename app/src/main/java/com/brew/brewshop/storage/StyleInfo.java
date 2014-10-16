@@ -1,6 +1,6 @@
 package com.brew.brewshop.storage;
 
-public class StyleInfo {
+public class StyleInfo implements Nameable {
     private int id;
     private String name;
     private int categoryId;
@@ -22,6 +22,7 @@ public class StyleInfo {
 
     public int getId() { return id; }
 
+    @Override
     public String getName() {
         return name;
     }

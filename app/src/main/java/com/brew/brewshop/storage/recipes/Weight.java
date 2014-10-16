@@ -7,7 +7,11 @@ public class Weight implements Parcelable{
     private double ounces;
 
     public Weight() {
-        ounces = 1;
+
+    }
+
+    public Weight(double pounds, double ounces) {
+        setOunces(pounds * 16 + ounces);
     }
 
     public Weight(Parcel parcel) {

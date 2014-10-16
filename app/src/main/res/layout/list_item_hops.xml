@@ -5,7 +5,8 @@
 
     <LinearLayout style="@style/RecipeIngredient"
     android:orientation="horizontal"
-    android:background="@color/color_white">
+        android:background="@drawable/touchable"
+        >
 
     <ImageView
         android:id="@+id/icon"

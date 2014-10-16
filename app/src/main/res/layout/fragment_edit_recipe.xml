@@ -15,7 +15,7 @@
             android:padding="5dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@color/color_white"
+            android:background="@drawable/touchable"
             android:orientation="vertical">
 
         <LinearLayout android:layout_width="fill_parent"
@@ -208,7 +208,7 @@
             <ImageView android:layout_width="48dp"
                 android:id="@+id/new_ingredient_view"
                 android:layout_height="48dp"
-                android:background="@color/color_white"
+                android:background="@drawable/touchable"
                 android:src="@drawable/ic_action_new_dark"/>
             </FrameLayout>
 
@@ -238,7 +238,7 @@
             android:background="@drawable/drop_shadow">
 
         <TextView android:id="@+id/recipe_notes"
-            android:background="@color/color_white"
+            android:background="@drawable/touchable"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:minHeight="48dp"

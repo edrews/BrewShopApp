@@ -2,6 +2,14 @@
     style="@style/FillParent"
     android:background="@color/color_gray">
 
+    <LinearLayout style="@style/FillParent"
+        android:orientation="vertical">
+
+    <TextView style="@style/RecipeHeader"
+        android:text="Recipe Information"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"/>
+
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -134,15 +142,34 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/description"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_marginTop="10dp"
-                android:text="Description"
-                android:textColor="@color/text_dark_secondary"
-                android:textSize="12sp" />
-
         </LinearLayout>
     </FrameLayout>
+
+        <LinearLayout style="@style/FillParent"
+            android:id="@+id/description_layout"
+            android:orientation="vertical">
+
+            <TextView style="@style/RecipeHeader"
+                android:text="Style Description"
+                android:layout_marginLeft="5dp"/>
+
+            <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/drop_shadow">
+
+                <TextView android:id="@+id/description"
+                    android:background="@drawable/touchable"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:minHeight="48dp"
+                    android:padding="5dp"
+                    android:singleLine="false"
+                    android:gravity="center_vertical"
+                    android:text="Description"
+                    android:textSize="14sp"/>
+
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
 </ScrollView>

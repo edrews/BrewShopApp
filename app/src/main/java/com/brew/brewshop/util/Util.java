@@ -37,18 +37,26 @@ public class Util {
         0x050B0A
     };
 
-    public int getColor(int srm) {
+    public static int getColor(double srm) {
         return getColorNoAlpha(srm) + 0xFF000000;
     }
 
-    private int getColorNoAlpha(int srm) {
-        if (srm < 1) {
+    private static int getColorNoAlpha(double srm) {
+        int rounded = (int) Math.round(srm);
+        if (rounded < 1) {
             return COLOR_MAP[0];
-        } else if (srm > COLOR_MAP.length) {
+        } else if (rounded > COLOR_MAP.length) {
             return COLOR_MAP[COLOR_MAP.length - 1];
         } else {
-            return COLOR_MAP[srm - 1];
+            return COLOR_MAP[rounded - 1];
         }
+    }
+
+    public static double toDouble(CharSequence value) {
+        if (value.length() == 0) {
+            return 0;
+        }
+        return Double.parseDouble(value.toString());
     }
 
     public static String fromDouble(double d, int precision) {
@@ -61,5 +69,9 @@ public class Util {
             bd = bd.stripTrailingZeros();
         }
         return bd.toPlainString();
+    }
+
+    public static String separateSentences(String paragraph) {
+        return paragraph.replace(". ", ".\n\n");
     }
 }

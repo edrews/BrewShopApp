@@ -8,36 +8,33 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.brew.brewshop.R;
 import com.brew.brewshop.storage.BrewStorage;
-import com.brew.brewshop.storage.StyleInfo;
 import com.brew.brewshop.storage.StyleInfoAdapter;
+import com.brew.brewshop.storage.StyleInfo;
 import com.brew.brewshop.storage.StyleInfoList;
 import com.brew.brewshop.storage.StyleStorage;
 import com.brew.brewshop.storage.recipes.BeerStyle;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.util.Util;
 
-import java.util.List;
-
 public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     private static final String TAG = RecipeStatsFragment.class.getName();
-    private static final String RECIPE = "RecipeId";
+    private static final String RECIPE = "Recipe";
 
     private Recipe mRecipe;
     private BrewStorage mStorage;
 
-    private TextView mRecipeName;
+    private EditText mRecipeName;
     private Spinner mStyle;
-    private TextView mBatchVolume;
-    private TextView mBoilVolume;
-    private TextView mBoilTime;
-    private TextView mEfficiency;
+    private EditText mBatchVolume;
+    private EditText mBoilVolume;
+    private EditText mBoilTime;
+    private EditText mEfficiency;
     private TextView mDescription;
     private StyleInfoList mStyleInfoList;
 
@@ -53,7 +50,7 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
         }
 
         if (mRecipe != null) {
-            mRecipeName = (TextView) root.findViewById(R.id.recipe_name);
+            mRecipeName = (EditText) root.findViewById(R.id.recipe_name);
             mRecipeName.setText(mRecipe.getName());
 
             mDescription = (TextView) root.findViewById(R.id.description);
@@ -65,16 +62,16 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
             mStyle.setOnItemSelectedListener(this);
             setStyle(mRecipe.getStyle());
 
-            mBatchVolume = (TextView) root.findViewById(R.id.batch_volume);
+            mBatchVolume = (EditText) root.findViewById(R.id.batch_volume);
             mBatchVolume.setText(Util.fromDouble(mRecipe.getBatchVolume(), 5));
 
-            mBoilVolume = (TextView) root.findViewById(R.id.boil_volume);
+            mBoilVolume = (EditText) root.findViewById(R.id.boil_volume);
             mBoilVolume.setText(Util.fromDouble(mRecipe.getBoilVolume(), 5));
 
-            mBoilTime = (TextView) root.findViewById(R.id.boil_time);
+            mBoilTime = (EditText) root.findViewById(R.id.boil_time);
             mBoilTime.setText(Util.fromDouble(mRecipe.getBoilTime(), 0));
 
-            mEfficiency = (TextView) root.findViewById(R.id.efficiency);
+            mEfficiency = (EditText) root.findViewById(R.id.efficiency);
             mEfficiency.setText(Util.fromDouble(mRecipe.getEfficiency(), 5));
         }
         getActivity().getActionBar().setTitle(getActivity().getResources().getString(R.string.edit_recipe_stats));
@@ -101,11 +98,11 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
         }
         mRecipe.setName(name);
 
-        mRecipe.setBatchVolume(toDouble(mBatchVolume.getText()));
-        mRecipe.setBoilVolume(toDouble(mBoilVolume.getText()));
-        mRecipe.setBoilTime(toDouble(mBoilTime.getText()));
+        mRecipe.setBatchVolume(Util.toDouble(mBatchVolume.getText()));
+        mRecipe.setBoilVolume(Util.toDouble(mBoilVolume.getText()));
+        mRecipe.setBoilTime(Util.toDouble(mBoilTime.getText()));
 
-        double efficiency = toDouble(mEfficiency.getText());
+        double efficiency = Util.toDouble(mEfficiency.getText());
         if (efficiency > 100) {
             efficiency = 100;
         }
@@ -141,25 +138,17 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
         mRecipe = recipe;
     }
 
-    private double toDouble(CharSequence value) {
-        if (value.length() == 0) {
-            return 0;
-        }
-        return Double.parseDouble(value.toString());
-    }
-
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         setDescription(((StyleInfo) mStyle.getSelectedItem()));
     }
 
     private void setDescription(StyleInfo info) {
-        String description = info.getDescription();
-        mDescription.setText(separateSentences(description));
-    }
-
-    private String separateSentences(String paragraph) {
-        return paragraph.replace(". ", ".\n\n");
+        if (info.getDescription().isEmpty()) {
+            mDescription.setText(getActivity().getResources().getString(R.string.no_description));
+        } else {
+            mDescription.setText(Util.separateSentences(info.getDescription()));
+        }
     }
 
     @Override

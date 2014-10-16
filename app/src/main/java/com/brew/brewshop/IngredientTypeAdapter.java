@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -24,11 +25,20 @@ public class IngredientTypeAdapter extends ArrayAdapter<String> {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.list_item_ingredient, parent, false);
 
+        String ingredientType = mIngredients.get(position);
+
+        ImageView icon = (ImageView) rowView.findViewById(R.id.ingredient_icon);
+        if (mContext.getResources().getString(R.string.hops).equals(ingredientType)) {
+            icon.setBackgroundResource(R.color.hop_color);
+        } else if (mContext.getResources().getString(R.string.malt).equals(ingredientType)) {
+            icon.setBackgroundResource(R.color.malt_color);
+        } else if (mContext.getResources().getString(R.string.yeast).equals(ingredientType)) {
+            icon.setBackgroundResource(R.color.yeast_color);
+        }
+
         TextView nameView = (TextView) rowView.findViewById(R.id.ingredient_name);
+        nameView.setText(ingredientType);
 
-        String string = mIngredients.get(position);
-        nameView.setText(string);
         return rowView;
-
     }
 }

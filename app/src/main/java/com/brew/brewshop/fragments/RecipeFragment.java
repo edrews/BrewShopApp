@@ -73,7 +73,7 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
         textView.setText(mRecipe.getName());
 
         ImageView iconView = (ImageView) root.findViewById(R.id.recipe_icon);
-        iconView.setBackgroundColor(new Util().getColor(mRecipe.getSrm()));
+        iconView.setBackgroundColor(Util.getColor(mRecipe.getSrm()));
 
         textView = (TextView) root.findViewById(R.id.recipe_style);
         textView.setText(styleInfo.getName());
@@ -213,7 +213,6 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
         mSelectIngredient.setContentView(R.layout.select_ingredient);
 
         IngredientTypeAdapter adapter = new IngredientTypeAdapter(getActivity(), getIngredients());
-
         ListView listView = (ListView) mSelectIngredient.findViewById(R.id.recipe_list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);

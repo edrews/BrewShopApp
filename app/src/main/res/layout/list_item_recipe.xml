@@ -5,7 +5,7 @@
 
 <LinearLayout android:id="@+id/item_container"
     android:layout_width="fill_parent"
-    android:background="@color/color_white"
+    android:background="@drawable/touchable"
     android:layout_height="wrap_content"
     android:padding="2dp"
     android:orientation="horizontal"
