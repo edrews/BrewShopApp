@@ -1,4 +1,6 @@
-package com.brew.brewshop.storage;
+package com.brew.brewshop.storage.style;
+
+import com.brew.brewshop.storage.Nameable;
 
 public class StyleInfo implements Nameable {
     private int id;

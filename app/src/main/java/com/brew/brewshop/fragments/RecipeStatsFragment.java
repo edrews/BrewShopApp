@@ -14,10 +14,10 @@ import android.widget.TextView;
 
 import com.brew.brewshop.R;
 import com.brew.brewshop.storage.BrewStorage;
-import com.brew.brewshop.storage.StyleInfoAdapter;
-import com.brew.brewshop.storage.StyleInfo;
-import com.brew.brewshop.storage.StyleInfoList;
-import com.brew.brewshop.storage.StyleStorage;
+import com.brew.brewshop.storage.NameableAdapter;
+import com.brew.brewshop.storage.style.StyleInfo;
+import com.brew.brewshop.storage.style.StyleInfoList;
+import com.brew.brewshop.storage.style.StyleStorage;
 import com.brew.brewshop.storage.recipes.BeerStyle;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.util.Util;
@@ -56,7 +56,7 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
             mDescription = (TextView) root.findViewById(R.id.description);
             mStyleInfoList = new StyleStorage(getActivity()).getStyles();
             mStyle = (Spinner) root.findViewById(R.id.recipe_style);
-            StyleInfoAdapter adapter = new StyleInfoAdapter(getActivity(), mStyleInfoList);
+            NameableAdapter adapter = new NameableAdapter(getActivity(), mStyleInfoList);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             mStyle.setAdapter(adapter);
             mStyle.setOnItemSelectedListener(this);

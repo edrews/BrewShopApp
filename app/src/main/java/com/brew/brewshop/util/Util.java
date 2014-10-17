@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class Util {
 
-    private static int[] COLOR_MAP = new int[] {
+    private static int[] SRM_COLORS = new int[] {
         0xF3F993,
         0xF5F75C,
         0xF6F513,
@@ -44,11 +44,11 @@ public class Util {
     private static int getColorNoAlpha(double srm) {
         int rounded = (int) Math.round(srm);
         if (rounded < 1) {
-            return COLOR_MAP[0];
-        } else if (rounded > COLOR_MAP.length) {
-            return COLOR_MAP[COLOR_MAP.length - 1];
+            return SRM_COLORS[0];
+        } else if (rounded > SRM_COLORS.length) {
+            return SRM_COLORS[SRM_COLORS.length - 1];
         } else {
-            return COLOR_MAP[rounded - 1];
+            return SRM_COLORS[rounded - 1];
         }
     }
 

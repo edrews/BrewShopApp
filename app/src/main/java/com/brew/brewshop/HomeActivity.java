@@ -203,7 +203,7 @@ public class HomeActivity extends FragmentActivity implements FragmentHandler,
     public void showHopsEditor(Recipe recipe, HopAddition addition) {
         HopsFragment fragment = new HopsFragment();
         fragment.setRecipe(recipe);
-        fragment.setHopAddition(addition);
+        fragment.setHopIndex(recipe.getHops().indexOf(addition));
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_frame, fragment)
@@ -216,7 +216,7 @@ public class HomeActivity extends FragmentActivity implements FragmentHandler,
     public void showYeastEditor(Recipe recipe, Yeast yeast) {
         YeastFragment fragment = new YeastFragment();
         fragment.setRecipe(recipe);
-        fragment.setYeast(yeast);
+        fragment.setYeastIndex(recipe.getYeast().indexOf(yeast));
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_frame, fragment)

@@ -29,6 +29,5 @@ public class BeerStyleAdapter extends ArrayAdapter<String> {
         String style = mStyles.get(position);
         nameView.setText(style);
         return rowView;
-
     }
 }

@@ -4,18 +4,24 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Yeast implements Parcelable {
+    private int id;
     private String name;
     private double avgAttenuation;
 
     public Yeast() {
+        id = 0;
         name = "Yeast";
         avgAttenuation = 80;
     }
 
     public Yeast(Parcel parcel) {
+        id = parcel.readInt();
         name = parcel.readString();
         avgAttenuation = parcel.readDouble();
     }
+
+    public int getId() { return id; }
+    public void setId(int value) { id = value; }
 
     public String getName() { return name; }
     public void setName(String value) { name = value; }
@@ -40,6 +46,7 @@ public class Yeast implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
         parcel.writeString(name);
         parcel.writeDouble(avgAttenuation);
     }

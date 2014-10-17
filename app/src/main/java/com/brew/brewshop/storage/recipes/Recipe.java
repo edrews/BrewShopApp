@@ -114,4 +114,14 @@ public class Recipe implements Parcelable {
     public double getGravity() { return 1.050; }
     public int getSrm() { return 10; }
     public int getIbu() { return 10; }
+
+    public static final Parcelable.Creator<Recipe> CREATOR = new Parcelable.Creator<Recipe>() {
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
 }

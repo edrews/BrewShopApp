@@ -1,12 +1,134 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/FillParent"
-    android:orientation="vertical"
-    android:padding="5dp">
+    android:background="@color/color_gray">
 
-        <TextView android:layout_width="fill_parent"
-            android:layout_height="48dp"
-            android:text="Hops"
-            android:textSize="22sp"
-            android:gravity="center_vertical"/>
+    <LinearLayout style="@style/FillParent"
+        android:orientation="vertical">
 
+        <TextView style="@style/RecipeHeader"
+            android:text="Hop Addition"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"/>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/drop_shadow">
+
+        <LinearLayout
+            style="@style/FillParent"
+            android:background="@color/color_white"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/RecipeEditLabel"
+                    android:text="Hop Type" />
+
+                <Spinner
+                    android:id="@+id/hops_type"
+                    android:layout_width="fill_parent"
+                    android:layout_height="48dp"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/RecipeEditLabel"
+                    android:text="Weight" />
+
+                <EditText style="@style/RecipeEditValue"
+                    android:id="@+id/hops_weight"
+                    android:hint=""
+                    android:inputType="numberDecimal"
+                    android:maxLength="5"/>
+
+                <TextView
+                    style="@style/RecipeEditUnit"
+                    android:text="oz" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/RecipeEditLabel"
+                    android:text="Alpha Acid" />
+
+                <EditText
+                    android:id="@+id/hops_alpha"
+                    style="@style/RecipeEditValue"
+                    android:inputType="numberDecimal"
+                    android:maxLength="5"/>
+
+                <TextView
+                    style="@style/RecipeEditUnit"
+                    android:text="%" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/RecipeEditLabel"
+                    android:text="Time" />
+
+                <EditText
+                    android:id="@+id/hops_time"
+                    style="@style/RecipeEditValue"
+                    android:inputType="numberDecimal"
+                    android:maxLength="5"/>
+
+                <TextView
+                    style="@style/RecipeEditUnit"
+                    android:text="min" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </FrameLayout>
+
+    <LinearLayout style="@style/FillParent"
+        android:id="@+id/description_layout"
+        android:orientation="vertical">
+
+        <TextView style="@style/RecipeHeader"
+            android:text="Description"
+            android:layout_marginLeft="5dp"/>
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/drop_shadow">
+
+            <TextView android:id="@+id/description"
+                android:background="@drawable/touchable"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:minHeight="48dp"
+                android:padding="5dp"
+                android:singleLine="false"
+                android:gravity="center_vertical"
+                android:text="Description"
+                android:textSize="14sp"/>
+
+        </FrameLayout>
+        </LinearLayout>
 </LinearLayout>
+</ScrollView>

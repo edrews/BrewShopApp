@@ -1,8 +1,6 @@
 package com.brew.brewshop.storage;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +12,8 @@ import android.widget.TextView;
 
 import com.brew.brewshop.R;
 import com.brew.brewshop.storage.recipes.Recipe;
+import com.brew.brewshop.storage.style.StyleInfoList;
+import com.brew.brewshop.storage.style.StyleStorage;
 import com.brew.brewshop.util.Util;
 
 import java.util.List;

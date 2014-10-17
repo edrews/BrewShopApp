@@ -2,7 +2,6 @@ package com.brew.brewshop.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,9 @@ import android.widget.TextView;
 
 import com.brew.brewshop.R;
 import com.brew.brewshop.storage.BrewStorage;
+import com.brew.brewshop.storage.NameableAdapter;
 import com.brew.brewshop.storage.malt.MaltInfo;
-import com.brew.brewshop.storage.malt.MaltInfoAdapter;
+import com.brew.brewshop.storage.NameableList;
 import com.brew.brewshop.storage.malt.MaltInfoList;
 import com.brew.brewshop.storage.malt.MaltStorage;
 import com.brew.brewshop.storage.recipes.Malt;
@@ -57,7 +57,7 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
             mMaltIndex = state.getInt(MALT_INDEX, -1);
         }
 
-        MaltInfoAdapter adapter = new MaltInfoAdapter(getActivity(), mMaltInfo);
+        NameableAdapter<MaltInfo> adapter = new NameableAdapter<MaltInfo>(getActivity(), mMaltInfo);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mMaltSpinner.setAdapter(adapter);
 
