@@ -1,7 +1,5 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/drop_shadow">
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Card">
 
 <LinearLayout style="@style/RecipeIngredient"
     android:background="@drawable/touchable"
@@ -80,4 +78,4 @@
     </LinearLayout>
 
 </LinearLayout>
-    </FrameLayout>
+    </android.support.v7.widget.CardView>

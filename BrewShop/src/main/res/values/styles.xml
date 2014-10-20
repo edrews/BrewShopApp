@@ -118,4 +118,13 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">@color/text_dark_primary</item>
     </style>
+
+    <style name="Card">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="cardCornerRadius">5dp</item>
+        <item name="cardElevation">2dp</item>
+        <item name="cardBackgroundColor">@color/color_white</item>
+    </style>
 </resources>
