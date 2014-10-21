@@ -1,17 +1,12 @@
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Card">
-
-    <LinearLayout style="@style/RecipeIngredient"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        style="@style/RecipeIngredient"
         android:orientation="horizontal"
         android:background="@drawable/touchable">
 
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="5dp"
-        android:background="@color/hop_color"/>
+        <TextView style="@style/IngredientIcon"
+            android:id="@+id/icon"
+            android:text="H"
+            android:background="@color/hop_color"/>
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -78,4 +73,3 @@
     </LinearLayout>
 
 </LinearLayout>
-</android.support.v7.widget.CardView >

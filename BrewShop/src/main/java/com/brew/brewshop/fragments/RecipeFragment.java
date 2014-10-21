@@ -51,7 +51,7 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
         View root = inflater.inflate(R.layout.fragment_edit_recipe, container, false);
         root.findViewById(R.id.recipe_stats_layout).setOnClickListener(this);
-        root.findViewById(R.id.recipe_notes).setOnClickListener(this);
+        root.findViewById(R.id.recipe_notes_layout).setOnClickListener(this);
         root.findViewById(R.id.new_ingredient_view).setOnClickListener(this);
 
         setHasOptionsMenu(true);
@@ -179,7 +179,7 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
             case R.id.recipe_stats_layout:
                 mFragmentHandler.showRecipeStatsEditor(mRecipe);
                 break;
-            case R.id.recipe_notes:
+            case R.id.recipe_notes_layout:
                 mFragmentHandler.showRecipeNotesEditor(mRecipe);
                 break;
             case R.id.new_ingredient_view:

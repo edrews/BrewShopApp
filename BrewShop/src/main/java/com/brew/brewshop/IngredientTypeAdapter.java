@@ -27,13 +27,16 @@ public class IngredientTypeAdapter extends ArrayAdapter<String> {
 
         String ingredientType = mIngredients.get(position);
 
-        ImageView icon = (ImageView) rowView.findViewById(R.id.ingredient_icon);
+        TextView icon = (TextView) rowView.findViewById(R.id.ingredient_icon);
         if (mContext.getResources().getString(R.string.hops).equals(ingredientType)) {
             icon.setBackgroundResource(R.color.hop_color);
+            icon.setText("H");
         } else if (mContext.getResources().getString(R.string.malt).equals(ingredientType)) {
             icon.setBackgroundResource(R.color.malt_color);
+            icon.setText("M");
         } else if (mContext.getResources().getString(R.string.yeast).equals(ingredientType)) {
             icon.setBackgroundResource(R.color.yeast_color);
+            icon.setText("Y");
         }
 
         TextView nameView = (TextView) rowView.findViewById(R.id.ingredient_name);

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.brew.brewshop.storage.recipes.HopAddition;
 import com.brew.brewshop.storage.recipes.MaltAddition;
+import com.brew.brewshop.storage.recipes.Weight;
 import com.brew.brewshop.storage.recipes.Yeast;
 import com.brew.brewshop.util.Util;
 
@@ -47,8 +48,7 @@ public class IngredientListAdapter extends ArrayAdapter<Object> {
         TextView view;
 
         view = (TextView) parent.findViewById(R.id.weight);
-        double lbs = addition.getWeight().getPounds();
-        view.setText(String.format("%.1f lb.", lbs));
+        view.setText(formatWeight(addition.getWeight()));
 
         view = (TextView) parent.findViewById(R.id.name);
         view.setText(addition.getMalt().getName());
@@ -61,16 +61,15 @@ public class IngredientListAdapter extends ArrayAdapter<Object> {
         double color = addition.getMalt().getColor();
         view.setText(String.format("%.0f SRM", color));
 
-        ImageView image = (ImageView) parent.findViewById(R.id.icon);
-        image.setBackgroundColor(Util.getColor(color));
+        View icon = parent.findViewById(R.id.icon);
+        icon.setBackgroundColor(Util.getColor(color));
     }
 
     public void populateView(View parent, HopAddition addition) {
         TextView view;
 
         view = (TextView) parent.findViewById(R.id.weight);
-        double ounces = addition.getWeight().getOunces();
-        view.setText(String.format("%.1f oz.", ounces));
+        view.setText(formatWeight(addition.getWeight()));
 
         view = (TextView) parent.findViewById(R.id.name);
         view.setText(addition.getHop().getName());
@@ -92,6 +91,22 @@ public class IngredientListAdapter extends ArrayAdapter<Object> {
 
         view = (TextView) parent.findViewById(R.id.attenuation);
         double gravity = yeast.getAttenuation();
-        view.setText(String.format("~%.0f%% Attenuation", gravity));
+        view.setText(String.format("~%.1f%% Attenuation", gravity));
+    }
+
+    private String formatWeight(Weight weight) {
+        StringBuilder builder = new StringBuilder();
+        int pounds = weight.getPoundsPortion();
+        if (pounds > 0) {
+            builder.append(String.format("%d lb.", pounds));
+        }
+        double ounces = weight.getOuncesPortion();
+        if (pounds == 0 || ounces > 0.05) {
+            if (pounds > 0) {
+                builder.append(" ");
+            }
+            builder.append(String.format("%.1f oz.", ounces));
+        }
+        return builder.toString();
     }
 }

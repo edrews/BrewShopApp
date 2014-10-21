@@ -5,13 +5,10 @@
     android:minHeight="48dp"
     android:padding="2dp">
 
-    <ImageView
+    <TextView style="@style/IngredientIcon"
         android:id="@+id/ingredient_icon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
         android:layout_centerVertical="true"
-        android:layout_margin="5dp"
-        android:background="@color/color_primary"/>
+        android:background="@color/malt_color"/>
 
     <TextView
         android:id="@+id/ingredient_name"
