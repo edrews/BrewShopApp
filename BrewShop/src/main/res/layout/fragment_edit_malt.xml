@@ -45,14 +45,24 @@
                     android:text="Weight" />
 
                 <EditText style="@style/RecipeEditValue"
-                    android:id="@+id/malt_weight"
+                    android:id="@+id/malt_weight_lb"
                     android:hint=""
                     android:inputType="numberDecimal"
                     android:maxLength="5"/>
 
                 <TextView
                     style="@style/RecipeEditUnit"
-                    android:text="lbs" />
+                    android:text="lb" />
+
+                <EditText style="@style/RecipeEditValue"
+                    android:id="@+id/malt_weight_oz"
+                    android:hint=""
+                    android:inputType="numberDecimal"
+                    android:maxLength="5"/>
+
+                <TextView
+                    style="@style/RecipeEditUnit"
+                    android:text="oz" />
 
             </LinearLayout>
 

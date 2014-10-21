@@ -14,7 +14,6 @@ import com.brew.brewshop.R;
 import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.NameableAdapter;
 import com.brew.brewshop.storage.malt.MaltInfo;
-import com.brew.brewshop.storage.NameableList;
 import com.brew.brewshop.storage.malt.MaltInfoList;
 import com.brew.brewshop.storage.malt.MaltStorage;
 import com.brew.brewshop.storage.recipes.Malt;
@@ -35,7 +34,8 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
 
     private Spinner mMaltSpinner;
     private TextView mDescription;
-    private EditText mWeightEdit;
+    private EditText mWeightLbEdit;
+    private EditText mWeightOzEdit;
     private EditText mGravityEdit;
     private EditText mColorEdit;
 
@@ -43,7 +43,8 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
         View root = inflater.inflate(R.layout.fragment_edit_malt, container, false);
         mMaltSpinner = (Spinner) root.findViewById(R.id.malt_type);
-        mWeightEdit = (EditText) root.findViewById(R.id.malt_weight);
+        mWeightLbEdit = (EditText) root.findViewById(R.id.malt_weight_lb);
+        mWeightOzEdit = (EditText) root.findViewById(R.id.malt_weight_oz);
         mColorEdit = (EditText) root.findViewById(R.id.malt_color);
         mGravityEdit = (EditText) root.findViewById(R.id.malt_gravity);
         mDescription = (TextView) root.findViewById(R.id.description);
@@ -60,16 +61,15 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
         NameableAdapter<MaltInfo> adapter = new NameableAdapter<MaltInfo>(getActivity(), mMaltInfo);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mMaltSpinner.setAdapter(adapter);
+        mMaltSpinner.setOnItemSelectedListener(this);
 
         if (mRecipe != null && mMaltIndex >= 0) {
-            MaltAddition addition = mRecipe.getMalts().get(mMaltIndex);
+            MaltAddition addition = getMaltAddition();
             setMalt(addition.getMalt());
-            mWeightEdit.setText(String.valueOf(addition.getWeight().getPounds()));
-            mColorEdit.setText(String.valueOf(addition.getMalt().getColor()));
-            mGravityEdit.setText(String.valueOf(addition.getMalt().getGravity()));
+            setWeight(addition.getWeight());
+            mColorEdit.setText(Util.fromDouble(addition.getMalt().getColor(), 1));
+            mGravityEdit.setText(Util.fromDouble(addition.getMalt().getGravity(), 3, false));
         }
-
-        mMaltSpinner.setOnItemSelectedListener(this);
 
         getActivity().getActionBar().setTitle(getActivity().getResources().getString(R.string.edit_malt_addition));
 
@@ -89,7 +89,7 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
         malt.setName(maltInfo.getName());
         addition.setMalt(malt);
 
-        Weight weight = new Weight(Util.toDouble(mWeightEdit.getText()), 0);
+        Weight weight = new Weight(Util.toDouble(mWeightLbEdit.getText()), Util.toDouble(mWeightOzEdit.getText()));
         addition.setWeight(weight);
 
         mStorage.updateRecipe(mRecipe);
@@ -121,6 +121,15 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
         }
     }
 
+    private void setWeight(Weight weight) {
+        mWeightLbEdit.setText(String.valueOf(weight.getPoundsPortion()));
+        mWeightOzEdit.setText(Util.fromDouble(weight.getOuncesPortion(), 1));
+    }
+
+    private MaltAddition getMaltAddition() {
+        return mRecipe.getMalts().get(mMaltIndex);
+    }
+
     public void setRecipe(Recipe recipe) {
         mRecipe = recipe;
     }
@@ -132,8 +141,10 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         MaltInfo info = (MaltInfo) mMaltSpinner.getSelectedItem();
-        mColorEdit.setText(String.valueOf(info.getSrm()));
-        mGravityEdit.setText(String.valueOf(info.getGravity()));
+        if (info.getId() != getMaltAddition().getMalt().getId()) {
+            mColorEdit.setText(Util.fromDouble(info.getSrm(), 1));
+            mGravityEdit.setText(Util.fromDouble(info.getGravity(), 3, false));
+        }
         if (info.getDescription().isEmpty()) {
             mDescription.setText(getActivity().getResources().getString(R.string.no_description));
         } else {

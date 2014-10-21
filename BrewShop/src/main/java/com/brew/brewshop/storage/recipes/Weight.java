@@ -6,9 +6,7 @@ import android.os.Parcelable;
 public class Weight implements Parcelable{
     private double ounces;
 
-    public Weight() {
-
-    }
+    public Weight() { }
 
     public Weight(double pounds, double ounces) {
         setOunces(pounds * 16 + ounces);
@@ -20,6 +18,14 @@ public class Weight implements Parcelable{
 
     public double getOunces() { return ounces; }
     public void setOunces(double value) { ounces = value; }
+
+    public int getPoundsPortion() {
+        return (int) (ounces/16);
+    }
+
+    public double getOuncesPortion() {
+        return ounces - 16 * getPoundsPortion();
+    }
 
     public double getPounds() { return ounces / 16;}
     public void setPounds(double value) { ounces = value * 16; }

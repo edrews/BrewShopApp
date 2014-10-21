@@ -52,6 +52,13 @@ public class Util {
         }
     }
 
+    public static int toInt(CharSequence value) {
+        if (value.length() == 0) {
+            return 0;
+        }
+        return Integer.parseInt(value.toString());
+    }
+
     public static double toDouble(CharSequence value) {
         if (value.length() == 0) {
             return 0;
@@ -65,10 +72,17 @@ public class Util {
 
     public static String fromDouble(double d, int precision, boolean stripZeros) {
         BigDecimal bd = new BigDecimal(d).setScale(precision, BigDecimal.ROUND_HALF_EVEN);
+        String string;
         if (stripZeros) {
-            bd = bd.stripTrailingZeros();
+            if (d < .001) { //Fix a bug in Java 7
+                string = "0";
+            } else {
+                string = bd.stripTrailingZeros().toPlainString();
+            }
+        } else {
+            string = bd.toPlainString();
         }
-        return bd.toPlainString();
+        return string;
     }
 
     public static String separateSentences(String paragraph) {

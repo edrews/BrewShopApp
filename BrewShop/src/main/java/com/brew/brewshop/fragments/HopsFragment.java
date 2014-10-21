@@ -2,6 +2,7 @@ package com.brew.brewshop.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,16 +64,15 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
         NameableAdapter<HopsInfo> adapter = new NameableAdapter<HopsInfo>(getActivity(), mHopInfo);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(adapter);
+        mSpinner.setOnItemSelectedListener(this);
 
         if (mRecipe != null && mHopIndex >= 0) {
-            HopAddition addition = mRecipe.getHops().get(mHopIndex);
+            HopAddition addition = getHopAddition();
             setHop(addition.getHop());
-            mWeightEdit.setText(String.valueOf(addition.getWeight().getOunces()));
-            mAlphaEdit.setText(String.valueOf(addition.getHop().getAlpha()));
+            mWeightEdit.setText(Util.fromDouble(addition.getWeight().getOunces(), 3));
+            mAlphaEdit.setText(Util.fromDouble(addition.getHop().getAlpha(), 3));
             mTimeEdit.setText(String.valueOf(addition.getTime()));
         }
-
-        mSpinner.setOnItemSelectedListener(this);
 
         getActivity().getActionBar().setTitle(getActivity().getResources().getString(R.string.edit_hop_addition));
 
@@ -86,13 +86,18 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
 
         HopsInfo info = (HopsInfo) mSpinner.getSelectedItem();
         Hop hop = new Hop();
-        hop.setAlpha(Util.toDouble(mAlphaEdit.getText()));
+        double alpha = Util.toDouble(mAlphaEdit.getText());
+        if (alpha > 100) {
+            alpha = 100;
+        }
+        hop.setAlpha(alpha);
         hop.setId(info.getId());
         hop.setName(info.getName());
         addition.setHop(hop);
 
         Weight weight = new Weight(0, Util.toDouble(mWeightEdit.getText()));
         addition.setWeight(weight);
+        addition.setTime(Util.toInt(mTimeEdit.getText()));
 
         mStorage.updateRecipe(mRecipe);
     }
@@ -111,6 +116,10 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
         }
         state.putParcelable(RECIPE, mRecipe);
         state.putInt(HOP_INDEX, mHopIndex);
+    }
+
+    private HopAddition getHopAddition() {
+        return  mRecipe.getHops().get(mHopIndex);
     }
 
     private void setHop(Hop hop) {
@@ -133,12 +142,14 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        HopsInfo info = (HopsInfo) mSpinner.getSelectedItem();
-        mAlphaEdit.setText(String.valueOf(info.getAlphaAcidMin()));
-        if (info.getDescription().isEmpty()) {
+        HopsInfo hopsInfo = (HopsInfo) mSpinner.getSelectedItem();
+        if (hopsInfo.getId() != getHopAddition().getHop().getId()) {
+            mAlphaEdit.setText(Util.fromDouble(hopsInfo.getAlphaAcidMin(), 3));
+        }
+        if (hopsInfo.getDescription().isEmpty()) {
             mDescription.setText(getActivity().getResources().getString(R.string.no_description));
         } else {
-            mDescription.setText(Util.separateSentences(info.getDescription()));
+            mDescription.setText(Util.separateSentences(hopsInfo.getDescription()));
         }
     }
 

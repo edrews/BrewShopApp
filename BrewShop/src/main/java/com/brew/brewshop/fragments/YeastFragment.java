@@ -59,9 +59,9 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
         mSpinner.setAdapter(adapter);
 
         if (mRecipe != null && mYeastIndex >= 0) {
-            Yeast yeast = mRecipe.getYeast().get(mYeastIndex);
+            Yeast yeast = getYeast();
             setYeast(yeast);
-            mAttenuationEdit.setText(String.valueOf(yeast.getAttenuation()));
+            mAttenuationEdit.setText(Util.fromDouble(yeast.getAttenuation(), 3));
         }
 
         mSpinner.setOnItemSelectedListener(this);
@@ -79,7 +79,7 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
         YeastInfo info = (YeastInfo) mSpinner.getSelectedItem();
         yeast.setName(info.getName());
         yeast.setId(info.getId());
-        double attenuation = getAttenuation(info);
+        double attenuation = Util.toDouble(mAttenuationEdit.getText());
         if (attenuation > 100) {
             attenuation = 100;
         }
@@ -104,6 +104,10 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
         state.putInt(YEAST_INDEX, mYeastIndex);
     }
 
+    private Yeast getYeast() {
+        return mRecipe.getYeast().get(mYeastIndex);
+    }
+
     private void setYeast(Yeast yeast) {
         YeastInfo info = mYeastInfo.findById(yeast.getId());
         int index = mYeastInfo.indexOf(info);
@@ -125,7 +129,9 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         YeastInfo info = (YeastInfo) mSpinner.getSelectedItem();
-        mAttenuationEdit.setText(String.valueOf(getAttenuation(info)));
+        if (info.getId() != getYeast().getId()) {
+            mAttenuationEdit.setText(Util.fromDouble(getAttenuation(info), 3));
+        }
         if (info.getDescription().isEmpty()) {
             mDescription.setText(getActivity().getResources().getString(R.string.no_description));
         } else {

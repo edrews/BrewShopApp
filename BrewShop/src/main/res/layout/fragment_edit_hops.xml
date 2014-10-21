@@ -89,8 +89,8 @@
                 <EditText
                     android:id="@+id/hops_time"
                     style="@style/RecipeEditValue"
-                    android:inputType="numberDecimal"
-                    android:maxLength="5"/>
+                    android:inputType="number|"
+                    android:maxLength="3"/>
 
                 <TextView
                     style="@style/RecipeEditUnit"

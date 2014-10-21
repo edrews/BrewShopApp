@@ -162,6 +162,11 @@
                 <TextView style="@style/RecipeStatRight"
                     android:text="~110"/>
             </LinearLayout>
+            <View
+                android:layout_height="fill_parent"
+                android:layout_width="0.5dp"
+                android:layout_margin="5dp"
+                android:background="@color/color_gray"/>
             <LinearLayout style="@style/FillParent"
                 android:layout_weight="1"
                 android:orientation="vertical">
@@ -188,18 +193,22 @@
 
         <RelativeLayout android:layout_width="fill_parent"
             android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_height="wrap_content">
 
             <TextView style="@style/RecipeHeader"
                 android:text="@string/ingredients"
                 android:layout_alignParentBottom="true"/>
 
-            <ImageView android:layout_width="48dp"
+            <TextView
+                android:minWidth="48dp"
                 android:id="@+id/new_ingredient_view"
                 android:layout_height="48dp"
+                android:gravity="bottom|right"
+                android:layout_width="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
-                android:src="@drawable/ic_action_new_dark"/>
+                android:text="NEW"/>
 
         </RelativeLayout>
 

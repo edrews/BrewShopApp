@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.brew.brewshop.storage.recipes.HopAddition;
-import com.brew.brewshop.storage.recipes.Malt;
 import com.brew.brewshop.storage.recipes.MaltAddition;
 import com.brew.brewshop.storage.recipes.Yeast;
 import com.brew.brewshop.util.Util;

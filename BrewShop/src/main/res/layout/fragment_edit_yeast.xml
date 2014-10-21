@@ -47,8 +47,8 @@
                 <EditText style="@style/RecipeEditValue"
                     android:id="@+id/yeast_attenuation"
                     android:hint=""
-                    android:inputType="number"
-                    android:maxLength="3"/>
+                    android:inputType="numberDecimal"
+                    android:maxLength="5"/>
 
                 <TextView
                     style="@style/RecipeEditUnit"
