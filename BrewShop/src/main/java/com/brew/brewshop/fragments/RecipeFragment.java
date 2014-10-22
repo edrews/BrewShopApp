@@ -28,9 +28,11 @@ import com.brew.brewshop.storage.recipes.HopAddition;
 import com.brew.brewshop.storage.recipes.MaltAddition;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.storage.recipes.Yeast;
+import com.brew.brewshop.IngredientComparator;
 import com.brew.brewshop.util.Util;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class RecipeFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener{
@@ -46,6 +48,7 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
     private BrewStorage mStorage;
     private FragmentHandler mFragmentHandler;
     private Dialog mSelectIngredient;
+    private List<Object> mSortedIngredients;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
@@ -122,12 +125,14 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
         textView.setText(abv + UNIT_PERCENT);
 
         LinearLayout ingredientList = (LinearLayout) root.findViewById(R.id.ingredient_list);
-        IngredientListAdapter adapter = new IngredientListAdapter(getActivity(), mRecipe.getIngredients());
+        mSortedIngredients = mRecipe.getIngredients();
+        Collections.sort(mSortedIngredients, new IngredientComparator());
+        IngredientListAdapter adapter = new IngredientListAdapter(getActivity(), mSortedIngredients);
         if (adapter.getCount() > 0) {
             ingredientList.removeAllViews();
             for (int i = 0; i < adapter.getCount(); i++) {
                 View view = adapter.getView(i, null, ingredientList);
-                view.setTag(R.string.ingredients, mRecipe.getIngredients().get(i));
+                view.setTag(R.string.ingredients, mSortedIngredients.get(i));
                 view.setOnClickListener(this);
                 ingredientList.addView(view);
             }
@@ -204,7 +209,7 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
 
     private void addNewIngredient() {
         int maxIngredients = getActivity().getResources().getInteger(R.integer.max_ingredients);
-        if (mRecipe.getIngredients().size() >= maxIngredients) {
+        if (mSortedIngredients.size() >= maxIngredients) {
             String message = String.format(findString(R.string.max_ingredients_reached), maxIngredients);
             Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
             return;
@@ -212,7 +217,7 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
         mSelectIngredient = new Dialog(getActivity());
         mSelectIngredient.setContentView(R.layout.select_ingredient);
 
-        IngredientTypeAdapter adapter = new IngredientTypeAdapter(getActivity(), getIngredients());
+        IngredientTypeAdapter adapter = new IngredientTypeAdapter(getActivity(), getIngredientTypes());
         ListView listView = (ListView) mSelectIngredient.findViewById(R.id.recipe_list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
@@ -234,7 +239,7 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
         mSelectIngredient.dismiss();
-        String ingredient = getIngredients().get(position);
+        String ingredient = getIngredientTypes().get(position);
         if (findString(R.string.malt).equals(ingredient)) {
             MaltAddition malt = new MaltAddition();
             mRecipe.getMalts().add(malt);
@@ -250,7 +255,7 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
         }
     }
 
-    private List<String> getIngredients() {
+    private List<String> getIngredientTypes() {
         String[] ingredients = getActivity().getResources().getStringArray(R.array.ingredient_types);
         return Arrays.asList(ingredients);
     }
