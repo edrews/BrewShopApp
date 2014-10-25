@@ -5,8 +5,8 @@
     <color name="color_primary">#5d4037</color>
     <color name="color_primary_light">#d7ccc8</color>
     <color name="color_primary_dark">#2e1713</color>
-    <color name="color_accent">#ffd050</color>
-    <color name="color_accent_light">#ffffe0</color>
+    <color name="color_accent">#fff080</color>
+    <color name="color_accent_light">#f0f0f0</color>
 
     <color name="text_dark_primary">#DF000000</color>
     <color name="text_dark_secondary">#8A000000</color>

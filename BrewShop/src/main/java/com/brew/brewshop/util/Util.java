@@ -1,5 +1,7 @@
 package com.brew.brewshop.util;
 
+import com.brew.brewshop.storage.recipes.MaltAddition;
+
 import java.math.BigDecimal;
 
 public class Util {

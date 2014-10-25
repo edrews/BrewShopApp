@@ -84,7 +84,12 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
         MaltInfo maltInfo = (MaltInfo) mMaltSpinner.getSelectedItem();
         Malt malt = new Malt();
         malt.setColor(Util.toDouble(mColorEdit.getText()));
-        malt.setGravity(Util.toDouble(mGravityEdit.getText()));
+
+        double gravity = Util.toDouble(mGravityEdit.getText());
+        if (gravity < 1) {
+            gravity = 1;
+        }
+        malt.setGravity(gravity);
         malt.setId(maltInfo.getId());
         malt.setName(maltInfo.getName());
         addition.setMalt(malt);

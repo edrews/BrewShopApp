@@ -10,7 +10,7 @@
 
             <LinearLayout
                 android:id="@+id/recipe_stats_layout"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/touchable"
                 android:orientation="vertical"
@@ -204,28 +204,34 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/recipe_og"
                             style="@style/RecipeStatRight"
-                            android:text="1.050" />
+                            android:text="0.000" />
 
                         <TextView
+                            android:id="@+id/recipe_ibu"
                             style="@style/RecipeStatRight"
-                            android:text="20" />
+                            android:text="0" />
 
                         <TextView
+                            android:id="@+id/recipe_srm"
                             style="@style/RecipeStatRight"
-                            android:text="10" />
+                            android:text="0" />
 
                         <TextView
+                            android:id="@+id/recipe_fg"
                             style="@style/RecipeStatRight"
-                            android:text="~1.012" />
+                            android:text="~0.000" />
 
                         <TextView
+                            android:id="@+id/recipe_abv"
                             style="@style/RecipeStatRight"
-                            android:text="~4.7" />
+                            android:text="~0.0" />
 
                         <TextView
+                            android:id="@+id/recipe_calories"
                             style="@style/RecipeStatRight"
-                            android:text="~110" />
+                            android:text="~0" />
                     </LinearLayout>
 
                     <View
@@ -295,7 +301,7 @@
                         android:gravity="center"
                         android:minWidth="48dp"
                         android:background="@drawable/touchable"
-                        android:text="NEW" />
+                        android:text="ADD" />
 
                 </RelativeLayout>
 

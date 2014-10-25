@@ -111,8 +111,60 @@ public class Recipe implements Parcelable {
         return ingredients;
     }
 
-    public double getGravity() { return 1.050; }
-    public int getSrm() { return 10; }
+    public double getSrm() {
+        double maltColorUnits = 0;
+        for (MaltAddition malt : getMalts()) {
+            maltColorUnits += malt.getMalt().getColor() * malt.getWeight().getPounds();
+        }
+        maltColorUnits /= getBatchVolume();
+        double srm = 1.4922 * Math.pow(maltColorUnits, 0.6859);
+        return srm;
+    }
+
+    public double getFg() {
+        double attenuation = 0;
+        for (Yeast yeast : getYeast()) {
+            if (yeast.getAttenuation() > attenuation) {
+                attenuation = yeast.getAttenuation();
+            }
+        }
+        double og = getOg();
+        return og - (og - 1) * (attenuation * 0.01);
+    }
+
+    public double getOg() {
+        double gravityPoints = 0;
+        for (MaltAddition addition : getMalts()) {
+            gravityPoints += addition.getWeight().getPounds() * (addition.getMalt().getGravity() - 1);
+        }
+        gravityPoints = (gravityPoints * getEfficiency() * .01) / getBatchVolume();
+        return (gravityPoints + 1);
+    }
+
+    public double getCalories() {
+        double fg = getFg();
+        double abw = (getAbv() * .79) / fg;
+        double re = calculateRealExtract();
+        return ((6.9 * abw) + 4.0 * (re - 0.1)) * fg * 3.55;
+    }
+
+    public double getAbv() {
+        double og = getOg();
+        double fg = getFg();
+        return (76.08*(og - fg) / (1.775-og)) * (fg/0.794);
+    }
+
+    private double calculateRealExtract() {
+        double pi = gravityToPlato(getOg());
+        double pf = gravityToPlato(getFg());
+        return (0.1808 * pi) + (0.8192 * pf);
+    }
+
+    private double gravityToPlato(double sg) {
+        double plato = -668.962 + (1262.45 * sg) - (776.43 * Math.pow(sg, 2)) + (182.94 * Math.pow(sg, 3));
+        return plato;
+    }
+
     public int getIbu() { return 10; }
 
     public static final Parcelable.Creator<Recipe> CREATOR = new Parcelable.Creator<Recipe>() {

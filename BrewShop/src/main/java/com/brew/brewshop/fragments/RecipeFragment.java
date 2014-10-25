@@ -93,6 +93,24 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
         textView = (TextView) root.findViewById(R.id.efficiency);
         textView.setText(Util.fromDouble(mRecipe.getEfficiency(), 1) + UNIT_PERCENT);
 
+        textView = (TextView) root.findViewById(R.id.recipe_og);
+        textView.setText(Util.fromDouble(mRecipe.getOg(), 3, false));
+
+        textView = (TextView) root.findViewById(R.id.recipe_fg);
+        textView.setText("~"+Util.fromDouble(mRecipe.getFg(), 3, false));
+
+        textView = (TextView) root.findViewById(R.id.recipe_abv);
+        textView.setText("~"+Util.fromDouble(mRecipe.getAbv(), 1));
+
+        textView = (TextView) root.findViewById(R.id.recipe_srm);
+        textView.setText(Util.fromDouble(mRecipe.getSrm(), 1));
+
+        textView = (TextView) root.findViewById(R.id.recipe_ibu);
+        textView.setText(Util.fromDouble(mRecipe.getIbu(), 1));
+
+        textView = (TextView) root.findViewById(R.id.recipe_calories);
+        textView.setText("~"+Util.fromDouble(mRecipe.getCalories(), 1));
+
         textView = (TextView) root.findViewById(R.id.style_og);
         textView.setText(Util.fromDouble(styleInfo.getOgMin(), 3, false) + "+");
 

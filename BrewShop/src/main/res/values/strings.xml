@@ -22,7 +22,7 @@
     <string name="ingredients">Ingredients</string>
     <string name="add_ingredient">Add Ingredient</string>
     <string name="max_ingredients_reached">Recipes have a %d ingredient limit</string>
-    <string name="no_ingredients">Add ingredients</string>
+    <string name="no_ingredients">No ingredients</string>
     <string name="unnamed_recipe">Unnamed Recipe</string>
     <string name="add_recipe_notes">Add recipe notes...</string>
     <string name="delete_selected_recipes">Delete selected recipes?</string>
