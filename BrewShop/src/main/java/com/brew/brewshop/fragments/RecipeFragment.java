@@ -1,42 +1,51 @@
 package com.brew.brewshop.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.brew.brewshop.FragmentHandler;
-import com.brew.brewshop.IngredientListAdapter;
+import com.brew.brewshop.IngredientListView;
 import com.brew.brewshop.IngredientTypeAdapter;
 import com.brew.brewshop.R;
+import com.brew.brewshop.ViewClickListener;
 import com.brew.brewshop.storage.BrewStorage;
-import com.brew.brewshop.storage.style.StyleInfo;
-import com.brew.brewshop.storage.style.StyleStorage;
 import com.brew.brewshop.storage.recipes.HopAddition;
 import com.brew.brewshop.storage.recipes.MaltAddition;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.storage.recipes.Yeast;
-import com.brew.brewshop.IngredientComparator;
+import com.brew.brewshop.storage.style.StyleInfo;
+import com.brew.brewshop.storage.style.StyleStorage;
 import com.brew.brewshop.util.Util;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-public class RecipeFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener{
+public class RecipeFragment extends Fragment implements ViewClickListener,
+        DialogInterface.OnClickListener,
+        AdapterView.OnItemClickListener,
+        ActionMode.Callback {
+
     private static final String TAG = RecipeFragment.class.getName();
+    private static final String ACTION_MODE = "ActionMode";
+    private static final String SELECTED_INDEXES = "Selected";
     private static final String RECIPE = "Recipe";
     private static final String UNIT_GALLON = " gal";
     private static final String UNIT_MINUTES = " min";
@@ -48,11 +57,14 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
     private BrewStorage mStorage;
     private FragmentHandler mFragmentHandler;
     private Dialog mSelectIngredient;
-    private List<Object> mSortedIngredients;
+    private ActionMode mActionMode;
+    private IngredientListView mIngredientView;
+    private View mRootView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
         View root = inflater.inflate(R.layout.fragment_edit_recipe, container, false);
+        mRootView = root;
         root.findViewById(R.id.recipe_stats_layout).setOnClickListener(this);
         root.findViewById(R.id.recipe_notes_layout).setOnClickListener(this);
         root.findViewById(R.id.new_ingredient_view).setOnClickListener(this);
@@ -93,23 +105,7 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
         textView = (TextView) root.findViewById(R.id.efficiency);
         textView.setText(Util.fromDouble(mRecipe.getEfficiency(), 1) + UNIT_PERCENT);
 
-        textView = (TextView) root.findViewById(R.id.recipe_og);
-        textView.setText(Util.fromDouble(mRecipe.getOg(), 3, false));
-
-        textView = (TextView) root.findViewById(R.id.recipe_fg);
-        textView.setText("~"+Util.fromDouble(mRecipe.getFg(), 3, false));
-
-        textView = (TextView) root.findViewById(R.id.recipe_abv);
-        textView.setText("~"+Util.fromDouble(mRecipe.getAbv(), 1));
-
-        textView = (TextView) root.findViewById(R.id.recipe_srm);
-        textView.setText(Util.fromDouble(mRecipe.getSrm(), 1));
-
-        textView = (TextView) root.findViewById(R.id.recipe_ibu);
-        textView.setText(Util.fromDouble(mRecipe.getIbu(), 1));
-
-        textView = (TextView) root.findViewById(R.id.recipe_calories);
-        textView.setText("~"+Util.fromDouble(mRecipe.getCalories(), 1));
+        updateStats();
 
         textView = (TextView) root.findViewById(R.id.style_og);
         textView.setText(Util.fromDouble(styleInfo.getOgMin(), 3, false) + "+");
@@ -142,19 +138,8 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
         }
         textView.setText(abv + UNIT_PERCENT);
 
-        LinearLayout ingredientList = (LinearLayout) root.findViewById(R.id.ingredient_list);
-        mSortedIngredients = mRecipe.getIngredients();
-        Collections.sort(mSortedIngredients, new IngredientComparator());
-        IngredientListAdapter adapter = new IngredientListAdapter(getActivity(), mSortedIngredients);
-        if (adapter.getCount() > 0) {
-            ingredientList.removeAllViews();
-            for (int i = 0; i < adapter.getCount(); i++) {
-                View view = adapter.getView(i, null, ingredientList);
-                view.setTag(R.string.ingredients, mSortedIngredients.get(i));
-                view.setOnClickListener(this);
-                ingredientList.addView(view);
-            }
-        }
+        mIngredientView = new IngredientListView(getActivity(), root, mRecipe, this);
+        mIngredientView.drawList();
 
         textView = (TextView) root.findViewById(R.id.recipe_notes);
         String notes;
@@ -165,7 +150,7 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
             notes = mRecipe.getNotes();
         }
         textView.setText(notes);
-
+        checkResumeActionMode(state);
         getActivity().getActionBar().setTitle(findString(R.string.edit_recipe));
 
         return root;
@@ -184,16 +169,16 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
             state = new Bundle();
         }
         state.putParcelable(RECIPE, mRecipe);
+        state.putBoolean(ACTION_MODE, mActionMode != null);
+        if (mActionMode != null) {
+            state.putIntArray(SELECTED_INDEXES, mIngredientView.getSelectedIndexes());
+        }
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.edit_recipe_menu, menu);
-    }
-
-    public void setRecipe(Recipe recipe) {
-        mRecipe = recipe;
     }
 
     @Override
@@ -209,39 +194,37 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
                 addNewIngredient();
                 break;
         }
+
         Object ingredient = view.getTag(R.string.ingredients);
         if (ingredient != null) {
-            editIngredient(ingredient);
+            int index = (Integer) view.getTag(R.integer.list_index);
+            boolean selected = (Boolean) view.getTag(R.integer.is_selected);
+            if (mActionMode != null) {
+                mIngredientView.setSelected(index, !selected);
+                if (mIngredientView.getSelectedCount() == 0) {
+                    mActionMode.finish();
+                }
+                updateActionBar();
+            } else {
+                editIngredient(ingredient);
+            }
         }
     }
 
-    private void editIngredient(Object ingredient) {
-        if (ingredient instanceof MaltAddition) {
-            mFragmentHandler.showMaltEditor(mRecipe, (MaltAddition) ingredient);
-        } else if (ingredient instanceof HopAddition) {
-            mFragmentHandler.showHopsEditor(mRecipe, (HopAddition) ingredient);
-        } else if (ingredient instanceof Yeast) {
-            mFragmentHandler.showYeastEditor(mRecipe, (Yeast) ingredient);
+    @Override
+    public boolean onLongClick(View view) {
+        Object ingredient = view.getTag(R.string.ingredients);
+        if (ingredient != null) {
+            if (mActionMode != null) {
+                updateActionBar();
+                return false;
+            } else {
+                int index = (Integer) view.getTag(R.integer.list_index);
+                startActionMode(new int[] {index});
+            }
+            return true;
         }
-    }
-
-    private void addNewIngredient() {
-        int maxIngredients = getActivity().getResources().getInteger(R.integer.max_ingredients);
-        if (mSortedIngredients.size() >= maxIngredients) {
-            String message = String.format(findString(R.string.max_ingredients_reached), maxIngredients);
-            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        mSelectIngredient = new Dialog(getActivity());
-        mSelectIngredient.setContentView(R.layout.select_ingredient);
-
-        IngredientTypeAdapter adapter = new IngredientTypeAdapter(getActivity(), getIngredientTypes());
-        ListView listView = (ListView) mSelectIngredient.findViewById(R.id.recipe_list);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(this);
-        mSelectIngredient.setCancelable(true);
-        mSelectIngredient.setTitle(findString(R.string.add_ingredient));
-        mSelectIngredient.show();
+        return false;
     }
 
     @Override
@@ -271,6 +254,172 @@ public class RecipeFragment extends Fragment implements View.OnClickListener, Ad
             mRecipe.getYeast().add(yeast);
             mFragmentHandler.showYeastEditor(mRecipe, yeast);
         }
+    }
+
+    @Override
+    public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+        mActionMode = actionMode;
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+        menu.clear();
+        int checked = mIngredientView.getSelectedCount();
+        mActionMode.setTitle(getResources().getString(R.string.select_ingredients));
+        mActionMode.setSubtitle(checked + " " + getResources().getString(R.string.selected));
+
+        MenuInflater inflater = actionMode.getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
+
+        boolean itemsChecked = (mIngredientView.getSelectedCount() > 0);
+        mActionMode.getMenu().findItem(R.id.action_delete).setVisible(itemsChecked);
+        mActionMode.getMenu().findItem(R.id.action_select_all).setVisible(!mIngredientView.areAllSelected());
+        return true;
+    }
+
+    @Override
+    public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.action_select_all:
+                mIngredientView.setAllSelected(true);
+                updateActionBar();
+                return true;
+            case R.id.action_delete:
+                int count = mIngredientView.getSelectedCount();
+                String message;
+                if (count > 1) {
+                    message = String.format(getActivity().getResources().getString(R.string.delete_selected_ingredients), count);
+                } else {
+                    message = String.format(getActivity().getResources().getString(R.string.delete_selected_ingredient), count);
+                }
+                new AlertDialog.Builder(getActivity())
+                        .setMessage(message)
+                        .setPositiveButton(R.string.yes, this)
+                        .setNegativeButton(R.string.no, null)
+                        .show();
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    @Override
+    public void onDestroyActionMode(ActionMode actionMode) {
+        mIngredientView.setAllSelected(false);
+        mActionMode = null;
+    }
+
+    @Override
+    public void onClick(DialogInterface dialogInterface, int i) {
+        int deleted = deleteSelected();
+        mIngredientView.drawList();
+        mActionMode.finish();
+        updateStats();
+        toastDeleted(deleted);
+    }
+
+    private void checkResumeActionMode(Bundle bundle) {
+        if (bundle != null) {
+            if (bundle.getBoolean(ACTION_MODE)) {
+                int[] selected = bundle.getIntArray(SELECTED_INDEXES);
+                startActionMode(selected);
+            }
+        }
+    }
+
+    private void updateStats() {
+        TextView textView;
+        textView = (TextView) mRootView.findViewById(R.id.recipe_og);
+        textView.setText(Util.fromDouble(mRecipe.getOg(), 3, false));
+
+        textView = (TextView) mRootView.findViewById(R.id.recipe_fg);
+        textView.setText(Util.fromDouble(mRecipe.getFg(), 3, false));
+
+        textView = (TextView) mRootView.findViewById(R.id.recipe_abv);
+        textView.setText(Util.fromDouble(mRecipe.getAbv(), 1)+UNIT_PERCENT);
+
+        textView = (TextView) mRootView.findViewById(R.id.recipe_srm);
+        textView.setText(Util.fromDouble(mRecipe.getSrm(), 1));
+
+        textView = (TextView) mRootView.findViewById(R.id.recipe_ibu);
+        textView.setText(Util.fromDouble(mRecipe.getIbu(), 1));
+
+        textView = (TextView) mRootView.findViewById(R.id.recipe_calories);
+        textView.setText(Util.fromDouble(mRecipe.getCalories(), 1));
+    }
+
+    public void setRecipe(Recipe recipe) {
+        mRecipe = recipe;
+    }
+
+    private void toastDeleted(int deleted) {
+        Context context = getActivity();
+        String message;
+        if (deleted > 1) {
+            message = String.format(context.getResources().getString(R.string.deleted_ingredients), deleted);
+        } else {
+            message = context.getResources().getString(R.string.deleted_ingredient);
+        }
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private int deleteSelected() {
+        int[] indexes = mIngredientView.getSelectedIndexes();
+        for (int i = indexes.length - 1; i >= 0; i--) {
+            Object ingredient = mRecipe.getIngredients().get(indexes[i]);
+            if (ingredient instanceof MaltAddition) {
+                mRecipe.getMalts().remove(ingredient);
+            } else if (ingredient instanceof HopAddition) {
+                mRecipe.getHops().remove(ingredient);
+            } else if (ingredient instanceof Yeast) {
+                mRecipe.getYeast().remove(ingredient);
+            }
+        }
+        mStorage.updateRecipe(mRecipe);
+        return indexes.length;
+    }
+
+    private void updateActionBar() {
+        if (mActionMode != null) {
+            mActionMode.invalidate();
+        }
+    }
+
+    private void startActionMode(int[] selectedIndexes) {
+        for (int i : selectedIndexes) {
+            mIngredientView.setSelected(i, true);
+        }
+        getActivity().startActionMode(this);
+    }
+
+    private void editIngredient(Object ingredient) {
+        if (ingredient instanceof MaltAddition) {
+            mFragmentHandler.showMaltEditor(mRecipe, (MaltAddition) ingredient);
+        } else if (ingredient instanceof HopAddition) {
+            mFragmentHandler.showHopsEditor(mRecipe, (HopAddition) ingredient);
+        } else if (ingredient instanceof Yeast) {
+            mFragmentHandler.showYeastEditor(mRecipe, (Yeast) ingredient);
+        }
+    }
+
+    private void addNewIngredient() {
+        int maxIngredients = getActivity().getResources().getInteger(R.integer.max_ingredients);
+        if (mRecipe.getIngredients().size() >= maxIngredients) {
+            String message = String.format(findString(R.string.max_ingredients_reached), maxIngredients);
+            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        mSelectIngredient = new Dialog(getActivity());
+        mSelectIngredient.setContentView(R.layout.select_ingredient);
+
+        IngredientTypeAdapter adapter = new IngredientTypeAdapter(getActivity(), getIngredientTypes());
+        ListView listView = (ListView) mSelectIngredient.findViewById(R.id.recipe_list);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(this);
+        mSelectIngredient.setCancelable(true);
+        mSelectIngredient.setTitle(findString(R.string.add_ingredient));
+        mSelectIngredient.show();
     }
 
     private List<String> getIngredientTypes() {

@@ -3,7 +3,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/touchable"
     android:minHeight="48dp"
-    android:padding="2dp">
+    android:layout_margin="2dp">
 
     <TextView style="@style/IngredientIcon"
         android:id="@+id/ingredient_icon"

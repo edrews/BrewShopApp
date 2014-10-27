@@ -14,10 +14,13 @@
     <string name="retrieve_error">Unable to retrieve product list.</string>
     <string name="no_products">No products available.</string>
     <string name="select_recipes">Select Recipes</string>
+    <string name="select_ingredients">Select Ingredients</string>
     <string name="selected">selected</string>
     <string name="no_recipes">You have no recipes</string>
     <string name="deleted_recipes">Deleted %d recipes</string>
-    <string name="deleted_recipe">Deleted recipe</string>
+    <string name="deleted_recipe">Recipe deleted</string>
+    <string name="deleted_ingredients">Deleted %d ingredients</string>
+    <string name="deleted_ingredient">Ingredient deleted</string>
     <string name="max_recipes_reached">App has a %d recipe limit</string>
     <string name="ingredients">Ingredients</string>
     <string name="add_ingredient">Add Ingredient</string>
@@ -25,7 +28,10 @@
     <string name="no_ingredients">No ingredients</string>
     <string name="unnamed_recipe">Unnamed Recipe</string>
     <string name="add_recipe_notes">Add recipe notes...</string>
-    <string name="delete_selected_recipes">Delete selected recipes?</string>
+    <string name="delete_selected_recipes">Delete %d recipes?</string>
+    <string name="delete_selected_ingredients">Delete %d ingredients?</string>
+    <string name="delete_selected_recipe">Delete recipe?</string>
+    <string name="delete_selected_ingredient">Delete ingredient?</string>
     <string name="no_description">No description available.</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>

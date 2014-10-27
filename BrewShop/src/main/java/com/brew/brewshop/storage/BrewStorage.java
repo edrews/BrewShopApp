@@ -5,13 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
+import com.brew.brewshop.IngredientComparator;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class BrewStorage extends SQLiteOpenHelper {
@@ -22,7 +22,7 @@ public class BrewStorage extends SQLiteOpenHelper {
     private static final String ID_COLUMN = "_id";
     private static final String DATA_COLUMN = "data";
 
-    private List<Recipe> mRecipeCache;
+    private static List<Recipe> sRecipeCache;
 
     public BrewStorage(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -60,7 +60,7 @@ public class BrewStorage extends SQLiteOpenHelper {
         cv.put(DATA_COLUMN, json);
         db.insert(RECIPES_TABLE, DATA_COLUMN, cv);
         readNewId(db, recipe);
-        mRecipeCache = null;
+        sRecipeCache = null;
     }
 
     private void readNewId(SQLiteDatabase db, Recipe recipe) {
@@ -78,8 +78,8 @@ public class BrewStorage extends SQLiteOpenHelper {
     }
 
     public List<Recipe> retrieveRecipes() {
-        if (mRecipeCache != null) {
-            return mRecipeCache;
+        if (sRecipeCache != null) {
+            return sRecipeCache;
         }
         List<Recipe> recipes = new ArrayList<Recipe>();
         Gson gson = new Gson();
@@ -97,8 +97,9 @@ public class BrewStorage extends SQLiteOpenHelper {
             }
         }
         cursor.close();
-        mRecipeCache = recipes;
-        return mRecipeCache;
+        Collections.sort(recipes, new RecipeComparator());
+        sRecipeCache = recipes;
+        return sRecipeCache;
     }
 
     public Recipe retrieveRecipe(Recipe recipe) {
@@ -126,7 +127,7 @@ public class BrewStorage extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         db.update(RECIPES_TABLE, args, filter, null);
         db.close();
-        mRecipeCache = null;
+        sRecipeCache = null;
     }
 
     public void deleteRecipe(Recipe recipe) {
@@ -134,7 +135,7 @@ public class BrewStorage extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(RECIPES_TABLE, ID_COLUMN + "=" + id, null);
         db.close();
-        mRecipeCache = null;
+        sRecipeCache = null;
     }
 
     public String getJson(Recipe recipe) {

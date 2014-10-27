@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -21,10 +22,12 @@ import java.util.List;
 public class RecipeListAdapter extends BaseAdapter {
     private Context mContext;
     BrewStorage mStorage;
+    LinearLayout mLayout;
 
-    public RecipeListAdapter(Context context) {
+    public RecipeListAdapter(Context context, BrewStorage storage, LinearLayout layout) {
         mContext = context;
-        mStorage = new BrewStorage(context);
+        mStorage = storage;
+        mLayout = layout;
     }
 
     @Override
@@ -60,6 +63,11 @@ public class RecipeListAdapter extends BaseAdapter {
         iconView.setBackgroundColor(Util.getColor(recipe.getSrm()));
         nameView.setText(recipe.getName());
         descriptionView.setText(styleInfoList.findById(recipe.getStyle().getId()).getName());
+
+        if (position == mStorage.retrieveRecipes().size() - 1) {
+            rowView.findViewById(R.id.separator).setVisibility(View.GONE);
+        }
+
         return rowView;
     }
 }

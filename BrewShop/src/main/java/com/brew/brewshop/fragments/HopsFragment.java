@@ -2,7 +2,6 @@ package com.brew.brewshop.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +16,8 @@ import com.brew.brewshop.storage.NameableAdapter;
 import com.brew.brewshop.storage.hops.HopsInfo;
 import com.brew.brewshop.storage.hops.HopsInfoList;
 import com.brew.brewshop.storage.hops.HopsStorage;
-import com.brew.brewshop.storage.malt.MaltInfo;
-import com.brew.brewshop.storage.malt.MaltStorage;
 import com.brew.brewshop.storage.recipes.Hop;
 import com.brew.brewshop.storage.recipes.HopAddition;
-import com.brew.brewshop.storage.recipes.Malt;
-import com.brew.brewshop.storage.recipes.MaltAddition;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.storage.recipes.Weight;
 import com.brew.brewshop.util.Util;
@@ -70,7 +65,7 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
             HopAddition addition = getHopAddition();
             setHop(addition.getHop());
             mWeightEdit.setText(Util.fromDouble(addition.getWeight().getOunces(), 3));
-            mAlphaEdit.setText(Util.fromDouble(addition.getHop().getAlpha(), 3));
+            mAlphaEdit.setText(Util.fromDouble(addition.getHop().getPercentAlpha(), 3));
             mTimeEdit.setText(String.valueOf(addition.getTime()));
         }
 
@@ -90,7 +85,7 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
         if (alpha > 100) {
             alpha = 100;
         }
-        hop.setAlpha(alpha);
+        hop.setPercentAlpha(alpha);
         hop.setId(info.getId());
         hop.setName(info.getName());
         addition.setHop(hop);

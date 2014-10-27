@@ -3,12 +3,18 @@ package com.brew.brewshop.storage.recipes;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.brew.brewshop.IngredientComparator;
+import com.brew.brewshop.util.Util;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Recipe implements Parcelable {
     private static final int VERSION = 1;
     private static final int DEFAULT_BEER_STYLE = 1;
+    private static final double MIN_VOLUME = 0.1;
+    private static final double MIN_GRAVITY = 1.001;
 
     private int id;
     private String name;
@@ -108,6 +114,7 @@ public class Recipe implements Parcelable {
         ingredients.addAll(malts);
         ingredients.addAll(hops);
         ingredients.addAll(yeast);
+        Collections.sort(ingredients, new IngredientComparator());
         return ingredients;
     }
 
@@ -165,7 +172,26 @@ public class Recipe implements Parcelable {
         return plato;
     }
 
-    public int getIbu() { return 10; }
+    // Jackie Rager's Equation
+    // http://www.rooftopbrew.net/ibu.php
+    public double getIbu() {
+        double ibu = 0;
+        for (HopAddition hop : hops) {
+            double weight = hop.getWeight().getOunces();
+            double util = Util.getHopUtilization(hop.getTime(), getOg());
+            double alpha = hop.getHop().getPercentAlpha() / 100;
+            double volume = batchVolume;
+            if (volume < MIN_VOLUME) {
+                volume = MIN_VOLUME;
+            }
+            double gravity = getOg();
+            if (gravity < MIN_GRAVITY) {
+                gravity = MIN_GRAVITY;
+            }
+            ibu += (weight * util * alpha * 7489) / (volume * gravity);
+        }
+        return ibu;
+    }
 
     public static final Parcelable.Creator<Recipe> CREATOR = new Parcelable.Creator<Recipe>() {
         public Recipe createFromParcel(Parcel in) {

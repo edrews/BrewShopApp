@@ -25,8 +25,8 @@ public class Hop implements Parcelable {
     public String getName() { return name; }
     public void setName(String value) { name = value; }
 
-    public double getAlpha() { return percentAlpha; }
-    public void setAlpha(double value) { percentAlpha = value; }
+    public double getPercentAlpha() { return percentAlpha; }
+    public void setPercentAlpha(double value) { percentAlpha = value; }
 
     @Override
     public int describeContents() {

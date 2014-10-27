@@ -1,6 +1,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/RecipeIngredient"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+<LinearLayout style="@style/RecipeIngredient"
     android:orientation="horizontal"
+    android:id="@+id/ingredient_layout"
     android:background="@drawable/touchable">
 
     <TextView style="@style/IngredientIcon"
@@ -63,3 +68,7 @@
     </LinearLayout>
 
 </LinearLayout>
+<View style="@style/HorizontalSeparator"
+android:id="@+id/separator"/>
+
+    </LinearLayout>

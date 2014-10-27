@@ -5,31 +5,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.brew.brewshop.storage.recipes.HopAddition;
 import com.brew.brewshop.storage.recipes.MaltAddition;
+import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.storage.recipes.Weight;
 import com.brew.brewshop.storage.recipes.Yeast;
 import com.brew.brewshop.util.Util;
 
-import java.util.List;
-
 public class IngredientListAdapter extends ArrayAdapter<Object> {
     private Context mContext;
-    private List<Object> mIngredients;
+    private Recipe mRecipe;
 
-    public IngredientListAdapter(Context context, List<Object> ingredients) {
-        super(context, R.layout.list_item_malt, ingredients);
+    public IngredientListAdapter(Context context, Recipe recipe) {
+        super(context, R.layout.list_item_malt);
         mContext = context;
-        mIngredients = ingredients;
+        mRecipe = recipe;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        Object ingredient = mIngredients.get(position);
+        Object ingredient = mRecipe.getIngredients().get(position);
         View rowView = null;
         if (ingredient instanceof MaltAddition) {
             rowView = inflater.inflate(R.layout.list_item_malt, parent, false);
@@ -40,6 +38,9 @@ public class IngredientListAdapter extends ArrayAdapter<Object> {
         } else if (ingredient instanceof Yeast) {
             rowView = inflater.inflate(R.layout.list_item_yeast, parent, false);
             populateView(rowView, (Yeast) ingredient);
+        }
+        if (position == mRecipe.getIngredients().size() - 1) {
+            rowView.findViewById(R.id.separator).setVisibility(View.GONE);
         }
         return rowView;
     }
@@ -75,7 +76,7 @@ public class IngredientListAdapter extends ArrayAdapter<Object> {
         view.setText(addition.getHop().getName());
 
         view = (TextView) parent.findViewById(R.id.alpha);
-        double alpha = addition.getHop().getAlpha();
+        double alpha = addition.getHop().getPercentAlpha();
         view.setText(String.format("%.1f%% Alpha", alpha));
 
         view = (TextView) parent.findViewById(R.id.time);
