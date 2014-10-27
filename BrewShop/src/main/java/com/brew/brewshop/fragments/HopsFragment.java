@@ -146,8 +146,10 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
             mAlphaEdit.setText(Util.fromDouble(hopsInfo.getAlphaAcidMin(), 3));
         }
         if (hopsInfo.getDescription().isEmpty()) {
+            mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_secondary));
             mDescription.setText(getActivity().getResources().getString(R.string.no_description));
         } else {
+            mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_primary));
             mDescription.setText(Util.separateSentences(hopsInfo.getDescription()));
         }
     }

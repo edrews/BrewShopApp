@@ -150,8 +150,10 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
 
     private void setDescription(StyleInfo info) {
         if (info.getDescription().isEmpty()) {
+            mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_secondary));
             mDescription.setText(getActivity().getResources().getString(R.string.no_description));
         } else {
+            mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_primary));
             mDescription.setText(Util.separateSentences(info.getDescription()));
         }
     }

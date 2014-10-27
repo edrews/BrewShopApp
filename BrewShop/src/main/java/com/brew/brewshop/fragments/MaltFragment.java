@@ -156,8 +156,10 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
             mGravityEdit.setText(Util.fromDouble(info.getGravity(), 3, false));
         }
         if (info.getDescription().isEmpty()) {
+            mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_secondary));
             mDescription.setText(getActivity().getResources().getString(R.string.no_description));
         } else {
+            mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_primary));
             mDescription.setText(Util.separateSentences(info.getDescription()));
         }
     }
