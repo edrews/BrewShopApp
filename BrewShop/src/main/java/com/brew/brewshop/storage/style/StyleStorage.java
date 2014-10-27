@@ -10,8 +10,6 @@ import org.json.JSONException;
 import java.io.IOException;
 
 public class StyleStorage {
-    private static final String TAG = StyleStorage.class.getName();
-
     private static StyleInfoList sStyleCache;
 
     private Context mContext;

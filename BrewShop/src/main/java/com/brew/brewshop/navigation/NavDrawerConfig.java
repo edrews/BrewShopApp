@@ -8,7 +8,6 @@ public class NavDrawerConfig {
     private int drawerShadow;
     private int drawerLayoutId;
     private int leftDrawerId;
-    private int[] actionMenuItemsToHideWhenDrawerOpen;
     private NavDrawerItem[] navItems;
     private int drawerOpenDesc;
     private int drawerCloseDesc;

@@ -21,7 +21,7 @@ public class NavDrawerAdapter extends ArrayAdapter<NavDrawerItem> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = null ;
+        View view;
         NavDrawerItem menuItem = this.getItem(position);
         if ( menuItem.getType() == NavMenuEntry.ITEM_TYPE ) {
             view = getItemView(convertView, parent, menuItem );

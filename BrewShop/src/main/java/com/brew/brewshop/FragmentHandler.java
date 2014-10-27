@@ -6,6 +6,7 @@ import com.brew.brewshop.storage.recipes.MaltAddition;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.storage.recipes.Yeast;
 
+@SuppressWarnings("unused")
 public interface FragmentHandler {
     public void showProducts(ProductType type);
     public void showRecipeManager();

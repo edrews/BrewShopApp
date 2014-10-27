@@ -38,4 +38,13 @@ public class Hop implements Parcelable {
         parcel.writeString(name);
         parcel.writeDouble(percentAlpha);
     }
+
+    public static final Parcelable.Creator<Hop> CREATOR = new Parcelable.Creator<Hop>() {
+        public Hop createFromParcel(Parcel in) {
+            return new Hop(in);
+        }
+        public Hop[] newArray(int size) {
+            return new Hop[size];
+        }
+    };
 }

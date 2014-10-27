@@ -39,7 +39,7 @@ public class IngredientListAdapter extends ArrayAdapter<Object> {
             rowView = inflater.inflate(R.layout.list_item_yeast, parent, false);
             populateView(rowView, (Yeast) ingredient);
         }
-        if (position == mRecipe.getIngredients().size() - 1) {
+        if (position == mRecipe.getIngredients().size() - 1 && rowView != null) {
             rowView.findViewById(R.id.separator).setVisibility(View.GONE);
         }
         return rowView;

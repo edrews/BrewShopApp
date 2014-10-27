@@ -4,15 +4,12 @@ import android.content.Context;
 
 import com.brew.brewshop.R;
 import com.brew.brewshop.storage.JsonReader;
-import com.brew.brewshop.storage.malt.MaltInfoList;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 
 public class HopsStorage {
-    private static final String TAG = HopsStorage.class.getName();
-
     private static HopsInfoList sHopsCache;
 
     private Context mContext;
@@ -21,6 +18,7 @@ public class HopsStorage {
         mContext = context;
     }
 
+    @SuppressWarnings("unchecked")
     public HopsInfoList getHops() {
         if (sHopsCache != null) {
             return sHopsCache;

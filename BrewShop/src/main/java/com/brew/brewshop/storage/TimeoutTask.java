@@ -16,7 +16,7 @@ public class TimeoutTask extends AsyncTask<Integer, Void, Void> {
             Thread.sleep(millis, 0);
             mHandler.onTimeout();
         } catch (InterruptedException e) {
-
+            e.printStackTrace();
         }
         return null;
     }

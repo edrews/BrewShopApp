@@ -1,5 +1,6 @@
 package com.brew.brewshop.fragments;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,14 +16,15 @@ import android.widget.TextView;
 import com.brew.brewshop.R;
 import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.NameableAdapter;
+import com.brew.brewshop.storage.recipes.BeerStyle;
+import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.storage.style.StyleInfo;
 import com.brew.brewshop.storage.style.StyleInfoList;
 import com.brew.brewshop.storage.style.StyleStorage;
-import com.brew.brewshop.storage.recipes.BeerStyle;
-import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.util.Util;
 
 public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+    @SuppressWarnings("unused")
     private static final String TAG = RecipeStatsFragment.class.getName();
     private static final String RECIPE = "Recipe";
 
@@ -74,7 +76,10 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
             mEfficiency = (EditText) root.findViewById(R.id.efficiency);
             mEfficiency.setText(Util.fromDouble(mRecipe.getEfficiency(), 5));
         }
-        getActivity().getActionBar().setTitle(getActivity().getResources().getString(R.string.edit_recipe_stats));
+        ActionBar bar = getActivity().getActionBar();
+        if (bar != null) {
+            bar.setTitle(getActivity().getResources().getString(R.string.edit_recipe_stats));
+        }
 
         return root;
     }

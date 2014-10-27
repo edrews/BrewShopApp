@@ -42,10 +42,7 @@ public class IngredientListView {
     }
 
     public boolean areAllSelected() {
-        if (mRecipe.getIngredients().size() == getSelectedCount()) {
-            return true;
-        }
-        return false;
+        return (mRecipe.getIngredients().size() == getSelectedCount());
     }
 
     public void setAllSelected(boolean selected) {

@@ -2,7 +2,6 @@ package com.brew.brewshop.navigation;
 
 import android.app.Activity;
 import android.content.res.Configuration;
-import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,8 +15,6 @@ import android.widget.ListView;
 import com.brew.brewshop.R;
 
 public class NavDrawer {
-    private static final String TAG = NavDrawer.class.getName();
-
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private ListView mDrawerList;
@@ -61,8 +58,8 @@ public class NavDrawer {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
-    public void onPostCreate(Bundle savedInstanceState) {
-        mDrawerToggle.syncState();
+    public void onPostCreate() {
+
     }
 
     public void onConfigurationChanged(Configuration newConfig) {
@@ -86,14 +83,10 @@ public class NavDrawer {
                 }
                 break;
         }
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        } else {
-            return false;
-        }
+        return mDrawerToggle.onOptionsItemSelected(item);
     }
 
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public boolean onKeyDown(int keyCode) {
         if ( keyCode == KeyEvent.KEYCODE_MENU ) {
             if ( this.mDrawerLayout.isDrawerOpen(this.mDrawerList)) {
                 this.mDrawerLayout.closeDrawer(this.mDrawerList);

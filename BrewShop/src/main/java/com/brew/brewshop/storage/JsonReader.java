@@ -34,7 +34,10 @@ public class JsonReader {
         JSONObject object = new JSONObject(total.toString());
         JSONArray array = object.getJSONArray("data");
         Gson gson = new Gson();
+
+        @SuppressWarnings("unchecked")
         T list = (T) gson.fromJson(array.toString(), mClass);
+
         Collections.sort(list, new NameComparator());
         return list;
     }

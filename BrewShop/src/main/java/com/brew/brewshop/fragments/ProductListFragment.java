@@ -1,5 +1,6 @@
 package com.brew.brewshop.fragments;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductListFragment extends Fragment implements IProductRetrievedHandler {
+    @SuppressWarnings("unused")
     private static final String TAG = ProductListFragment.class.getName();
     public static String PRODUCT_TYPE_KEY = "ProductType";
     public static String PRODUCTS_KEY = "Products";
@@ -82,7 +84,7 @@ public class ProductListFragment extends Fragment implements IProductRetrievedHa
         mErrorView.setVisibility(View.GONE);
         mProgressView.setVisibility(View.VISIBLE);
         setRefreshEnabled(false);
-        new ProductStorage(getActivity()).retrieveProducts(this, type);
+        new ProductStorage().retrieveProducts(this, type);
     }
 
     @Override
@@ -144,7 +146,7 @@ public class ProductListFragment extends Fragment implements IProductRetrievedHa
     }
 
     private void setTitle(ProductType type) {
-        int id = 0;
+        int id;
         switch (type) {
             case BEER:
                 id = R.string.beer;
@@ -164,6 +166,9 @@ public class ProductListFragment extends Fragment implements IProductRetrievedHa
                 id = R.string.homebrew_supplies;
                 break;
         }
-        getActivity().getActionBar().setTitle(getActivity().getResources().getString(id));
+        ActionBar bar = getActivity().getActionBar();
+        if (bar != null) {
+            bar.setTitle(getActivity().getResources().getString(id));
+        }
     }
 }

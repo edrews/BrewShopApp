@@ -1,7 +1,9 @@
 package com.brew.brewshop;
 
+import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -12,12 +14,12 @@ import android.view.MenuItem;
 
 import com.brew.brewshop.fragments.HopsFragment;
 import com.brew.brewshop.fragments.MaltFragment;
+import com.brew.brewshop.fragments.ProductListFragment;
 import com.brew.brewshop.fragments.RecipeFragment;
+import com.brew.brewshop.fragments.RecipeListFragment;
 import com.brew.brewshop.fragments.RecipeNotesFragment;
 import com.brew.brewshop.fragments.RecipeStatsFragment;
 import com.brew.brewshop.fragments.YeastFragment;
-import com.brew.brewshop.fragments.ProductListFragment;
-import com.brew.brewshop.fragments.RecipeListFragment;
 import com.brew.brewshop.navigation.NavDrawer;
 import com.brew.brewshop.navigation.NavDrawerAdapter;
 import com.brew.brewshop.navigation.NavDrawerConfig;
@@ -32,9 +34,7 @@ import com.brew.brewshop.storage.recipes.Yeast;
 
 public class HomeActivity extends FragmentActivity implements FragmentHandler,
         NavSelectionHandler,
-        FragmentManager.OnBackStackChangedListener
-{
-    private static final String TAG = HomeActivity.class.getName();
+        FragmentManager.OnBackStackChangedListener {
     private static final String CURRENT_RECIPE = "Recipe";
 
     private NavDrawer mNavDrawer;
@@ -43,8 +43,11 @@ public class HomeActivity extends FragmentActivity implements FragmentHandler,
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar bar = getActionBar();
+        if (bar != null) {
+            bar.setHomeButtonEnabled(true);
+            bar.setDisplayHomeAsUpEnabled(true);
+        }
 
         mNavDrawer = new NavDrawer(this, getNavDrawerConfig(), this);
         if (bundle == null) {
@@ -113,7 +116,7 @@ public class HomeActivity extends FragmentActivity implements FragmentHandler,
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        mNavDrawer.onPostCreate(savedInstanceState);
+        mNavDrawer.onPostCreate();
     }
 
     @Override
@@ -143,10 +146,7 @@ public class HomeActivity extends FragmentActivity implements FragmentHandler,
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (mNavDrawer.onKeyDown(keyCode, event)) {
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
+        return mNavDrawer.onKeyDown(keyCode) || super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -259,10 +259,13 @@ public class HomeActivity extends FragmentActivity implements FragmentHandler,
     @Override
     public void onBackStackChanged() {
         FragmentManager manager = getSupportFragmentManager();
-        if (manager.getBackStackEntryCount() > 0) {
-            getActionBar().setHomeAsUpIndicator(null);
-        } else {
-            getActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
+        ActionBar bar = getActionBar();
+        if (bar != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            if (manager.getBackStackEntryCount() > 0) {
+                bar.setHomeAsUpIndicator(null);
+            } else {
+                bar.setHomeAsUpIndicator(R.drawable.ic_drawer);
+            }
         }
         invalidateOptionsMenu();
     }

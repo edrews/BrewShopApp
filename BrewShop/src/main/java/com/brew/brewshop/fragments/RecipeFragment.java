@@ -1,5 +1,6 @@
 package com.brew.brewshop.fragments;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -42,7 +43,7 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
         DialogInterface.OnClickListener,
         AdapterView.OnItemClickListener,
         ActionMode.Callback {
-
+    @SuppressWarnings("unused")
     private static final String TAG = RecipeFragment.class.getName();
     private static final String ACTION_MODE = "ActionMode";
     private static final String SELECTED_INDEXES = "Selected";
@@ -151,7 +152,10 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
         }
         textView.setText(notes);
         checkResumeActionMode(state);
-        getActivity().getActionBar().setTitle(findString(R.string.edit_recipe));
+        ActionBar bar = getActivity().getActionBar();
+        if (bar != null) {
+            bar.setTitle(findString(R.string.edit_recipe));
+        }
 
         return root;
     }

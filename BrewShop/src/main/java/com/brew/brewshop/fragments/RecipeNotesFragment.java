@@ -1,5 +1,6 @@
 package com.brew.brewshop.fragments;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -7,15 +8,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.brew.brewshop.R;
 import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.recipes.Recipe;
 
 public class RecipeNotesFragment extends Fragment {
+    @SuppressWarnings("unused")
     private static final String TAG = RecipeNotesFragment.class.getName();
     private static final String RECIPE = "Recipe";
 
@@ -38,7 +38,10 @@ public class RecipeNotesFragment extends Fragment {
         if (mRecipe != null) {
             mNotes.setText(mRecipe.getNotes());
         }
-        getActivity().getActionBar().setTitle(getActivity().getResources().getString(R.string.edit_recipe_notes));
+        ActionBar bar = getActivity().getActionBar();
+        if (bar != null) {
+            bar.setTitle(getActivity().getResources().getString(R.string.edit_recipe_notes));
+        }
 
         return root;
     }

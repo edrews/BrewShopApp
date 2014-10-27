@@ -15,6 +15,7 @@ public class Recipe implements Parcelable {
     private static final int DEFAULT_BEER_STYLE = 1;
     private static final double MIN_VOLUME = 0.1;
     private static final double MIN_GRAVITY = 1.001;
+    private static final double MIN_BOIL_TIME = 10;
 
     private int id;
     private String name;
@@ -124,8 +125,7 @@ public class Recipe implements Parcelable {
             maltColorUnits += malt.getMalt().getColor() * malt.getWeight().getPounds();
         }
         maltColorUnits /= getBatchVolume();
-        double srm = 1.4922 * Math.pow(maltColorUnits, 0.6859);
-        return srm;
+        return 1.4922 * Math.pow(maltColorUnits, 0.6859);
     }
 
     public double getFg() {
@@ -168,8 +168,7 @@ public class Recipe implements Parcelable {
     }
 
     private double gravityToPlato(double sg) {
-        double plato = -668.962 + (1262.45 * sg) - (776.43 * Math.pow(sg, 2)) + (182.94 * Math.pow(sg, 3));
-        return plato;
+        return -668.962 + (1262.45 * sg) - (776.43 * Math.pow(sg, 2)) + (182.94 * Math.pow(sg, 3));
     }
 
     // Jackie Rager's Equation
@@ -180,7 +179,18 @@ public class Recipe implements Parcelable {
             double weight = hop.getWeight().getOunces();
             double util = Util.getHopUtilization(hop.getTime(), getOg());
             double alpha = hop.getHop().getPercentAlpha() / 100;
-            double volume = batchVolume;
+
+            double boilDuration = boilTime;
+            if (boilDuration < MIN_BOIL_TIME) {
+                boilDuration = MIN_BOIL_TIME;
+            }
+
+            double hopTime = hop.getTime();
+            if (hopTime > boilDuration) {
+                hopTime = boilDuration;
+            }
+
+            double volume = batchVolume + (boilVolume - batchVolume) * (hopTime / boilDuration);
             if (volume < MIN_VOLUME) {
                 volume = MIN_VOLUME;
             }

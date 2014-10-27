@@ -3,7 +3,7 @@ package com.brew.brewshop.storage.recipes;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Weight implements Parcelable{
+public class Weight implements Parcelable {
     private double ounces;
 
     public Weight() { }
@@ -39,4 +39,13 @@ public class Weight implements Parcelable{
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeDouble(ounces);
     }
+
+    public static final Parcelable.Creator<Weight> CREATOR = new Parcelable.Creator<Weight>() {
+        public Weight createFromParcel(Parcel in) {
+            return new Weight(in);
+        }
+        public Weight[] newArray(int size) {
+            return new Weight[size];
+        }
+    };
 }

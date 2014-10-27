@@ -1,5 +1,6 @@
 package com.brew.brewshop.fragments;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import com.brew.brewshop.storage.recipes.Weight;
 import com.brew.brewshop.util.Util;
 
 public class MaltFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+    @SuppressWarnings("unused")
     private static final String TAG = MaltFragment.class.getName();
     private static final String RECIPE = "Recipe";
     private static final String MALT_INDEX = "MaltIndex";
@@ -71,7 +73,10 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
             mGravityEdit.setText(Util.fromDouble(addition.getMalt().getGravity(), 3, false));
         }
 
-        getActivity().getActionBar().setTitle(getActivity().getResources().getString(R.string.edit_malt_addition));
+        ActionBar bar = getActivity().getActionBar();
+        if (bar != null) {
+            bar.setTitle(getActivity().getResources().getString(R.string.edit_malt_addition));
+        }
 
         return root;
     }

@@ -9,6 +9,7 @@ public class HopsInfo implements Nameable {
     private double alphaAcidMin;
 
     public HopsInfo() {
+        id = 0;
         name = "";
         description = "";
         alphaAcidMin = 0;

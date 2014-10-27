@@ -74,19 +74,6 @@ public class Util {
         return HOP_UTILIZATION[minutesIdx][gravityIdx];
     }
 
-    private double quantizedMinutes(double minutes) {
-        int idx = 0;
-        double smallestDifference = Math.abs(HOP_TIMES[0] - minutes);
-        for(int i = 0; i < HOP_TIMES.length; i++){
-            double difference = Math.abs(HOP_TIMES[i] - minutes);
-            if (difference < smallestDifference){
-                idx = i;
-                smallestDifference = difference;
-            }
-        }
-        return HOP_TIMES[idx];
-    }
-
     private static int findClosestIdx(double value, double[] values) {
         int idx = 0;
         double smallestDifference = Math.abs(values[0] - value);

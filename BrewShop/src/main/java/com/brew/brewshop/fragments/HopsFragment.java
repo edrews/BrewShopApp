@@ -1,5 +1,6 @@
 package com.brew.brewshop.fragments;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import com.brew.brewshop.storage.recipes.Weight;
 import com.brew.brewshop.util.Util;
 
 public class HopsFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+    @SuppressWarnings("unused")
     private static final String TAG = HopsFragment.class.getName();
     private static final String RECIPE = "Recipe";
     private static final String HOP_INDEX = "HopIndex";
@@ -69,8 +71,10 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
             mTimeEdit.setText(String.valueOf(addition.getTime()));
         }
 
-        getActivity().getActionBar().setTitle(getActivity().getResources().getString(R.string.edit_hop_addition));
-
+        ActionBar bar = getActivity().getActionBar();
+        if (bar != null) {
+            bar.setTitle(getActivity().getResources().getString(R.string.edit_hop_addition));
+        }
         return root;
     }
 

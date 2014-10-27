@@ -10,8 +10,6 @@ import org.json.JSONException;
 import java.io.IOException;
 
 public class MaltStorage {
-    private static final String TAG = MaltStorage.class.getName();
-
     private static MaltInfoList sMaltCache;
 
     private Context mContext;
@@ -20,6 +18,7 @@ public class MaltStorage {
         mContext = context;
     }
 
+    @SuppressWarnings("unchecked")
     public MaltInfoList getMalts() {
         if (sMaltCache != null) {
             return sMaltCache;

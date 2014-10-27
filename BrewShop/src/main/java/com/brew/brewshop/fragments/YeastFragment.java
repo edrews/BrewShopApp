@@ -1,5 +1,6 @@
 package com.brew.brewshop.fragments;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,11 +14,7 @@ import android.widget.TextView;
 import com.brew.brewshop.R;
 import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.NameableAdapter;
-import com.brew.brewshop.storage.hops.HopsInfo;
-import com.brew.brewshop.storage.recipes.Hop;
-import com.brew.brewshop.storage.recipes.HopAddition;
 import com.brew.brewshop.storage.recipes.Recipe;
-import com.brew.brewshop.storage.recipes.Weight;
 import com.brew.brewshop.storage.recipes.Yeast;
 import com.brew.brewshop.storage.yeast.YeastInfo;
 import com.brew.brewshop.storage.yeast.YeastInfoList;
@@ -25,6 +22,7 @@ import com.brew.brewshop.storage.yeast.YeastStorage;
 import com.brew.brewshop.util.Util;
 
 public class YeastFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+    @SuppressWarnings("unused")
     private static final String TAG = YeastFragment.class.getName();
     private static final String RECIPE = "Recipe";
     private static final String YEAST_INDEX = "YeastIndex";
@@ -66,8 +64,10 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
 
         mSpinner.setOnItemSelectedListener(this);
 
-        getActivity().getActionBar().setTitle(getActivity().getResources().getString(R.string.edit_yeast_addition));
-
+        ActionBar bar = getActivity().getActionBar();
+        if (bar != null) {
+            bar.setTitle(getActivity().getResources().getString(R.string.edit_yeast_addition));
+        }
         return root;
     }
 

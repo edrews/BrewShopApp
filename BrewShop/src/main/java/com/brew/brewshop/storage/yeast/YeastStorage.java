@@ -10,8 +10,6 @@ import org.json.JSONException;
 import java.io.IOException;
 
 public class YeastStorage {
-    private static final String TAG = YeastStorage.class.getName();
-
     private static YeastInfoList sCache;
 
     private Context mContext;
@@ -20,6 +18,7 @@ public class YeastStorage {
         mContext = context;
     }
 
+    @SuppressWarnings("unchecked")
     public YeastInfoList getYeast() {
         if (sCache != null) {
             return sCache;

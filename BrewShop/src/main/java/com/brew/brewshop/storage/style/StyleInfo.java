@@ -2,6 +2,7 @@ package com.brew.brewshop.storage.style;
 
 import com.brew.brewshop.storage.Nameable;
 
+@SuppressWarnings("unused")
 public class StyleInfo implements Nameable {
     private int id;
     private String name;

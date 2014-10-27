@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.brew.brewshop.IngredientComparator;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.google.gson.Gson;
 
@@ -15,7 +14,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class BrewStorage extends SQLiteOpenHelper {
-    private static final String TAG = BrewStorage.class.getName();
     private static final String DATABASE_NAME = "brew.db";
     private static final int DATABASE_VERSION = 2;
     private static final String RECIPES_TABLE = "recipes";
@@ -40,16 +38,11 @@ public class BrewStorage extends SQLiteOpenHelper {
     }
 
     private void createTables(SQLiteDatabase db) {
-        String createCommand = new StringBuilder()
-                .append("create table ")
-                .append(RECIPES_TABLE)
-                .append(" (")
-                .append(ID_COLUMN)
-                .append(" integer primary key autoincrement, ")
-                .append(DATA_COLUMN)
-                .append(" text not null);")
-                .toString();
-        db.execSQL(createCommand);
+        String command = "create table " + RECIPES_TABLE +
+                         " (" + ID_COLUMN +
+                         " integer primary key autoincrement, " + DATA_COLUMN +
+                         " text not null);";
+        db.execSQL(command);
     }
 
     public void createRecipe(Recipe recipe) {
@@ -64,12 +57,11 @@ public class BrewStorage extends SQLiteOpenHelper {
     }
 
     private void readNewId(SQLiteDatabase db, Recipe recipe) {
-        StringBuilder builder = new StringBuilder()
-                .append("select ").append(ID_COLUMN)
-                .append(" from ").append(RECIPES_TABLE)
-                .append(" order by ").append(ID_COLUMN)
-                .append(" desc limit 1");
-        Cursor cursor = db.rawQuery(builder.toString(), new String[]{});
+        String query = "select " + ID_COLUMN +
+                       " from " + RECIPES_TABLE +
+                       " order by " + ID_COLUMN +
+                       " desc limit 1";
+        Cursor cursor = db.rawQuery(query, new String[]{});
         if (cursor.moveToFirst()) {
             int id = cursor.getInt(cursor.getColumnIndex(ID_COLUMN));
             recipe.setId(id);
@@ -95,8 +87,8 @@ public class BrewStorage extends SQLiteOpenHelper {
                     recipes.add(recipe);
                 } while (cursor.moveToNext());
             }
+            cursor.close();
         }
-        cursor.close();
         Collections.sort(recipes, new RecipeComparator());
         sRecipeCache = recipes;
         return sRecipeCache;
@@ -105,17 +97,17 @@ public class BrewStorage extends SQLiteOpenHelper {
     public Recipe retrieveRecipe(Recipe recipe) {
         Gson gson = new Gson();
         SQLiteDatabase db=this.getReadableDatabase();
-        StringBuilder builder = new StringBuilder()
-                .append("select * from ").append(RECIPES_TABLE).append(" where " )
-                .append(ID_COLUMN).append("=").append(recipe.getId());
-        Cursor cursor = db.rawQuery(builder.toString(), new String[]{});
+        String query = "select * from " + RECIPES_TABLE +
+                       " where " + ID_COLUMN +
+                       "=" + recipe.getId();
+        Cursor cursor = db.rawQuery(query, new String[]{});
         if (cursor != null ) {
             if (cursor.moveToFirst()) {
                 String data = cursor.getString(cursor.getColumnIndex(DATA_COLUMN));
                 recipe = gson.fromJson(data, Recipe.class);
             }
+            cursor.close();
         }
-        cursor.close();
         return recipe;
     }
 
@@ -140,9 +132,6 @@ public class BrewStorage extends SQLiteOpenHelper {
 
     public String getJson(Recipe recipe) {
         Gson gson = new Gson();
-        //Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson(recipe);
-        //Log.d(TAG, "Updating recipe: " + json);
-        return json;
+        return gson.toJson(recipe);
     }
 }

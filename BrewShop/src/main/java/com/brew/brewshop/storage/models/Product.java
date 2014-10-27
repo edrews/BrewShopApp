@@ -6,6 +6,7 @@ import android.os.Parcelable;
 
 import com.brew.brewshop.storage.ProductType;
 
+@SuppressWarnings("unused")
 public class Product implements Parcelable {
     private String mName;
     private String mDescription;

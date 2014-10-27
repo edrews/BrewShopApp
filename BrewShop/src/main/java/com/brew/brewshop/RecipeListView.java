@@ -1,8 +1,6 @@
 package com.brew.brewshop;
 
 import android.content.Context;
-import android.support.v7.widget.CardView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,19 +14,16 @@ public class RecipeListView {
     private BrewStorage mStorage;
     private TextView mMessageView;
     private ViewClickListener mListener;
-    private Context mContext;
 
     public RecipeListView(Context context, View view, BrewStorage storage, ViewClickListener listener) {
         mRecipeView = (LinearLayout) view.findViewById(R.id.recipe_layout);
         mMessageView = (TextView) view.findViewById(R.id.error_message);
         mStorage = storage;
         mListener = listener;
-        mContext = context;
         mRecipeAdapter = new RecipeListAdapter(context, mStorage, mRecipeView);
     }
 
     public void drawRecipeList() {
-        LayoutInflater inflater = LayoutInflater.from(mContext);
         mRecipeView.removeAllViews();
         int nRecipes = mStorage.retrieveRecipes().size();
         if (nRecipes == 0) {
@@ -47,10 +42,7 @@ public class RecipeListView {
     }
 
     public boolean areAllSelected() {
-        if (mStorage.retrieveRecipes().size() == getSelectedCount()) {
-            return true;
-        }
-        return false;
+        return (mStorage.retrieveRecipes().size() == getSelectedCount());
     }
 
     public void setAllSelected(boolean selected) {

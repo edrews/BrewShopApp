@@ -10,9 +10,11 @@ public class MaltInfo implements Nameable {
     private double potential;
 
     public MaltInfo() {
+        id = 0;
         name = "";
         description = "";
         srmPrecise = 0;
+        potential = 0;
     }
 
     public int getId() { return id; }

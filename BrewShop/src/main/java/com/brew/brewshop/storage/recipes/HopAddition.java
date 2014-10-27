@@ -33,7 +33,6 @@ public class HopAddition implements Parcelable{
         public HopAddition createFromParcel(Parcel in) {
             return new HopAddition(in);
         }
-
         public HopAddition[] newArray(int size) {
             return new HopAddition[size];
         }

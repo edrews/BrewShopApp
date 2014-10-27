@@ -1,6 +1,5 @@
 package com.brew.brewshop.storage;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -30,14 +29,9 @@ public class ProductStorage extends FindCallback<ParseObject> implements ITimeou
     private static final int MAX_RESULTS = 100;
     private static final int TIMEOUT = 5000;
 
-    private Context mContext;
     private ParseQuery<ParseObject> mQuery;
     private IProductRetrievedHandler mHandler;
     private TimeoutTask mTimeoutTask;
-
-    public ProductStorage(Context context) {
-        mContext = context;
-    }
 
     public void retrieveProducts(IProductRetrievedHandler handler, ProductType productType) {
         mHandler = handler;

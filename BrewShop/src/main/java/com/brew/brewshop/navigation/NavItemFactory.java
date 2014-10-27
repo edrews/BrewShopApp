@@ -3,8 +3,6 @@ package com.brew.brewshop.navigation;
 import android.content.Context;
 
 public class NavItemFactory {
-    private static final String TAG = NavItemFactory.class.getName();
-
     private Context mContext;
 
     public NavItemFactory(Context context) {

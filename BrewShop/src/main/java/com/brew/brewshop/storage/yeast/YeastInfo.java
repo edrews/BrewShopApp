@@ -2,6 +2,7 @@ package com.brew.brewshop.storage.yeast;
 
 import com.brew.brewshop.storage.Nameable;
 
+@SuppressWarnings("unused")
 public class YeastInfo implements Nameable {
     private int id;
     private String name;

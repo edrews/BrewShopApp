@@ -1,5 +1,6 @@
 package com.brew.brewshop.fragments;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -18,15 +19,15 @@ import android.widget.Toast;
 
 import com.brew.brewshop.FragmentHandler;
 import com.brew.brewshop.R;
-import com.brew.brewshop.ViewClickListener;
 import com.brew.brewshop.RecipeListView;
+import com.brew.brewshop.ViewClickListener;
 import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.recipes.Recipe;
 
 public class RecipeListFragment extends Fragment implements ViewClickListener,
         DialogInterface.OnClickListener,
         ActionMode.Callback {
-
+    @SuppressWarnings("unused")
     private static final String TAG = RecipeListFragment.class.getName();
     private static final String ACTION_MODE = "ActionMode";
     private static final String SELECTED_INDEXES = "Selected";
@@ -45,7 +46,10 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         mRecipeView = new RecipeListView(getActivity(), rootView, mStorage, this);
         mRecipeView.drawRecipeList();
         checkResumeActionMode(savedInstanceState);
-        getActivity().getActionBar().setTitle(getActivity().getResources().getString(R.string.homebrew_recipes));
+        ActionBar bar = getActivity().getActionBar();
+        if (bar != null) {
+            bar.setTitle(getActivity().getResources().getString(R.string.homebrew_recipes));
+        }
         return rootView;
     }
 
