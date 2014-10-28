@@ -13,10 +13,19 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    signingConfigs {
+        release {
+            storeFile file('brewshop.keystore')
+            keyAlias "brewshop"
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+            keyPassword System.getenv("KEY_PASSWORD")
+        }
+    }
     buildTypes {
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
