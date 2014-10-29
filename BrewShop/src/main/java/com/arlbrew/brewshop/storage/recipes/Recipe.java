@@ -55,9 +55,16 @@ public class Recipe implements Parcelable {
         boilTime = parcel.readDouble();
         efficiency = parcel.readDouble();
         version = parcel.readInt();
+
+        malts = new ArrayList<MaltAddition>();
         parcel.readTypedList(malts, MaltAddition.CREATOR);
+
+        hops = new ArrayList<HopAddition>();
         parcel.readTypedList(hops, HopAddition.CREATOR);
+
+        yeast = new ArrayList<Yeast>();
         parcel.readTypedList(yeast, Yeast.CREATOR);
+
         notes = parcel.readString();
     }
 

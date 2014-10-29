@@ -1,95 +1,36 @@
 Brew Shop App
 =============
-The only homebrew companion app you'll ever need. Browse community recipes, design your own, and purchase them from the best store in the world, The Brew Shop.
 
-Recipe Browser
---------------
-* Custom Recipes
-* Community Recipes
-* Search Custom and Community
-* Search by available ingredients
-* New/Edit/Delete recipe
-* Save custom recipes remotely
-* Sort by last modified, style, creation date
+Short Description
+=================
+The only homebrew companion app you'll ever need.
 
-Recipe
-------
-* Set Name
-* Specify batch size and efficiency
-* Specify Style (BJCP?)
-* Calculate mash water (evaporation + grain absorption)
-* Calculate OG, IBU, SRM
-* Show color from SRM
-* From est. attenuation calculate OG, abv, and calories
-* Specify serving temp and target volumes
-* Suggest serving temp and volumes from style
-* Calculate C02 pressure from serving temp and style volumes
-* Calculate priming sugar from temp and style volumes
-* Specify mash temp and time
-* Calculate fermentability from Mash Temp
-* Add Malt
-* Add Hops
-* Add Water
-* Add Yeast
-* Add Adjunct
+Full Description
+================
+New in v1.0
+- Add, remove, and edit homebrew recipes
+- Edit brew stats including mash efficiency and brew volumes
+- Add, remove, and edit ingredients from a list of available malts, hops, and yeast strains
+- Fundamental brew stats like OG, IBU, and SRM calculated on the fly
+- Compare your recipe to one of several available styles
+- Add brew notes to each recipe
+- SRM reflected in recipe icon color
 
-Malt
+TODO
 ----
-* Add/Edit/Delete Malt
-* Select Weight
-* Add Custom Malt
-* Specify Name
-* Specify Color
-* Specify Gravity
-* Specify Description
+* Validate calculations
+* Better data sets
+* Tablet Optimization
+* Custom ingredient names
+* Common hop substitutions
+* Local inventory
+* Save storage remotely
+* Share remote storage
+* About app, version, etc.
+* Community recipes
 
-Hops
-----
-* Add/Edit/Delete Hop
-* Select weight
-* Select boil time
-* Add Custom Hop
-* Specify Name
-* Specify AA
-* Specify Description
-* Specify common substitutions
-
-Water
------
-* Load water minerals from style/region
-* Specify Minerals in PPM
-* Calculate PH
-
-Yeast
------
-* Add/Edit/Delete Yeast
-* Select Fermentation Temp
-* Add Yeast
-* Specify Name
-* Specify Avg. Attenuation
-* Specify Description
-
-Adjunct/Notes
--------------
-* List of common adjuncts (for purchase)
-
-Tools
------
-* Brew timer. Mash and Hop addition alerts.
-* Hydrometer temp conversion
-
-Store
------
-* Ingredient prices in recipe, ingredient selection
+Store TODO
+----------
+* Ingredient prices in recipe
 * Running recipe total
 * Recipe purchase
-
-Settings
---------
-* Log in/Log out
-* Account information
-* Payment information
-
-Other
------
-* About app, version, email
