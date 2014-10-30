@@ -39,7 +39,7 @@ public class IngredientComparator implements Comparator<Object> {
     private int compareHops(HopAddition o1, HopAddition o2) {
         int result;
         if (o1.getTime() != o2.getTime()) {
-            if (o1.getTime() > o2.getTime()) {
+            if (o1.getTime() < o2.getTime()) {
                 result = 1;
             } else {
                 result = -1;

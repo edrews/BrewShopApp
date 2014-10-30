@@ -169,7 +169,7 @@
 
                     <LinearLayout
                         style="@style/FillParent"
-                        android:layout_weight="1.5"
+                        android:layout_weight="1.4"
                         android:orientation="vertical">
 
                         <TextView
@@ -200,7 +200,7 @@
                     <LinearLayout
                         style="@style/FillParent"
                         android:layout_marginRight="5dp"
-                        android:layout_weight="1.5"
+                        android:layout_weight="1.4"
                         android:orientation="vertical">
 
                         <TextView
@@ -231,7 +231,7 @@
                         <TextView
                             android:id="@+id/recipe_calories"
                             style="@style/RecipeStatRight"
-                            android:text="~0" />
+                            android:text="Add Yeast" />
                     </LinearLayout>
 
                     <View

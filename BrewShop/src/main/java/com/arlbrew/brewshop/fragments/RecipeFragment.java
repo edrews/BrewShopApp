@@ -224,7 +224,7 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
                 return false;
             } else {
                 int index = (Integer) view.getTag(R.integer.list_index);
-                startActionMode(new int[] {index});
+                startActionMode(new int[]{index});
             }
             return true;
         }
@@ -334,14 +334,9 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
 
     private void updateStats() {
         TextView textView;
+
         textView = (TextView) mRootView.findViewById(R.id.recipe_og);
         textView.setText(Util.fromDouble(mRecipe.getOg(), 3, false));
-
-        textView = (TextView) mRootView.findViewById(R.id.recipe_fg);
-        textView.setText(Util.fromDouble(mRecipe.getFg(), 3, false));
-
-        textView = (TextView) mRootView.findViewById(R.id.recipe_abv);
-        textView.setText(Util.fromDouble(mRecipe.getAbv(), 1)+UNIT_PERCENT);
 
         textView = (TextView) mRootView.findViewById(R.id.recipe_srm);
         textView.setText(Util.fromDouble(mRecipe.getSrm(), 1));
@@ -349,8 +344,32 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
         textView = (TextView) mRootView.findViewById(R.id.recipe_ibu);
         textView.setText(Util.fromDouble(mRecipe.getIbu(), 1));
 
+        textView = (TextView) mRootView.findViewById(R.id.recipe_fg);
+        if (mRecipe.hasYeast()) {
+            textView.setText(Util.fromDouble(mRecipe.getFg(), 3, false));
+            textView.setTextColor(getResources().getColor(R.color.text_dark_primary));
+        } else {
+            textView.setText(getResources().getString(R.string.add_yeast));
+            textView.setTextColor(getResources().getColor(R.color.text_dark_secondary));
+        }
+
+        textView = (TextView) mRootView.findViewById(R.id.recipe_abv);
+        if (mRecipe.hasYeast()) {
+            textView.setText(Util.fromDouble(mRecipe.getAbv(), 1) + UNIT_PERCENT);
+            textView.setTextColor(getResources().getColor(R.color.text_dark_primary));
+        } else {
+            textView.setText(getResources().getString(R.string.add_yeast));
+            textView.setTextColor(getResources().getColor(R.color.text_dark_secondary));
+        }
+
         textView = (TextView) mRootView.findViewById(R.id.recipe_calories);
-        textView.setText(Util.fromDouble(mRecipe.getCalories(), 1));
+        if (mRecipe.hasYeast()) {
+            textView.setText(Util.fromDouble(mRecipe.getCalories(), 1));
+            textView.setTextColor(getResources().getColor(R.color.text_dark_primary));
+        } else {
+            textView.setText(getResources().getString(R.string.add_yeast));
+            textView.setTextColor(getResources().getColor(R.color.text_dark_secondary));
+        }
     }
 
     public void setRecipe(Recipe recipe) {

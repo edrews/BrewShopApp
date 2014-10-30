@@ -35,6 +35,7 @@
     <string name="no_description">No description available.</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
+    <string name="add_yeast">Add Yeast</string>
 
     <!-- Navigation -->
     <string name="homebrew_tools">Homebrew Tools</string>

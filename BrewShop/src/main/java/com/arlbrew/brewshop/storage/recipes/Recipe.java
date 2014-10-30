@@ -126,6 +126,10 @@ public class Recipe implements Parcelable {
         return ingredients;
     }
 
+    public boolean hasYeast() {
+        return (yeast.size() > 0);
+    }
+
     public double getSrm() {
         double maltColorUnits = 0;
         for (MaltAddition malt : getMalts()) {

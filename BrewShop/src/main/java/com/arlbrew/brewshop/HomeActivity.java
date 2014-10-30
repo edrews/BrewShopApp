@@ -32,6 +32,9 @@ import com.arlbrew.brewshop.storage.recipes.MaltAddition;
 import com.arlbrew.brewshop.storage.recipes.Recipe;
 import com.arlbrew.brewshop.storage.recipes.Yeast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HomeActivity extends FragmentActivity implements FragmentHandler,
         NavSelectionHandler,
         FragmentManager.OnBackStackChangedListener {
@@ -61,24 +64,29 @@ public class HomeActivity extends FragmentActivity implements FragmentHandler,
 
     private NavDrawerConfig getNavDrawerConfig() {
         NavItemFactory factory = new NavItemFactory(this);
-        NavDrawerItem[] menu = new NavDrawerItem[] {
-                factory.newSection(R.string.homebrew_tools),
-                factory.newEntry(101, R.string.homebrew_recipes, R.drawable.folder),
-                factory.newSection(R.string.homebrew_shop),
-                factory.newEntry(201, R.string.beer, R.drawable.beer),
-                factory.newEntry(202, R.string.wine, R.drawable.wine),
-                factory.newEntry(203, R.string.coffee, R.drawable.coffee),
-                factory.newEntry(204, R.string.homebrew_supplies, R.drawable.hops)
-        };
+        List<NavDrawerItem> menu = new ArrayList<NavDrawerItem>();
+        menu.add(factory.newSection(R.string.homebrew_tools));
+        menu.add(factory.newEntry(101, R.string.homebrew_recipes, R.drawable.folder));
+
+        boolean showStore = getResources().getBoolean(R.bool.show_store_drawer_items);
+        if (showStore) {
+            menu.add(factory.newSection(R.string.homebrew_shop));
+            menu.add(factory.newEntry(201, R.string.beer, R.drawable.beer));
+            menu.add(factory.newEntry(202, R.string.wine, R.drawable.wine));
+            menu.add(factory.newEntry(203, R.string.coffee, R.drawable.coffee));
+            menu.add(factory.newEntry(204, R.string.homebrew_supplies, R.drawable.hops));
+        }
+        NavDrawerItem[] menuArray = menu.toArray(new NavDrawerItem[0]);
+
         NavDrawerConfig navConfig = new NavDrawerConfig();
         navConfig.setMainLayout(R.layout.main);
         navConfig.setDrawerLayoutId(R.id.drawer_layout);
         navConfig.setLeftDrawerId(R.id.left_drawer);
-        navConfig.setNavItems(menu);
+        navConfig.setNavItems(menuArray);
         navConfig.setDrawerShadow(R.drawable.drawer_shadow);
         navConfig.setDrawerOpenDesc(R.string.drawer_open);
         navConfig.setDrawerCloseDesc(R.string.drawer_close);
-        navConfig.setBaseAdapter(new NavDrawerAdapter(this, R.layout.navdrawer_item, menu));
+        navConfig.setBaseAdapter(new NavDrawerAdapter(this, R.layout.navdrawer_item, menuArray));
         return navConfig;
     }
 
