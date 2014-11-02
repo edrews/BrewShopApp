@@ -18,7 +18,6 @@ New in v1.0
 
 TODO
 ----
-* Yeast from Wyeast, White Labs, Fermentis
 * Malts from ?
 * Validate calculations
 * About app, version, etc.

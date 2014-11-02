@@ -26,14 +26,7 @@ public class YeastStorage {
         try {
             sCache = new YeastInfoList();
             JsonReader reader = new JsonReader(mContext, YeastInfoList.class);
-            sCache.addAll(reader.readAll(R.raw.yeast1));
-            sCache.addAll(reader.readAll(R.raw.yeast2));
-            sCache.addAll(reader.readAll(R.raw.yeast3));
-            sCache.addAll(reader.readAll(R.raw.yeast4));
-            sCache.addAll(reader.readAll(R.raw.yeast5));
-            sCache.addAll(reader.readAll(R.raw.yeast6));
-            sCache.addAll(reader.readAll(R.raw.yeast7));
-            sCache.addAll(reader.readAll(R.raw.yeast8));
+            sCache.addAll(reader.readAll(R.raw.yeasts, "yeasts"));
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -41,6 +34,4 @@ public class YeastStorage {
         }
         return sCache;
     }
-
-
 }

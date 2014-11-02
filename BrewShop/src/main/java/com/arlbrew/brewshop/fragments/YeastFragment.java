@@ -129,7 +129,7 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         YeastInfo info = (YeastInfo) mSpinner.getSelectedItem();
-        if (!info.getName().equals(getYeast())) {
+        if (!info.getName().equals(getYeast().getName())) {
             getYeast().setName(info.getName());
             mAttenuationEdit.setText(Util.fromDouble(getAttenuation(info), 3));
         }

@@ -4,18 +4,18 @@ import com.arlbrew.brewshop.storage.Nameable;
 
 @SuppressWarnings("unused")
 public class YeastInfo implements Nameable {
-    private int id;
     private String name;
     private String description;
-    private double attenuationMin;
-    private double attenuationMax;
+    private int attenMin;
+    private int attenMax;
 
     public YeastInfo() {
         name = "";
         description = "";
     }
 
-    public int getId() { return id; }
+    @Override
+    public int getId() { return 0; }
 
     @Override
     public String getName() {
@@ -27,10 +27,10 @@ public class YeastInfo implements Nameable {
     }
 
     public double getAttenuationMin() {
-        return attenuationMin;
+        return attenMin;
     }
 
-    public double getAttenuationMax() { return attenuationMax; }
+    public double getAttenuationMax() { return attenMax; }
 
     @Override
     public String toString() {
