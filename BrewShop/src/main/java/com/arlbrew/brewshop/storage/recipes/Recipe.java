@@ -12,8 +12,6 @@ import java.util.List;
 
 public class Recipe implements Parcelable {
     private static final int VERSION = 1;
-    private static final double MIN_VOLUME = 0.1;
-    private static final double MIN_GRAVITY = 1.001;
     private static final double MIN_BOIL_TIME = 10;
 
     private int id;
@@ -181,34 +179,18 @@ public class Recipe implements Parcelable {
         return -668.962 + (1262.45 * sg) - (776.43 * Math.pow(sg, 2)) + (182.94 * Math.pow(sg, 3));
     }
 
-    // Jackie Rager's Equation
+    // Glenn Tinseth's Equation
     // http://www.rooftopbrew.net/ibu.php
     public double getIbu() {
         double ibu = 0;
         for (HopAddition hop : hops) {
-            double weight = hop.getWeight().getOunces();
-            double util = Util.getHopUtilization(hop.getTime(), getOg());
-            double alpha = hop.getHop().getPercentAlpha() / 100;
-
-            double boilDuration = boilTime;
-            if (boilDuration < MIN_BOIL_TIME) {
-                boilDuration = MIN_BOIL_TIME;
-            }
-
+            double ounces = hop.getWeight().getOunces();
+            double percentAlpha = hop.getHop().getPercentAlpha();
             double hopTime = hop.getTime();
-            if (hopTime > boilDuration) {
-                hopTime = boilDuration;
+            if (hopTime > boilTime) {
+                hopTime = boilTime;
             }
-
-            double volume = batchVolume + (boilVolume - batchVolume) * (hopTime / boilDuration);
-            if (volume < MIN_VOLUME) {
-                volume = MIN_VOLUME;
-            }
-            double gravity = getOg();
-            if (gravity < MIN_GRAVITY) {
-                gravity = MIN_GRAVITY;
-            }
-            ibu += (weight * util * alpha * 7489) / (volume * gravity);
+            ibu += Util.getTinsethIbu(hopTime, ounces, percentAlpha, boilVolume, getOg());
         }
         return ibu;
     }
@@ -217,7 +199,6 @@ public class Recipe implements Parcelable {
         public Recipe createFromParcel(Parcel in) {
             return new Recipe(in);
         }
-
         public Recipe[] newArray(int size) {
             return new Recipe[size];
         }

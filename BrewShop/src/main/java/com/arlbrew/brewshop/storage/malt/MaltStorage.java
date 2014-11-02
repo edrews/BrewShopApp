@@ -30,7 +30,8 @@ public class MaltStorage {
         }
         try {
             sMaltCache = new MaltInfoList();
-            InputStream is = mContext.getResources().openRawResource(R.raw.fermentables); //From BeerSmith data
+            // From BeerSmith - http://www.beersmith.com/Grains/Grains/GrainList.htm
+            InputStream is = mContext.getResources().openRawResource(R.raw.fermentables);
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             String line;
             while ((line = reader.readLine()) != null) {

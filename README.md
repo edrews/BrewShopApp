@@ -1,12 +1,7 @@
 Brew Shop App
 =============
-
-Short Description
-=================
 The only homebrew companion app you'll ever need.
 
-Full Description
-================
 - Add, remove, and edit homebrew recipes
 - Edit brew stats including mash efficiency and brew volumes
 - Add, remove, and edit ingredients from a list of available malts, hops, and yeast strains
@@ -17,8 +12,6 @@ Full Description
 
 TODO
 ----
-* Validate calculations
-* About app, version, etc.
 * Custom ingredient names
 * Common hop substitutions
 * Tablet Optimization
