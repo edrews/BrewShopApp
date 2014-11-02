@@ -3,21 +3,19 @@ package com.arlbrew.brewshop.storage.malt;
 import com.arlbrew.brewshop.storage.Nameable;
 
 public class MaltInfo implements Nameable {
-    private int id;
     private String name;
     private String description;
-    private double srmPrecise;
-    private double potential;
+    private double srm;
+    private double gravity;
 
-    public MaltInfo() {
-        id = 0;
-        name = "";
+    public MaltInfo(String name, double srm, double gravity) {
+        this.name = name;
+        this.srm = srm;
+        this.gravity = gravity;
         description = "";
-        srmPrecise = 0;
-        potential = 0;
     }
 
-    public int getId() { return id; }
+    public int getId() { return 0; }
 
     @Override
     public String getName() {
@@ -29,11 +27,11 @@ public class MaltInfo implements Nameable {
     }
 
     public double getSrm() {
-        return srmPrecise;
+        return srm;
     }
 
     public double getGravity() {
-        return potential;
+        return gravity;
     }
 
     @Override

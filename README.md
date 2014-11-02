@@ -7,7 +7,6 @@ The only homebrew companion app you'll ever need.
 
 Full Description
 ================
-New in v1.0
 - Add, remove, and edit homebrew recipes
 - Edit brew stats including mash efficiency and brew volumes
 - Add, remove, and edit ingredients from a list of available malts, hops, and yeast strains
@@ -18,7 +17,6 @@ New in v1.0
 
 TODO
 ----
-* Malts from ?
 * Validate calculations
 * About app, version, etc.
 * Custom ingredient names
