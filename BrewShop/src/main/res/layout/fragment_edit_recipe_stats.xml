@@ -129,10 +129,28 @@
 
                 <TextView
                     style="@style/RecipeEditLabel"
-                    android:text="Beer Style" />
+                    android:text="BJCP Style" />
 
                 <Spinner
                     android:id="@+id/recipe_style"
+                    android:layout_width="fill_parent"
+                    android:layout_height="48dp"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/substyle_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/RecipeEditLabel"
+                    android:text="Substyle" />
+
+                <Spinner
+                    android:id="@+id/recipe_substyle"
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
                     android:layout_weight="1" />
@@ -147,7 +165,7 @@
             android:orientation="vertical">
 
             <TextView style="@style/RecipeHeader"
-                android:text="Style Description"
+                android:text="Style Guidelines"
                 android:layout_marginLeft="5dp"/>
 
             <android.support.v7.widget.CardView style="@style/Card">

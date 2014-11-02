@@ -10,9 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.arlbrew.brewshop.R;
+import com.arlbrew.brewshop.storage.recipes.BeerStyle;
 import com.arlbrew.brewshop.storage.recipes.Recipe;
-import com.arlbrew.brewshop.storage.style.StyleInfoList;
-import com.arlbrew.brewshop.storage.style.StyleStorage;
 import com.arlbrew.brewshop.util.Util;
 
 public class RecipeListAdapter extends BaseAdapter {
@@ -53,12 +52,10 @@ public class RecipeListAdapter extends BaseAdapter {
         TextView nameView = (TextView) rowView.findViewById(R.id.recipe_name);
         TextView descriptionView = (TextView) rowView.findViewById(R.id.recipe_style);
 
-        StyleInfoList styleInfoList = new StyleStorage(mContext).getStyles();
-
         Recipe recipe = mStorage.retrieveRecipes().get(position);
         iconView.setBackgroundColor(Util.getColor(recipe.getSrm()));
         nameView.setText(recipe.getName());
-        descriptionView.setText(styleInfoList.findById(recipe.getStyle().getId()).getName());
+        descriptionView.setText(recipe.getStyle().getDisplayName());
 
         if (position == mStorage.retrieveRecipes().size() - 1) {
             rowView.findViewById(R.id.separator).setVisibility(View.GONE);

@@ -36,6 +36,8 @@
     <string name="yes">YES</string>
     <string name="no">NO</string>
     <string name="add_yeast">Add Yeast</string>
+    <string name="none_available">None available</string>
+    <string name="varies">Varies</string>
 
     <!-- Navigation -->
     <string name="homebrew_tools">Homebrew Tools</string>

@@ -28,12 +28,11 @@ import com.arlbrew.brewshop.IngredientTypeAdapter;
 import com.arlbrew.brewshop.R;
 import com.arlbrew.brewshop.ViewClickListener;
 import com.arlbrew.brewshop.storage.BrewStorage;
+import com.arlbrew.brewshop.storage.recipes.BeerStyle;
 import com.arlbrew.brewshop.storage.recipes.HopAddition;
 import com.arlbrew.brewshop.storage.recipes.MaltAddition;
 import com.arlbrew.brewshop.storage.recipes.Recipe;
 import com.arlbrew.brewshop.storage.recipes.Yeast;
-import com.arlbrew.brewshop.storage.style.StyleInfo;
-import com.arlbrew.brewshop.storage.style.StyleStorage;
 import com.arlbrew.brewshop.util.Util;
 
 import java.util.Arrays;
@@ -82,7 +81,7 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
             mStorage.retrieveRecipe(mRecipe);
         }
 
-        StyleInfo styleInfo = new StyleStorage(getActivity()).getStyles().findById(mRecipe.getStyle().getId());
+        BeerStyle style = mRecipe.getStyle();
 
         TextView textView;
         textView = (TextView) root.findViewById(R.id.recipe_name);
@@ -92,7 +91,7 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
         iconView.setBackgroundColor(Util.getColor(mRecipe.getSrm()));
 
         textView = (TextView) root.findViewById(R.id.recipe_style);
-        textView.setText(styleInfo.getName());
+        textView.setText(style.getDisplayName());
 
         textView = (TextView) root.findViewById(R.id.batch_volume);
         textView.setText(Util.fromDouble(mRecipe.getBatchVolume(), 1) + UNIT_GALLON);
@@ -109,35 +108,59 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
         updateStats();
 
         textView = (TextView) root.findViewById(R.id.style_og);
-        textView.setText(Util.fromDouble(styleInfo.getOgMin(), 3, false) + "+");
+        if (style.getOgMin() < 0) {
+            textView.setText(getResources().getString(R.string.varies));
+        } else {
+            String og = Util.fromDouble(style.getOgMin(), 3, false);
+            if (style.getOgMax() - style.getOgMin() >= 0.001) {
+                og += " - " + Util.fromDouble(style.getOgMax(), 3, false);
+            }
+            textView.setText(og);
+        }
 
         textView = (TextView) root.findViewById(R.id.style_ibu);
-        String ibu = Util.fromDouble(styleInfo.getIbuMin(), 1);
-        if (styleInfo.getIbuMax() - styleInfo.getIbuMin() >= 0.1) {
-            ibu += " - " + Util.fromDouble(styleInfo.getIbuMax(), 1);
+        if (style.getIbuMin() < 0) {
+            textView.setText(getResources().getString(R.string.varies));
+        } else {
+            String ibu = Util.fromDouble(style.getIbuMin(), 1);
+            if (style.getIbuMax() - style.getIbuMin() >= 0.1) {
+                ibu += " - " + Util.fromDouble(style.getIbuMax(), 1);
+            }
+            textView.setText(ibu);
         }
-        textView.setText(ibu + UNIT_IBU);
 
         textView = (TextView) root.findViewById(R.id.style_srm);
-        String srm = String.valueOf(styleInfo.getSrmMin());
-        if (styleInfo.getSrmMin() != styleInfo.getSrmMax()) {
-            srm += " - " + styleInfo.getSrmMax();
+        if (style.getSrmMin() < 0) {
+            textView.setText(getResources().getString(R.string.varies));
+        } else {
+            String srm = Util.fromDouble(style.getSrmMin(), 1);
+            if (style.getSrmMax() - style.getSrmMin() > 0.1) {
+                srm += " - " + Util.fromDouble(style.getSrmMax(), 1);
+            }
+            textView.setText(srm);
         }
-        textView.setText(srm + UNIT_SRM);
 
         textView = (TextView) root.findViewById(R.id.style_fg);
-        String fg = Util.fromDouble(styleInfo.getFgMin(), 3, false);
-        if (styleInfo.getFgMax() - styleInfo.getFgMin() >= 0.001) {
-            fg += " - " + Util.fromDouble(styleInfo.getFgMax(), 3, false);
+        if (style.getFgMin() < 0) {
+            textView.setText(getResources().getString(R.string.varies));
+        } else {
+            String fg = Util.fromDouble(style.getFgMin(), 3, false);
+            if (style.getFgMax() - style.getFgMin() >= 0.001) {
+                fg += " - " + Util.fromDouble(style.getFgMax(), 3, false);
+            }
+            textView.setText(fg);
         }
-        textView.setText(fg);
 
         textView = (TextView) root.findViewById(R.id.style_abv);
-        String abv = Util.fromDouble(styleInfo.getAbvMin(), 1);
-        if (styleInfo.getAbvMax() - styleInfo.getAbvMin() >= 0.1) {
-            abv += " - " + Util.fromDouble(styleInfo.getAbvMax(), 1);
+        if (style.getAbvMin() < 0) {
+            textView.setText(getResources().getString(R.string.varies));
+        } else {
+            String abv = Util.fromDouble(style.getAbvMin(), 1);
+            if (style.getAbvMax() - style.getAbvMin() >= 0.1) {
+                abv += " - " + Util.fromDouble(style.getAbvMax(), 1);
+            }
+            textView.setText(abv + UNIT_PERCENT);
         }
-        textView.setText(abv + UNIT_PERCENT);
 
         mIngredientView = new IngredientListView(getActivity(), root, mRecipe, this);
         mIngredientView.drawList();

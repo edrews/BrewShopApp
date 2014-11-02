@@ -33,7 +33,7 @@ public class Recipe implements Parcelable {
 
     public Recipe() {
         name = "New Recipe";
-        style = new BeerStyle(DEFAULT_BEER_STYLE);
+        style = new BeerStyle();
         batchVolume = 5;
         boilVolume = 6.5;
         boilTime = 60;

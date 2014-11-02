@@ -9,22 +9,22 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
-public class StyleStorage {
-    private static StyleInfoList sStyleCache;
+public class BjcpCategoryStorage {
+    private static BjcpCategoryList sStyleCache;
 
     private Context mContext;
 
-    public StyleStorage(Context context) {
+    public BjcpCategoryStorage(Context context) {
         mContext = context;
     }
 
-    public StyleInfoList getStyles() {
+    public BjcpCategoryList getStyles() {
         if (sStyleCache != null) {
             return sStyleCache;
         }
         try {
-            JsonReader reader = new JsonReader(mContext, StyleInfoList.class);
-            sStyleCache = reader.readAll(R.raw.styles);
+            JsonReader reader = new JsonReader(mContext, BjcpCategoryList.class);
+            sStyleCache = reader.readAll(R.raw.bjcp, "beers");
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {

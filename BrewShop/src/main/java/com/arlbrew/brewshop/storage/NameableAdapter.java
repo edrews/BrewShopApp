@@ -13,10 +13,10 @@ public class NameableAdapter<T extends Nameable> extends ArrayAdapter<T> {
     private Context mContext;
     private List<T> mNameables;
 
-    public NameableAdapter(Context context, List<T> styles) {
-        super(context, android.R.layout.simple_spinner_item, styles);
+    public NameableAdapter(Context context, List<T> nameables) {
+        super(context, android.R.layout.simple_spinner_item, nameables);
         mContext = context;
-        mNameables = styles;
+        mNameables = nameables;
     }
 
     @Override

@@ -15,8 +15,9 @@ import java.io.InputStreamReader;
 import java.util.Collections;
 
 public class JsonReader {
-    Context mContext;
-    Class mClass;
+    private static final String DEFAULT_ARRAY = "data";
+    private Context mContext;
+    private Class mClass;
 
     public JsonReader(Context context, Class clazz) {
         mContext = context;
@@ -24,6 +25,10 @@ public class JsonReader {
     }
 
     public <T extends NameableList> T readAll(int resource) throws IOException, JSONException {
+        return readAll(resource, DEFAULT_ARRAY);
+    }
+
+    public <T extends NameableList> T readAll(int resource, String arrayName) throws IOException, JSONException {
         InputStream input = mContext.getResources().openRawResource(resource);
         BufferedReader r = new BufferedReader(new InputStreamReader(input));
         StringBuilder total = new StringBuilder(input.available());
@@ -32,7 +37,7 @@ public class JsonReader {
             total.append(line);
         }
         JSONObject object = new JSONObject(total.toString());
-        JSONArray array = object.getJSONArray("data");
+        JSONArray array = object.getJSONArray(arrayName);
         Gson gson = new Gson();
 
         @SuppressWarnings("unchecked")

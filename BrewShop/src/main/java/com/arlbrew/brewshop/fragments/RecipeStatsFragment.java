@@ -18,10 +18,16 @@ import com.arlbrew.brewshop.storage.BrewStorage;
 import com.arlbrew.brewshop.storage.NameableAdapter;
 import com.arlbrew.brewshop.storage.recipes.BeerStyle;
 import com.arlbrew.brewshop.storage.recipes.Recipe;
-import com.arlbrew.brewshop.storage.style.StyleInfo;
-import com.arlbrew.brewshop.storage.style.StyleInfoList;
-import com.arlbrew.brewshop.storage.style.StyleStorage;
+import com.arlbrew.brewshop.storage.style.BjcpCategory;
+import com.arlbrew.brewshop.storage.style.BjcpCategoryList;
+import com.arlbrew.brewshop.storage.style.BjcpCategoryStorage;
+import com.arlbrew.brewshop.storage.style.BjcpGuidelines;
+import com.arlbrew.brewshop.storage.style.BjcpSubcategory;
+import com.arlbrew.brewshop.storage.style.CommercialExample;
+import com.arlbrew.brewshop.storage.style.VitalStatistics;
 import com.arlbrew.brewshop.util.Util;
+
+import java.util.List;
 
 public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     @SuppressWarnings("unused")
@@ -31,14 +37,16 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
     private Recipe mRecipe;
     private BrewStorage mStorage;
 
+    private ViewGroup mSubstyleLayout;
     private EditText mRecipeName;
     private Spinner mStyle;
+    private Spinner mSubstyle;
     private EditText mBatchVolume;
     private EditText mBoilVolume;
     private EditText mBoilTime;
     private EditText mEfficiency;
     private TextView mDescription;
-    private StyleInfoList mStyleInfoList;
+    private BjcpCategoryList mBjcpCategoryList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
@@ -56,12 +64,19 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
             mRecipeName.setText(mRecipe.getName());
 
             mDescription = (TextView) root.findViewById(R.id.description);
-            mStyleInfoList = new StyleStorage(getActivity()).getStyles();
+            mBjcpCategoryList = new BjcpCategoryStorage(getActivity()).getStyles();
+
             mStyle = (Spinner) root.findViewById(R.id.recipe_style);
-            NameableAdapter adapter = new NameableAdapter(getActivity(), mStyleInfoList);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            mStyle.setAdapter(adapter);
+            NameableAdapter styleAdapter = new NameableAdapter(getActivity(), mBjcpCategoryList);
+            styleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            mStyle.setAdapter(styleAdapter);
             mStyle.setOnItemSelectedListener(this);
+
+            mSubstyle = (Spinner) root.findViewById(R.id.recipe_substyle);
+            mSubstyle.setOnItemSelectedListener(this);
+            setSubstyleList(mBjcpCategoryList.get(0).getSubcategories());
+
+            mSubstyleLayout = (ViewGroup) root.findViewById(R.id.substyle_layout);
             setStyle(mRecipe.getStyle());
 
             mBatchVolume = (EditText) root.findViewById(R.id.batch_volume);
@@ -84,14 +99,29 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
         return root;
     }
 
+    private void setSubstyleList(List<BjcpSubcategory> subcategories) {
+        NameableAdapter substyleAdapter = new NameableAdapter(getActivity(), subcategories);
+        substyleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSubstyle.setAdapter(substyleAdapter);
+    }
+
     private void setStyle(BeerStyle style) {
-        StyleInfo info = mStyleInfoList.findById(style.getId());
-        int index = mStyleInfoList.indexOf(info);
+        BjcpCategory category = mBjcpCategoryList.findByName(style.getStyleName());
+        int index = mBjcpCategoryList.indexOf(category);
         if (index < 0 ) {
             mStyle.setSelection(0);
+            mSubstyle.setSelection(0);
         } else {
             mStyle.setSelection(index);
+            setSubstyleList(category.getSubcategories());
+            int substyleIdx = category.findSubcategoryIdx(style.getSubstyleName());
+            if (substyleIdx < 0 ) {
+                mSubstyle.setSelection(0);
+            } else {
+                mSubstyle.setSelection(substyleIdx);
+            }
         }
+        mDescription.setText(style.getDescription());
     }
 
     @Override
@@ -102,7 +132,6 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
             name = getActivity().getResources().getString(R.string.unnamed_recipe);
         }
         mRecipe.setName(name);
-
         mRecipe.setBatchVolume(Util.toDouble(mBatchVolume.getText()));
         mRecipe.setBoilVolume(Util.toDouble(mBoilVolume.getText()));
         mRecipe.setBoilTime(Util.toDouble(mBoilTime.getText()));
@@ -113,9 +142,31 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
         }
         mRecipe.setEfficiency(efficiency);
 
-        StyleInfo styleInfo = (StyleInfo) mStyle.getSelectedItem();
-        mRecipe.setStyle(new BeerStyle(styleInfo.getId()));
+        BeerStyle style = mRecipe.getStyle();
+        VitalStatistics stats = getVitalStatistics();
+        style.setOgMin(stats.getOgMin());
+        style.setOgMax(stats.getOgMax());
+        style.setFgMin(stats.getFgMin());
+        style.setFgMax(stats.getFgMax());
+        style.setIbuMin(stats.getIbuMin());
+        style.setIbuMax(stats.getIbuMax());
+        style.setSrmMin(stats.getSrmMin());
+        style.setSrmMax(stats.getSrmMax());
+        style.setAbvMin(stats.getAbvMin());
+        style.setAbvMax(stats.getAbvMax());
+
+        style.setDescription(mDescription.getText().toString());
         mStorage.updateRecipe(mRecipe);
+    }
+
+    private VitalStatistics getVitalStatistics() {
+        BjcpCategory category = (BjcpCategory) mStyle.getSelectedItem();
+        if (category.getSubcategories() == null || category.getSubcategories().isEmpty()) {
+            return category.getGuidelines().getVitalStatistics();
+        } else {
+            BjcpSubcategory subcategory = (BjcpSubcategory) mSubstyle.getSelectedItem();
+            return subcategory.getGuidelines().getVitalStatistics();
+        }
     }
 
     @Override
@@ -145,17 +196,65 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        setDescription(((StyleInfo) mStyle.getSelectedItem()));
+        switch (adapterView.getId()) {
+            case R.id.recipe_style:
+                BjcpCategory category = (BjcpCategory) mStyle.getSelectedItem();
+                if (category.getName().equals(mRecipe.getStyle().getStyleName())) {
+                    if (category.getSubcategories().isEmpty()) {
+                        mSubstyleLayout.setVisibility(View.GONE);
+                    }
+                } else {
+                    mRecipe.getStyle().setStyleName(category.getName());
+                    if (category.getSubcategories().isEmpty()) {
+                        mRecipe.getStyle().setSubstyleName("");
+                        mSubstyleLayout.setVisibility(View.GONE);
+                        setDescription();
+                    } else {
+                        mSubstyleLayout.setVisibility(View.VISIBLE);
+                        setSubstyleList(category.getSubcategories());
+                        mSubstyle.setSelection(0);
+                    }
+                }
+                break;
+            case R.id.recipe_substyle:
+                BjcpSubcategory subcategory = (BjcpSubcategory) mSubstyle.getSelectedItem();
+                mRecipe.getStyle().setSubstyleName(subcategory.getName());
+                setDescription();
+                break;
+        }
     }
 
-    private void setDescription(StyleInfo info) {
-        if (info.getDescription().isEmpty()) {
-            mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_secondary));
-            mDescription.setText(getActivity().getResources().getString(R.string.no_description));
-        } else {
-            mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_primary));
-            mDescription.setText(Util.separateSentences(info.getDescription()));
+    private void setDescription() {
+        BjcpCategory category = (BjcpCategory) mStyle.getSelectedItem();
+        StringBuilder description = new StringBuilder();
+        description.append("BJCP Category: " + category.getId());
+
+        BjcpGuidelines guidelines = category.getGuidelines();
+        List<CommercialExample> examples = category.getCommercialExamples();
+
+        if (category.getSubcategories() != null && !category.getSubcategories().isEmpty()) {
+            BjcpSubcategory subcategory = (BjcpSubcategory) mSubstyle.getSelectedItem();
+            description.append(subcategory.getLetter());
+            guidelines = subcategory.getGuidelines();
+            examples = subcategory.getCommercialExamples();
         }
+
+        description.append("\n\n");
+
+        description.append("AROMA" + "\n\n" + guidelines.getAroma() + "\n\n");
+        description.append("APPEARANCE" + "\n\n" + guidelines.getAppearance() + "\n\n");
+        description.append("FLAVOR" + "\n\n" + guidelines.getFlavor() + "\n\n");
+        description.append("MOUTHFEEL" + "\n\n" + guidelines.getMouthfeel() + "\n\n");
+        description.append("OVERALL IMPRESSION" + "\n\n" + guidelines.getOverallImpression() + "\n\n");
+        description.append("COMMENTS" + "\n\n" + guidelines.getComments() + "\n\n");
+        description.append("INGREDIENTS" + "\n\n" + guidelines.getIngredients() + "\n\n");
+        description.append("COMMERCIAL EXAMPLES" + "\n\n");
+
+        StringBuilder examplesBuilder = new StringBuilder();
+        for (CommercialExample example : examples) {
+            examplesBuilder.append("- " + example.getName() + "\n");
+        }
+        mDescription.setText(Util.separateSentences(description.toString()) + examplesBuilder.toString());
     }
 
     @Override
