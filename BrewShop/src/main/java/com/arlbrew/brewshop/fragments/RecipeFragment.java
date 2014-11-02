@@ -49,8 +49,6 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
     private static final String RECIPE = "Recipe";
     private static final String UNIT_GALLON = " gal";
     private static final String UNIT_MINUTES = " min";
-    private static final String UNIT_IBU = " IBU";
-    private static final String UNIT_SRM = " SRM";
     private static final String UNIT_PERCENT = "%";
 
     private Recipe mRecipe;
@@ -91,7 +89,11 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
         iconView.setBackgroundColor(Util.getColor(mRecipe.getSrm()));
 
         textView = (TextView) root.findViewById(R.id.recipe_style);
-        textView.setText(style.getDisplayName());
+        String styleName = style.getDisplayName();
+        if (styleName == null || styleName.isEmpty()) {
+            styleName = getActivity().getResources().getString(R.string.select_style);
+        }
+        textView.setText(styleName);
 
         textView = (TextView) root.findViewById(R.id.batch_volume);
         textView.setText(Util.fromDouble(mRecipe.getBatchVolume(), 1) + UNIT_GALLON);

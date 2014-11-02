@@ -84,7 +84,7 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
     @Override
     public void onPause() {
         super.onPause();
-        MaltAddition addition = mRecipe.getMalts().get(mMaltIndex);
+        MaltAddition addition = getMaltAddition();
 
         MaltInfo maltInfo = (MaltInfo) mMaltSpinner.getSelectedItem();
         Malt malt = new Malt();
@@ -95,7 +95,6 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
             gravity = 1;
         }
         malt.setGravity(gravity);
-        malt.setId(maltInfo.getId());
         malt.setName(maltInfo.getName());
         addition.setMalt(malt);
 
@@ -122,7 +121,7 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
     }
 
     private void setMalt(Malt malt) {
-        MaltInfo info = mMaltInfo.findById(malt.getId());
+        MaltInfo info = mMaltInfo.findByName(malt.getName());
         int index = mMaltInfo.indexOf(info);
         if (index < 0 ) {
             mMaltSpinner.setSelection(0);
@@ -151,7 +150,8 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         MaltInfo info = (MaltInfo) mMaltSpinner.getSelectedItem();
-        if (info.getId() != getMaltAddition().getMalt().getId()) {
+        if (!info.getName().equals(getMaltAddition().getMalt().getName())) {
+            getMaltAddition().getMalt().setName(info.getName());
             mColorEdit.setText(Util.fromDouble(info.getSrm(), 1));
             mGravityEdit.setText(Util.fromDouble(info.getGravity(), 3, false));
         }

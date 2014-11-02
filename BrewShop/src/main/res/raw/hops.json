@@ -1,0 +1,309 @@
+{
+  "hops": [
+    {
+      "name": "Ahtanum™",
+      "alphaMin": 5.7,
+      "alphaMax": 6.3,
+      "description": "Floral, earthy, citrus and grapefruit tones"
+    },
+    {
+      "name": "Amarillo®",
+      "alphaMin": 8,
+      "alphaMax": 11,
+      "description": "Floral, tropical, and citrus (lemon, orange and grapefruit) characteristics"
+    },
+    {
+      "name": "Bitter Gold",
+      "alphaMin": 15.4,
+      "alphaMax": 18.8,
+      "description": "No specific aroma characteristics"
+    },
+    {
+      "name": "Bravo",
+      "alphaMin": 14,
+      "alphaMax": 17,
+      "description": "Pleasant fruity and floral aroma characteristics"
+    },
+    {
+      "name": "Brewer’s Gold",
+      "alphaMin": 8,
+      "alphaMax": 10,
+      "description": "Spicy, fruity characteristics, black currant"
+    },
+    {
+      "name": "Bullion",
+      "alphaMin": 6.7,
+      "alphaMax": 12.9,
+      "description": "Strong and zesty blackcurrant characteristics"
+    },
+    {
+      "name": "Cascade",
+      "alphaMin": 4.5,
+      "alphaMax": 7,
+      "description": "Medium intense floral, citrus and grapefruit tones"
+    },
+    {
+      "name": "Cashmere",
+      "alphaMin": 7.7,
+      "alphaMax": 9.1,
+      "description": "Mild herbal aroma with strong melon, lemon, lime and slightly spicy notes"
+    },
+    {
+      "name": "Centennial",
+      "alphaMin": 9.5,
+      "alphaMax": 11.5,
+      "description": "Medium intensity floral and citrus (lemon) tones"
+    },
+    {
+      "name": "Chelan",
+      "alphaMin": 12,
+      "alphaMax": 14.5,
+      "description": "Mild floral and citrus characteristics"
+    },
+    {
+      "name": "Chinook",
+      "alphaMin": 12,
+      "alphaMax": 14,
+      "description": "Distinct, medium intensity spice and pine characteristics with subtle notes of grapefruit"
+    },
+    {
+      "name": "Citra®",
+      "alphaMin": 11,
+      "alphaMax": 13,
+      "description": "Strong citrus and tropical tones of grapefruit, melon, lime, gooseberry, passion fruit and lychee"
+    },
+    {
+      "name": "Cluster",
+      "alphaMin": 5.5,
+      "alphaMax": 8.5,
+      "description": "Strong floral and spicy characteristics"
+    },
+    {
+      "name": "Columbia",
+      "alphaMin": 6.8,
+      "alphaMax": 11.5,
+      "description": "Subtle earth and mild fruit tones"
+    },
+    {
+      "name": "Columbus",
+      "alphaMin": 14,
+      "alphaMax": 16,
+      "description": "Pungent, black pepper, licorice characteristics with subtle citrus overtones"
+    },
+    {
+      "name": "Comet",
+      "alphaMin": 9,
+      "alphaMax": 11,
+      "description": "A pungent, wild American aroma with citrus (grapefruit) flavors"
+    },
+    {
+      "name": "Crystal",
+      "alphaMin": 3.5,
+      "alphaMax": 5.5,
+      "description": "Mild, spicy and floral"
+    },
+    {
+      "name": "Equinox™",
+      "alphaMin": 14.4,
+      "alphaMax": 15.6,
+      "description": "A pronounced aroma profile with citrus, tropical fruit, floral and herbal characteristics. Specific descriptors include lemon, lime, papaya, apple, and green pepper."
+    },
+    {
+      "name": "Eroica",
+      "alphaMin": 7.3,
+      "alphaMax": 14.9,
+      "description": "Forward fruit flavors"
+    },
+    {
+      "name": "Fuggle",
+      "alphaMin": 4,
+      "alphaMax": 5.5,
+      "description": "Mild wood and fruit characteristics"
+    },
+    {
+      "name": "Galena",
+      "alphaMin": 12,
+      "alphaMax": 14,
+      "description": "Spicy, blackcurrant and citrus (grapefruit) tones"
+    },
+    {
+      "name": "Glacier",
+      "alphaMin": 5.5,
+      "alphaMax": 5.5,
+      "description": "Pleasant hop aroma"
+    },
+    {
+      "name": "Golding",
+      "alphaMin": 4,
+      "alphaMax": 6,
+      "description": "Mild and delicate with sweet floral characteristics"
+    },
+    {
+      "name": "Hallertau",
+      "alphaMin": 3.5,
+      "alphaMax": 5.5,
+      "description": "Mild and pleasant, yet spicy, with herbal and floral characteristics"
+    },
+    {
+      "name": "Horizon",
+      "alphaMin": 11,
+      "alphaMax": 13,
+      "description": "Pleasant and spicy, with floral characteristics"
+    },
+    {
+      "name": "Liberty",
+      "alphaMin": 3,
+      "alphaMax": 5,
+      "description": "Mild and spicy with subtle lemon and citrus characteristics"
+    },
+    {
+      "name": "Magnum",
+      "alphaMin": 10,
+      "alphaMax": 14,
+      "description": "No distinct aroma characteristics"
+    },
+    {
+      "name": "Millennium",
+      "alphaMin": 14.5,
+      "alphaMax": 16.5,
+      "description": "Mild and resinous with floral and herbal tones"
+    },
+    {
+      "name": "Mosaic™",
+      "alphaMin": 11.5,
+      "alphaMax": 13.5,
+      "description": "A complex array of tropical fruit, citrus, berry, herbal, earthy and pine characteristics"
+    },
+    {
+      "name": "Mt. Hood",
+      "alphaMin": 4,
+      "alphaMax": 8,
+      "description": "Mild, herbal and somewhat pungent or spicy"
+    },
+    {
+      "name": "Mt. Rainier",
+      "alphaMin": 5,
+      "alphaMax": 8.1,
+      "description": "Excellent floral and noble aromas, with citrus and licorice overtones"
+    },
+    {
+      "name": "Newport",
+      "alphaMin": 13.5,
+      "alphaMax": 17,
+      "description": "Mild"
+    },
+    {
+      "name": "Northern Brewer",
+      "alphaMin": 8,
+      "alphaMax": 10,
+      "description": "Medium intensity, pine and mint characteristics"
+    },
+    {
+      "name": "Nugget",
+      "alphaMin": 12,
+      "alphaMax": 14.5,
+      "description": "Mild and pleasant with spicy, herbal tones"
+    },
+    {
+      "name": "Olympic",
+      "alphaMin": 10.6,
+      "alphaMax": 13.8,
+      "description": "Citrus characteristics with subtle spicy notes"
+    },
+    {
+      "name": "Palisade®",
+      "alphaMin": 5.5,
+      "alphaMax": 9.5,
+      "description": "Apricot, grass and clean floral characteristics"
+    },
+    {
+      "name": "Perle",
+      "alphaMin": 7,
+      "alphaMax": 9.5,
+      "description": "Slightly spicy with herbal and floral characteristics"
+    },
+    {
+      "name": "Saaz",
+      "alphaMin": 3,
+      "alphaMax": 4.5,
+      "description": "Mild spice and earth tones"
+    },
+    {
+      "name": "Santiam",
+      "alphaMin": 5,
+      "alphaMax": 7,
+      "description": "Slightly spicy with herbal and floral characteristics"
+    },
+    {
+      "name": "Simcoe®",
+      "alphaMin": 12,
+      "alphaMax": 14,
+      "description": "Unique passionfruit, pine, earth and citrus characteristics"
+    },
+    {
+      "name": "Sorachi Ace",
+      "alphaMin": 10,
+      "alphaMax": 16,
+      "description": "Unique lemon and dill characteristics"
+    },
+    {
+      "name": "Sterling",
+      "alphaMin": 6,
+      "alphaMax": 9,
+      "description": "Herbal and spicy, with a hint of floral, citrus (lemon/pineapple) characteristics"
+    },
+    {
+      "name": "Summit™",
+      "alphaMin": 16,
+      "alphaMax": 19,
+      "description": "Distinct spice, earthy, onion, garlic and citrus (pink grapefruit, orange and tangerine) tones"
+    },
+    {
+      "name": "Tahoma",
+      "alphaMin": 7.2,
+      "alphaMax": 8.2,
+      "description": "Predominate citrus and lemon notes with cedar, pine, floral, pepper and subtle green melon notes"
+    },
+    {
+      "name": "Tettnang",
+      "alphaMin": 4,
+      "alphaMax": 5,
+      "description": "Noble aroma that is pleasant and spicy"
+    },
+    {
+      "name": "TriplePearl",
+      "alphaMin": 10.25,
+      "alphaMax": 11.2,
+      "description": "Pleasant and balanced with notes of melon, orange citrus, resin, spice and pepper"
+    },
+    {
+      "name": "Ultra",
+      "alphaMin": 2,
+      "alphaMax": 3.5,
+      "description": "Mild and pleasant with spicy, floral tones"
+    },
+    {
+      "name": "Vanguard",
+      "alphaMin": 5,
+      "alphaMax": 6,
+      "description": "Herbal and floral tones"
+    },
+    {
+      "name": "Warrior®",
+      "alphaMin": 15,
+      "alphaMax": 17,
+      "description": "Mild and resinous with subtle citrus, pine and herbal characteristics"
+    },
+    {
+      "name": "Willamette",
+      "alphaMin": 4,
+      "alphaMax": 6,
+      "description": "Mild and pleasant, with slightly spicy and floral tones"
+    },
+    {
+      "name": "Yakima Gold",
+      "alphaMin": 8.8,
+      "alphaMax": 10.5,
+      "description": "Mild and pleasant"
+    }]
+}

@@ -227,7 +227,7 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
     private void setDescription() {
         BjcpCategory category = (BjcpCategory) mStyle.getSelectedItem();
         StringBuilder description = new StringBuilder();
-        description.append("BJCP Category: " + category.getId());
+        description.append(getActivity().getResources().getString(R.string.bjcp_category) + " " + category.getId());
 
         BjcpGuidelines guidelines = category.getGuidelines();
         List<CommercialExample> examples = category.getCommercialExamples();

@@ -3,19 +3,18 @@ package com.arlbrew.brewshop.storage.hops;
 import com.arlbrew.brewshop.storage.Nameable;
 
 public class HopsInfo implements Nameable {
-    private int id;
     private String name;
     private String description;
-    private double alphaAcidMin;
+    private double alphaMin;
+    private double alphaMax;
 
     public HopsInfo() {
-        id = 0;
         name = "";
         description = "";
-        alphaAcidMin = 0;
     }
 
-    public int getId() { return id; }
+    @Override
+    public int getId() { return 0; }
 
     @Override
     public String getName() {
@@ -26,8 +25,8 @@ public class HopsInfo implements Nameable {
         return description;
     }
 
-    public double getAlphaAcidMin() {
-        return alphaAcidMin;
+    public double getAlphaAcid() {
+        return (alphaMax + alphaMin) / 2;
     }
 
     @Override

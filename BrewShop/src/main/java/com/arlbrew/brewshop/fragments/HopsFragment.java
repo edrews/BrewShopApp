@@ -81,7 +81,7 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
     @Override
     public void onPause() {
         super.onPause();
-        HopAddition addition = mRecipe.getHops().get(mHopIndex);
+        HopAddition addition = getHopAddition();
 
         HopsInfo info = (HopsInfo) mSpinner.getSelectedItem();
         Hop hop = new Hop();
@@ -90,7 +90,6 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
             alpha = 100;
         }
         hop.setPercentAlpha(alpha);
-        hop.setId(info.getId());
         hop.setName(info.getName());
         addition.setHop(hop);
 
@@ -122,7 +121,7 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
     }
 
     private void setHop(Hop hop) {
-        HopsInfo info = mHopInfo.findById(hop.getId());
+        HopsInfo info = mHopInfo.findByName(hop.getName());
         int index = mHopInfo.indexOf(info);
         if (index < 0 ) {
             mSpinner.setSelection(0);
@@ -142,8 +141,9 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         HopsInfo hopsInfo = (HopsInfo) mSpinner.getSelectedItem();
-        if (hopsInfo.getId() != getHopAddition().getHop().getId()) {
-            mAlphaEdit.setText(Util.fromDouble(hopsInfo.getAlphaAcidMin(), 3));
+        if (!hopsInfo.getName().equals(getHopAddition().getHop().getName())) {
+            mAlphaEdit.setText(Util.fromDouble(hopsInfo.getAlphaAcid(), 3));
+            getHopAddition().getHop().setName(hopsInfo.getName());
         }
         if (hopsInfo.getDescription().isEmpty()) {
             mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_secondary));

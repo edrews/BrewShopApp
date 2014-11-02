@@ -55,7 +55,12 @@ public class RecipeListAdapter extends BaseAdapter {
         Recipe recipe = mStorage.retrieveRecipes().get(position);
         iconView.setBackgroundColor(Util.getColor(recipe.getSrm()));
         nameView.setText(recipe.getName());
-        descriptionView.setText(recipe.getStyle().getDisplayName());
+
+        String styleName = recipe.getStyle().getDisplayName();
+        if (styleName == null || styleName.isEmpty()) {
+            styleName = mContext.getResources().getString(R.string.no_style_selected);
+        }
+        descriptionView.setText(styleName);
 
         if (position == mStorage.retrieveRecipes().size() - 1) {
             rowView.findViewById(R.id.separator).setVisibility(View.GONE);

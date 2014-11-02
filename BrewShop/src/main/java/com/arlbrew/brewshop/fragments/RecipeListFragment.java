@@ -41,15 +41,17 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recipes, container, false);
         setHasOptionsMenu(true);
-        mStorage = new BrewStorage(getActivity());
 
-        mRecipeView = new RecipeListView(getActivity(), rootView, mStorage, this);
-        mRecipeView.drawRecipeList();
         checkResumeActionMode(savedInstanceState);
         ActionBar bar = getActivity().getActionBar();
         if (bar != null) {
             bar.setTitle(getActivity().getResources().getString(R.string.homebrew_recipes));
         }
+
+        mStorage = new BrewStorage(getActivity());
+        mRecipeView = new RecipeListView(getActivity(), rootView, mStorage, this);
+        mRecipeView.drawRecipeList();
+
         return rootView;
     }
 

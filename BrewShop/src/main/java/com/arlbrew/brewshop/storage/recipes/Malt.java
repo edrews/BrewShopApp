@@ -4,26 +4,21 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Malt implements Parcelable {
-    private int id;
     private String name;
     private double gravity; //gravity per pound per gallon
     private double color; //in Lovibond
 
     public Malt() {
-        name = "Malt";
+        name = "";
         gravity = 1;
         color = 1;
     }
 
     public Malt(Parcel parcel) {
-        id = parcel.readInt();
         name = parcel.readString();
         gravity = parcel.readDouble();
         color = parcel.readDouble();
     }
-
-    public void setId(int value) { id = value; }
-    public int getId() { return id; }
 
     public void setName(String value) { name = value; }
     public String getName() { return name; }
@@ -41,7 +36,6 @@ public class Malt implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(id);
         parcel.writeString(name);
         parcel.writeDouble(gravity);
         parcel.writeDouble(color);

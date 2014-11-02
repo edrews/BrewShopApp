@@ -18,21 +18,17 @@ New in v1.0
 
 TODO
 ----
-* Styles from BJCP
-* Fix bug with drop down not loading values if it was previously selected
-* Show spinner during load
-* Hops from HopUnion
 * Yeast from Wyeast, White Labs, Fermentis
 * Malts from ?
 * Validate calculations
-* Better data sets
-* Tablet Optimization
+* Select all on text edit
+* About app, version, etc.
 * Custom ingredient names
 * Common hop substitutions
+* Tablet Optimization
 * Local inventory
 * Save storage remotely
 * Share remote storage
-* About app, version, etc.
 * Community recipes
 
 Store TODO

@@ -26,10 +26,7 @@ public class HopsStorage {
         try {
             sHopsCache = new HopsInfoList();
             JsonReader reader = new JsonReader(mContext, HopsInfoList.class);
-            sHopsCache.addAll(reader.readAll(R.raw.hops1));
-            sHopsCache.addAll(reader.readAll(R.raw.hops2));
-            sHopsCache.addAll(reader.readAll(R.raw.hops3));
-            sHopsCache.addAll(reader.readAll(R.raw.hops4));
+            sHopsCache.addAll(reader.readAll(R.raw.hops, "hops"));
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {

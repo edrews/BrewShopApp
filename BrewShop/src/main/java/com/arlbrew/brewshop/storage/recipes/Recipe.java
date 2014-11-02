@@ -12,7 +12,6 @@ import java.util.List;
 
 public class Recipe implements Parcelable {
     private static final int VERSION = 1;
-    private static final int DEFAULT_BEER_STYLE = 1;
     private static final double MIN_VOLUME = 0.1;
     private static final double MIN_GRAVITY = 1.001;
     private static final double MIN_BOIL_TIME = 10;

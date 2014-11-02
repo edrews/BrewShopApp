@@ -38,6 +38,9 @@
     <string name="add_yeast">Add Yeast</string>
     <string name="none_available">None available</string>
     <string name="varies">Varies</string>
+    <string name="bjcp_category">BJCP Category</string>
+    <string name="select_style">Select a style...</string>
+    <string name="no_style_selected">No style selected</string>
 
     <!-- Navigation -->
     <string name="homebrew_tools">Homebrew Tools</string>

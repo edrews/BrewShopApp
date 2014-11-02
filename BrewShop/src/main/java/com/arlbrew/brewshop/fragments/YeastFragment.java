@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.arlbrew.brewshop.R;
 import com.arlbrew.brewshop.storage.BrewStorage;
 import com.arlbrew.brewshop.storage.NameableAdapter;
+import com.arlbrew.brewshop.storage.malt.MaltInfo;
 import com.arlbrew.brewshop.storage.recipes.Recipe;
 import com.arlbrew.brewshop.storage.recipes.Yeast;
 import com.arlbrew.brewshop.storage.yeast.YeastInfo;
@@ -78,7 +79,6 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
 
         YeastInfo info = (YeastInfo) mSpinner.getSelectedItem();
         yeast.setName(info.getName());
-        yeast.setId(info.getId());
         double attenuation = Util.toDouble(mAttenuationEdit.getText());
         if (attenuation > 100) {
             attenuation = 100;
@@ -109,7 +109,7 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
     }
 
     private void setYeast(Yeast yeast) {
-        YeastInfo info = mYeastInfo.findById(yeast.getId());
+        YeastInfo info = mYeastInfo.findByName(yeast.getName());
         int index = mYeastInfo.indexOf(info);
         if (index < 0 ) {
             mSpinner.setSelection(0);
@@ -129,7 +129,8 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         YeastInfo info = (YeastInfo) mSpinner.getSelectedItem();
-        if (info.getId() != getYeast().getId()) {
+        if (!info.getName().equals(getYeast())) {
+            getYeast().setName(info.getName());
             mAttenuationEdit.setText(Util.fromDouble(getAttenuation(info), 3));
         }
         if (info.getDescription().isEmpty()) {

@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Hop implements Parcelable {
-    private int id;
     private String name;
     private double percentAlpha;
 
@@ -14,13 +13,9 @@ public class Hop implements Parcelable {
     }
 
     public Hop(Parcel parcel) {
-        id = parcel.readInt();
         name = parcel.readString();
         percentAlpha = parcel.readDouble();
     }
-
-    public int getId() { return id; }
-    public void setId(int value) { id = value; }
 
     public String getName() { return name; }
     public void setName(String value) { name = value; }
