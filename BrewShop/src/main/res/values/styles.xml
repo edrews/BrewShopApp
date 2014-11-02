@@ -109,6 +109,7 @@
         <item name="android:textSize">16sp</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">@color/text_dark_primary</item>
+        <item name="android:selectAllOnFocus">true</item>
     </style>
 
     <style name="RecipeEditUnit">

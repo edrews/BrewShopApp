@@ -29,12 +29,11 @@
 
                 <EditText
                     android:id="@+id/recipe_name"
+                    style="@style/RecipeEditValue"
                     android:layout_width="fill_parent"
-                    android:layout_height="48dp"
                     android:hint="Enter name"
                     android:inputType="textCapWords|textNoSuggestions"
-                    android:maxLength="50"
-                    android:textSize="16sp" />
+                    android:maxLength="50"/>
 
             </LinearLayout>
 

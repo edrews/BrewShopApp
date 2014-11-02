@@ -21,7 +21,6 @@ TODO
 * Yeast from Wyeast, White Labs, Fermentis
 * Malts from ?
 * Validate calculations
-* Select all on text edit
 * About app, version, etc.
 * Custom ingredient names
 * Common hop substitutions
