@@ -66,6 +66,10 @@ public class RecipeListAdapter extends BaseAdapter {
             rowView.findViewById(R.id.separator).setVisibility(View.GONE);
         }
 
+        rowView.setTag(R.integer.recipe_id, recipe.getId());
+        rowView.setTag(R.integer.is_recipe_selected, false);
+        rowView.setTag(R.integer.is_recipe_showing, false);
+
         return rowView;
     }
 }

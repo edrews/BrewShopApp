@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.arlbrew.brewshop.storage.recipes.Recipe;
+import com.arlbrew.brewshop.storage.recipes.RecipeList;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class BrewStorage extends SQLiteOpenHelper {
     private static final String ID_COLUMN = "_id";
     private static final String DATA_COLUMN = "data";
 
-    private static List<Recipe> sRecipeCache;
+    private static RecipeList sRecipeCache;
 
     public BrewStorage(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -69,11 +70,11 @@ public class BrewStorage extends SQLiteOpenHelper {
         db.close();
     }
 
-    public List<Recipe> retrieveRecipes() {
+    public RecipeList retrieveRecipes() {
         if (sRecipeCache != null) {
             return sRecipeCache;
         }
-        List<Recipe> recipes = new ArrayList<Recipe>();
+        RecipeList recipes = new RecipeList();
         Gson gson = new Gson();
         SQLiteDatabase db=this.getReadableDatabase();
         Cursor cursor = db.rawQuery("select * from " + RECIPES_TABLE, new String[]{});

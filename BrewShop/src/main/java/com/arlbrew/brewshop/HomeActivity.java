@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.arlbrew.brewshop.fragments.HopsFragment;
 import com.arlbrew.brewshop.fragments.MaltFragment;
@@ -38,10 +39,14 @@ import java.util.List;
 public class HomeActivity extends FragmentActivity implements FragmentHandler,
         NavSelectionHandler,
         FragmentManager.OnBackStackChangedListener {
+
     private static final String CURRENT_RECIPE = "Recipe";
+    private static final String DETAIL_RESOURCE_NAME = "content_frame_right";
 
     private NavDrawer mNavDrawer;
     private Recipe mCurrentRecipe;
+    private RecipeListFragment mRecipeListFragment;
+    RecipeFragment mRecipeFragment;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -59,7 +64,28 @@ public class HomeActivity extends FragmentActivity implements FragmentHandler,
             mCurrentRecipe = bundle.getParcelable(CURRENT_RECIPE);
         }
 
-        getSupportFragmentManager().addOnBackStackChangedListener(this);
+        FragmentManager manager = getSupportFragmentManager();
+        manager.addOnBackStackChangedListener(this);
+        getFragmentReferences(manager);
+    }
+
+    private void getFragmentReferences(FragmentManager manager) {
+        List<Fragment> fragments = manager.getFragments();
+        if (fragments != null) {
+            Fragment fragment;
+            if (fragments.size() >= 1) {
+                fragment = fragments.get(0);
+                if (fragment instanceof RecipeListFragment) {
+                    mRecipeListFragment = (RecipeListFragment) fragment;
+                }
+            }
+            if (fragments.size() >= 2) {
+                fragment = fragments.get(1);
+                if (fragment instanceof RecipeFragment) {
+                    mRecipeFragment = (RecipeFragment) fragment;
+                }
+            }
+        }
     }
 
     private NavDrawerConfig getNavDrawerConfig() {
@@ -159,15 +185,44 @@ public class HomeActivity extends FragmentActivity implements FragmentHandler,
 
     @Override
     public void showRecipeEditor(Recipe recipe) {
+        clearBackStack();
         mCurrentRecipe = recipe;
-        RecipeFragment fragment = new RecipeFragment();
-        fragment.setRecipe(recipe);
+        if (recipe == null) {
+            setDetailVisibility(View.GONE);
+        } else {
+            showRecipeFragment(recipe);
+        }
+    }
+
+    private void showRecipeFragment(Recipe recipe) {
+        setDetailVisibility(View.VISIBLE);
+        mRecipeFragment = new RecipeFragment();
+        mRecipeFragment.setRecipe(recipe);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, fragment)
+                .replace(getDetailFrame(), mRecipeFragment)
                 .addToBackStack(null)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN | FragmentTransaction.TRANSIT_ENTER_MASK)
                 .commit();
+    }
+
+    private void setDetailVisibility(int visibility) {
+        View fragmentView = findViewById(R.id.content_frame_right);
+        if (fragmentView != null) {
+            fragmentView.setVisibility(visibility);
+            if (visibility == View.VISIBLE) {
+                setMessageVisibility(View.GONE);
+            } else {
+                setMessageVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    private void setMessageVisibility(int visibility) {
+        View messageView = findViewById(R.id.message_view);
+        if (messageView != null) {
+            messageView.setVisibility(visibility);
+        }
     }
 
     @Override
@@ -176,7 +231,7 @@ public class HomeActivity extends FragmentActivity implements FragmentHandler,
         fragment.setRecipe(recipe);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, fragment)
+                .replace(getDetailFrame(), fragment)
                 .addToBackStack(null)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN | FragmentTransaction.TRANSIT_ENTER_MASK)
                 .commit();
@@ -188,7 +243,7 @@ public class HomeActivity extends FragmentActivity implements FragmentHandler,
         fragment.setRecipe(recipe);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, fragment)
+                .replace(getDetailFrame(), fragment)
                 .addToBackStack(null)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN | FragmentTransaction.TRANSIT_ENTER_MASK)
                 .commit();
@@ -201,7 +256,7 @@ public class HomeActivity extends FragmentActivity implements FragmentHandler,
         fragment.setMaltIndex(recipe.getMalts().indexOf(addition));
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, fragment)
+                .replace(getDetailFrame(), fragment)
                 .addToBackStack(null)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN | FragmentTransaction.TRANSIT_ENTER_MASK)
                 .commit();
@@ -214,7 +269,7 @@ public class HomeActivity extends FragmentActivity implements FragmentHandler,
         fragment.setHopIndex(recipe.getHops().indexOf(addition));
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, fragment)
+                .replace(getDetailFrame(), fragment)
                 .addToBackStack(null)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN | FragmentTransaction.TRANSIT_ENTER_MASK)
                 .commit();
@@ -227,7 +282,7 @@ public class HomeActivity extends FragmentActivity implements FragmentHandler,
         fragment.setYeastIndex(recipe.getYeast().indexOf(yeast));
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, fragment)
+                .replace(getDetailFrame(), fragment)
                 .addToBackStack(null)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN | FragmentTransaction.TRANSIT_ENTER_MASK)
                 .commit();
@@ -247,8 +302,8 @@ public class HomeActivity extends FragmentActivity implements FragmentHandler,
 
     @Override
     public void showRecipeManager() {
-        RecipeListFragment fragment = new RecipeListFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+        mRecipeListFragment = new RecipeListFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mRecipeListFragment).commit();
     }
 
     @Override
@@ -267,6 +322,30 @@ public class HomeActivity extends FragmentActivity implements FragmentHandler,
     @Override
     public void onBackStackChanged() {
         FragmentManager manager = getSupportFragmentManager();
+        notifyRecipeManager(manager);
+        updateHomeIndicator(manager);
+        updateRecipeView(manager);
+    }
+
+    private void updateRecipeView(FragmentManager manager) {
+        if (manager.getBackStackEntryCount() > 0) {
+            setDetailVisibility(View.VISIBLE);
+        } else {
+            setDetailVisibility(View.GONE);
+        }
+    }
+
+    private void notifyRecipeManager(FragmentManager manager) {
+        if (mRecipeListFragment != null && mRecipeFragment != null) {
+            if (manager.getBackStackEntryCount() > 0) {
+                mRecipeListFragment.onRecipeUpdated(mRecipeFragment.getRecipe().getId());
+            } else {
+                mRecipeListFragment.onRecipeClosed(mRecipeFragment.getRecipe().getId());
+            }
+        }
+    }
+
+    private void updateHomeIndicator(FragmentManager manager) {
         ActionBar bar = getActionBar();
         if (bar != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             if (manager.getBackStackEntryCount() > 0) {
@@ -276,5 +355,13 @@ public class HomeActivity extends FragmentActivity implements FragmentHandler,
             }
         }
         invalidateOptionsMenu();
+    }
+
+    private int getDetailFrame() {
+        View view = findViewById(R.id.content_frame_right);
+        if (view != null) {
+            return R.id.content_frame_right;
+        }
+        return R.id.content_frame;
     }
 }

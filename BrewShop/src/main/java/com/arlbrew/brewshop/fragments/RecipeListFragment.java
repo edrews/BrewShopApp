@@ -26,11 +26,14 @@ import com.arlbrew.brewshop.storage.recipes.Recipe;
 
 public class RecipeListFragment extends Fragment implements ViewClickListener,
         DialogInterface.OnClickListener,
+        RecipeChangeHandler,
         ActionMode.Callback {
+
     @SuppressWarnings("unused")
     private static final String TAG = RecipeListFragment.class.getName();
     private static final String ACTION_MODE = "ActionMode";
     private static final String SELECTED_INDEXES = "Selected";
+    private static final String SHOWING_ID = "ShowingId";
 
     private BrewStorage mStorage;
     private FragmentHandler mViewSwitcher;
@@ -38,11 +41,11 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
     private RecipeListView mRecipeView;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
         View rootView = inflater.inflate(R.layout.fragment_recipes, container, false);
         setHasOptionsMenu(true);
 
-        checkResumeActionMode(savedInstanceState);
+        checkResumeActionMode(bundle);
         ActionBar bar = getActivity().getActionBar();
         if (bar != null) {
             bar.setTitle(getActivity().getResources().getString(R.string.homebrew_recipes));
@@ -51,6 +54,11 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         mStorage = new BrewStorage(getActivity());
         mRecipeView = new RecipeListView(getActivity(), rootView, mStorage, this);
         mRecipeView.drawRecipeList();
+        if (bundle != null) {
+            int id = bundle.getInt(SHOWING_ID, -1);
+            Recipe recipe = mStorage.retrieveRecipes().findById(id);
+            showRecipe(recipe);
+        }
 
         return rootView;
     }
@@ -65,8 +73,11 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putBoolean(ACTION_MODE, mActionMode != null);
+        if (mRecipeView != null) {
+            bundle.putInt(SHOWING_ID, mRecipeView.getShowingId());
+        }
         if (mActionMode != null) {
-            bundle.putIntArray(SELECTED_INDEXES, mRecipeView.getSelectedIndexes());
+            bundle.putIntArray(SELECTED_INDEXES, mRecipeView.getSelectedIds());
         }
     }
 
@@ -82,18 +93,20 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
 
     @Override
     public void onClick(View view) {
-        int index = (Integer) view.getTag(R.integer.list_index);
-        boolean selected = (Boolean) view.getTag(R.integer.is_selected);
+        boolean selected = (Boolean) view.getTag(R.integer.is_recipe_selected);
+        int id = (Integer) view.getTag(R.integer.recipe_id);
         if (mActionMode != null) {
-            mRecipeView.setSelected(index, !selected);
+            mRecipeView.setSelected(id, !selected);
             if (mRecipeView.getSelectedCount() == 0) {
                 mActionMode.finish();
             }
             updateActionBar();
         } else {
             if (mViewSwitcher != null) {
-                Recipe recipe = mStorage.retrieveRecipes().get(index);
-                mViewSwitcher.showRecipeEditor(recipe);
+                Recipe recipe = mStorage.retrieveRecipes().findById(id);
+                if (!mRecipeView.isShowing(recipe)) {
+                    showRecipe(recipe);
+                }
             } else {
                 Log.d(TAG, "Recipe manager is not set");
             }
@@ -102,12 +115,12 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
 
     @Override
     public boolean onLongClick(View view) {
-        int index = (Integer) view.getTag(R.integer.list_index);
+        int id = (Integer) view.getTag(R.integer.recipe_id);
         if (mActionMode != null) {
             updateActionBar();
             return false;
         } else {
-            startActionMode(new int[] {index});
+            startActionMode(new int[] {id});
         }
         return true;
     }
@@ -123,10 +136,20 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         if (menuItem.getItemId() == R.id.action_new_recipe && canCreateRecipe()) {
             Recipe recipe = new Recipe();
             mStorage.createRecipe(recipe);
-            mViewSwitcher.showRecipeEditor(recipe);
+            mRecipeView.drawRecipeList();
+            showRecipe(recipe);
             return true;
         }
         return false;
+    }
+
+    private void showRecipe(Recipe recipe) {
+        int id = -1;
+        if (recipe != null) {
+            id = recipe.getId();
+        }
+        mRecipeView.setShowing(id);
+        mViewSwitcher.showRecipeEditor(recipe);
     }
 
     @Override
@@ -186,7 +209,6 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
     @Override
     public void onClick(DialogInterface dialog, int which) {
         int deleted = deleteSelected();
-        mRecipeView.drawRecipeList();
         mActionMode.finish();
         toastDeleted(deleted);
     }
@@ -200,9 +222,9 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         }
     }
 
-    private void startActionMode(int[] selectedIndexes) {
-        for (int i : selectedIndexes) {
-            mRecipeView.setSelected(i, true);
+    private void startActionMode(int[] selectedIds) {
+        for (int i = 0; i < selectedIds.length; i++) {
+            mRecipeView.setSelected(selectedIds[i], true);
         }
         getActivity().startActionMode(this);
     }
@@ -218,11 +240,17 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
     }
 
     private int deleteSelected() {
-        int[] indexes = mRecipeView.getSelectedIndexes();
-        for (int i = indexes.length - 1; i >= 0; i--) {
-            mStorage.deleteRecipe(mStorage.retrieveRecipes().get(indexes[i]));
+        int[] selectedIds = mRecipeView.getSelectedIds();
+        int showingId = mRecipeView.getShowingId();
+        for (int i = 0; i < selectedIds.length; i ++) {
+            int id = selectedIds[i];
+            mStorage.deleteRecipe(mStorage.retrieveRecipes().findById(id));
+            if (showingId == id) {
+                showRecipe(null);
+            }
         }
-        return indexes.length;
+        mRecipeView.removeSelected();
+        return selectedIds.length;
     }
 
     private void updateActionBar() {
@@ -240,5 +268,20 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
             message = context.getResources().getString(R.string.deleted_recipe);
         }
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRecipeClosed(int recipeId) {
+        if (mRecipeView != null) {
+            mRecipeView.setShowing(-1);
+        }
+    }
+
+    @Override
+    public void onRecipeUpdated(int recipeId) {
+        if (mRecipeView != null) {
+            mRecipeView.setShowing(recipeId);
+            mRecipeView.drawRecipeList();
+        }
     }
 }

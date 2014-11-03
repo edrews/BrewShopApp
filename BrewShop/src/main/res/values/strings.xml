@@ -41,6 +41,7 @@
     <string name="bjcp_category">BJCP Category</string>
     <string name="select_style">Select a style...</string>
     <string name="no_style_selected">No style selected</string>
+    <string name="select_a_recipe">Select a recipe</string>
 
     <!-- Navigation -->
     <string name="homebrew_tools">Homebrew Tools</string>

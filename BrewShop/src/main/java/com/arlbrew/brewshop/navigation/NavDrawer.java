@@ -37,7 +37,6 @@ public class NavDrawer {
         mDrawerList = (ListView) mActivity.findViewById(mNavConfig.getLeftDrawerId());
         mDrawerList.setAdapter(mNavConfig.getBaseAdapter());
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
         mDrawerLayout.setDrawerShadow(mNavConfig.getDrawerShadow(), GravityCompat.START);
 
         mDrawerToggle = new ActionBarDrawerToggle(

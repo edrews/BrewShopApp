@@ -186,6 +186,14 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        if (mActionMode != null) {
+            mActionMode.finish();
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mStorage.close();
@@ -226,8 +234,8 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
 
         Object ingredient = view.getTag(R.string.ingredients);
         if (ingredient != null) {
-            int index = (Integer) view.getTag(R.integer.list_index);
-            boolean selected = (Boolean) view.getTag(R.integer.is_selected);
+            int index = (Integer) view.getTag(R.integer.ingredient_index);
+            boolean selected = (Boolean) view.getTag(R.integer.is_recipe_selected);
             if (mActionMode != null) {
                 mIngredientView.setSelected(index, !selected);
                 if (mIngredientView.getSelectedCount() == 0) {
@@ -248,7 +256,7 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
                 updateActionBar();
                 return false;
             } else {
-                int index = (Integer) view.getTag(R.integer.list_index);
+                int index = (Integer) view.getTag(R.integer.ingredient_index);
                 startActionMode(new int[]{index});
             }
             return true;
@@ -400,6 +408,8 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
     public void setRecipe(Recipe recipe) {
         mRecipe = recipe;
     }
+
+    public Recipe getRecipe() { return mRecipe; }
 
     private void toastDeleted(int deleted) {
         Context context = getActivity();

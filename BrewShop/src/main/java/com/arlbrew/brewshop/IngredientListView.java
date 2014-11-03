@@ -31,8 +31,8 @@ public class IngredientListView {
             mEmptyView.setVisibility(View.GONE);
             for (int i = 0; i < count; i++) {
                 View view = mIngredientAdapter.getView(i, null, mIngredientView);
-                view.setTag(R.integer.list_index, i);
-                view.setTag(R.integer.is_selected, false);
+                view.setTag(R.integer.ingredient_index, i);
+                view.setTag(R.integer.is_recipe_selected, false);
                 view.setTag(R.string.ingredients, mRecipe.getIngredients().get(i));
                 view.setOnClickListener(mListener);
                 view.setOnLongClickListener(mListener);
@@ -55,7 +55,7 @@ public class IngredientListView {
         int count = 0;
         for (int i = 0; i < mIngredientView.getChildCount(); i++) {
             View view = mIngredientView.getChildAt(i);
-            if ((Boolean) view.getTag(R.integer.is_selected)) {
+            if ((Boolean) view.getTag(R.integer.is_recipe_selected)) {
                 count++;
             }
         }
@@ -64,12 +64,12 @@ public class IngredientListView {
 
     public boolean isSelected(int index) {
         View view = mIngredientView.getChildAt(index);
-        return (Boolean) view.getTag(R.integer.is_selected);
+        return (Boolean) view.getTag(R.integer.is_recipe_selected);
     }
 
     public void setSelected(int position, boolean selected) {
         View view = mIngredientView.getChildAt(position);
-        view.setTag(R.integer.is_selected, selected);
+        view.setTag(R.integer.is_recipe_selected, selected);
         View ingredientView = view.findViewById(R.id.ingredient_layout);
         if (selected) {
             ingredientView.setBackgroundResource(R.color.color_accent);

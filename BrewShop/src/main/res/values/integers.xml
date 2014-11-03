@@ -4,6 +4,9 @@
     <integer name="max_ingredients">50</integer>
     <integer name="max_notes_characters">1000</integer>
 
-    <integer name="list_index">0</integer>
-    <integer name="is_selected">0</integer>
+    <integer name="ingredient_index">0</integer>
+
+    <integer name="is_recipe_selected">0</integer>
+    <integer name="is_recipe_showing">0</integer>
+    <integer name="recipe_id">0</integer>
 </resources>

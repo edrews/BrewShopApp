@@ -8,8 +8,28 @@
         android:layout_height="fill_parent">
         <FrameLayout
             android:id="@+id/content_frame"
-            android:layout_width="fill_parent"
+            android:layout_width="320dp"
             android:layout_height="fill_parent"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent">
+            <View
+                android:layout_width="5dp"
+                android:layout_height="fill_parent"
+                android:background="@drawable/drawer_shadow"
+                android:layout_alignParentLeft="true"
+                />
+            <FrameLayout android:id="@+id/content_frame_right"
+                style="@style/FillParent"/>
+            <TextView
+                style="@style/FillParent"
+                android:id="@+id/message_view"
+                android:text="@string/select_a_recipe"
+                android:layout_alignParentLeft="true"
+                android:gravity="center"
+                android:textColor="@color/text_dark_secondary"/>
+        </RelativeLayout>
+
         </LinearLayout>
 
     <ListView
