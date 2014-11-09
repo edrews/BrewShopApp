@@ -1,8 +1,9 @@
 package com.arlbrew.brewshop.fragments;
 
-import android.app.ActionBar;
+import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,7 +74,7 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
             mGravityEdit.setText(Util.fromDouble(addition.getMalt().getGravity(), 3, false));
         }
 
-        ActionBar bar = getActivity().getActionBar();
+        ActionBar bar = ((ActionBarActivity) getActivity()).getSupportActionBar();
         if (bar != null) {
             bar.setTitle(getActivity().getResources().getString(R.string.edit_malt_addition));
         }
@@ -155,7 +156,7 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
             mColorEdit.setText(Util.fromDouble(info.getSrm(), 1));
             mGravityEdit.setText(Util.fromDouble(info.getGravity(), 3, false));
         }
-        if (info.getDescription().isEmpty()) {
+        if (info.getDescription().length() == 0) {
             mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_secondary));
             mDescription.setText(getActivity().getResources().getString(R.string.no_description));
         } else {

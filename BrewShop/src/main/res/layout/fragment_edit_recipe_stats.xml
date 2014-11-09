@@ -1,6 +1,5 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/FillParent"
-    android:background="@color/color_gray">
+    style="@style/FillParent">
 
     <LinearLayout style="@style/FillParent"
         android:orientation="vertical">

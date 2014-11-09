@@ -13,6 +13,7 @@ import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ProductStorage extends FindCallback<ParseObject> implements ITimeoutHandler {
     private static final String TAG = ProductStorage.class.getName();
@@ -35,7 +36,7 @@ public class ProductStorage extends FindCallback<ParseObject> implements ITimeou
 
     public void retrieveProducts(IProductRetrievedHandler handler, ProductType productType) {
         mHandler = handler;
-        String type = productType.toString().toLowerCase();
+        String type = productType.toString().toLowerCase(Locale.US);
         mQuery = ParseQuery.getQuery(PARSE_CLASS)
                 .whereEqualTo(TYPE_KEY, type)
                 .orderByAscending(NAME_KEY)

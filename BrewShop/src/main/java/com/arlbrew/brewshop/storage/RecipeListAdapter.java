@@ -19,6 +19,13 @@ public class RecipeListAdapter extends BaseAdapter {
     BrewStorage mStorage;
     LinearLayout mLayout;
 
+    static class ViewHolder {
+        ImageView iconView;
+        TextView nameView;
+        TextView descriptionView;
+        View separatorView;
+    }
+
     public RecipeListAdapter(Context context, BrewStorage storage, LinearLayout layout) {
         mContext = context;
         mStorage = storage;
@@ -42,34 +49,37 @@ public class RecipeListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View rowView = convertView;
-        if (rowView == null) {
+        ViewHolder holder;
+        if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rowView = inflater.inflate(R.layout.list_item_recipe, parent, false);
+            convertView = inflater.inflate(R.layout.list_item_recipe, parent, false);
+            holder = new ViewHolder();
+            holder.iconView = (ImageView) convertView.findViewById(R.id.recipe_icon);
+            holder.nameView = (TextView) convertView.findViewById(R.id.recipe_name);
+            holder.descriptionView = (TextView) convertView.findViewById(R.id.recipe_style);
+            holder.separatorView = convertView.findViewById(R.id.separator);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
-
-        ImageView iconView = (ImageView) rowView.findViewById(R.id.recipe_icon);
-        TextView nameView = (TextView) rowView.findViewById(R.id.recipe_name);
-        TextView descriptionView = (TextView) rowView.findViewById(R.id.recipe_style);
 
         Recipe recipe = mStorage.retrieveRecipes().get(position);
-        iconView.setBackgroundColor(Util.getColor(recipe.getSrm()));
-        nameView.setText(recipe.getName());
+        holder.iconView.setBackgroundColor(Util.getColor(recipe.getSrm()));
+        holder.nameView.setText(recipe.getName());
 
         String styleName = recipe.getStyle().getDisplayName();
-        if (styleName == null || styleName.isEmpty()) {
+        if (styleName == null || styleName.length() == 0) {
             styleName = mContext.getResources().getString(R.string.no_style_selected);
         }
-        descriptionView.setText(styleName);
+        holder.descriptionView.setText(styleName);
 
         if (position == mStorage.retrieveRecipes().size() - 1) {
-            rowView.findViewById(R.id.separator).setVisibility(View.GONE);
+            holder.separatorView.setVisibility(View.GONE);
         }
 
-        rowView.setTag(R.integer.recipe_id, recipe.getId());
-        rowView.setTag(R.integer.is_recipe_selected, false);
-        rowView.setTag(R.integer.is_recipe_showing, false);
+        convertView.setTag(R.integer.recipe_id, recipe.getId());
+        convertView.setTag(R.integer.is_recipe_selected, false);
+        convertView.setTag(R.integer.is_recipe_showing, false);
 
-        return rowView;
+        return convertView;
     }
 }

@@ -4,7 +4,5 @@
         android:drawable="@color/color_accent_light" />
     <item android:state_focused="true"
         android:drawable="@color/color_accent_light" />
-    <item android:state_hovered="true"
-        android:drawable="@color/color_accent_light" />
     <item android:drawable="@color/color_transparent" />
 </selector>

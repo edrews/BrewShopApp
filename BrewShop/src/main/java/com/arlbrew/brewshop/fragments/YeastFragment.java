@@ -1,6 +1,7 @@
 package com.arlbrew.brewshop.fragments;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.arlbrew.brewshop.FragmentHandler;
 import com.arlbrew.brewshop.R;
 import com.arlbrew.brewshop.storage.BrewStorage;
 import com.arlbrew.brewshop.storage.NameableAdapter;
@@ -36,6 +38,7 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
     private Spinner mSpinner;
     private TextView mDescription;
     private EditText mAttenuationEdit;
+    private FragmentHandler mViewSwitcher;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
@@ -64,11 +67,7 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
         }
 
         mSpinner.setOnItemSelectedListener(this);
-
-        ActionBar bar = getActivity().getActionBar();
-        if (bar != null) {
-            bar.setTitle(getActivity().getResources().getString(R.string.edit_yeast_addition));
-        }
+        mViewSwitcher.setTitle(getActivity().getResources().getString(R.string.edit_yeast_addition));
         return root;
     }
 
@@ -86,6 +85,16 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
         yeast.setAttenuation(attenuation);
 
         mStorage.updateRecipe(mRecipe);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mViewSwitcher = (FragmentHandler) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement " + FragmentHandler.class.getName());
+        }
     }
 
     @Override
@@ -133,7 +142,7 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
             getYeast().setName(info.getName());
             mAttenuationEdit.setText(Util.fromDouble(getAttenuation(info), 3));
         }
-        if (info.getDescription().isEmpty()) {
+        if (info.getDescription().length() == 0) {
             mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_secondary));
             mDescription.setText(getActivity().getResources().getString(R.string.no_description));
         } else {

@@ -1,7 +1,6 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/color_gray"
     android:scrollbars="none">
 
 <LinearLayout
@@ -15,6 +14,7 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:maxWidth="400dp"
+        android:contentDescription="The Brew Shop"
         android:src="@drawable/brew_shop_header"/>
 
     <android.support.v7.widget.CardView

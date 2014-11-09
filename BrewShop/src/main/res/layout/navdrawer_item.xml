@@ -2,23 +2,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/activatedBackgroundIndicator"
-    android:textAppearance="?android:attr/textAppearanceListItemSmall"
+    android:background="@color/color_primary_dark"
     android:gravity="center_vertical"
-    android:minHeight="?android:attr/listPreferredItemHeightSmall">
+    android:minHeight="48dp">
 
     <ImageView
         android:id="@+id/navmenuitem_icon"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:layout_centerVertical="true"
+        android:contentDescription="Navigation icon"
         android:padding="0dp"/>
 
     <TextView
         android:id="@+id/navmenuitem_label"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:textSize="18dp"
+        android:textSize="20sp"
         android:layout_toRightOf="@id/navmenuitem_icon"
         android:gravity="center_vertical"
         android:text="TextView"

@@ -8,6 +8,7 @@ import com.arlbrew.brewshop.storage.recipes.Yeast;
 
 @SuppressWarnings("unused")
 public interface FragmentHandler {
+    public void setTitle(String title);
     public void showProducts(ProductType type);
     public void showRecipeManager();
     public void showRecipeEditor(Recipe recipe);

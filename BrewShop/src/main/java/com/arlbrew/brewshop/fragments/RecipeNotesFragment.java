@@ -1,6 +1,7 @@
 package com.arlbrew.brewshop.fragments;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.arlbrew.brewshop.FragmentHandler;
 import com.arlbrew.brewshop.R;
 import com.arlbrew.brewshop.storage.BrewStorage;
 import com.arlbrew.brewshop.storage.recipes.Recipe;
@@ -22,6 +24,7 @@ public class RecipeNotesFragment extends Fragment {
     private Recipe mRecipe;
     private BrewStorage mStorage;
     private EditText mNotes;
+    private FragmentHandler mViewSwitcher;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
@@ -38,12 +41,19 @@ public class RecipeNotesFragment extends Fragment {
         if (mRecipe != null) {
             mNotes.setText(mRecipe.getNotes());
         }
-        ActionBar bar = getActivity().getActionBar();
-        if (bar != null) {
-            bar.setTitle(getActivity().getResources().getString(R.string.edit_recipe_notes));
-        }
+        mViewSwitcher.setTitle(getActivity().getResources().getString(R.string.edit_recipe_notes));
 
         return root;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mViewSwitcher = (FragmentHandler) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement " + FragmentHandler.class.getName());
+        }
     }
 
     @Override

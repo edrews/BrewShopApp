@@ -1,9 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".HomeActivity" >
     <item android:id="@+id/action_new_recipe"
         android:icon="@drawable/ic_action_new"
         android:title="@string/new_recipe"
         android:orderInCategory="100"
-        android:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom" />
 </menu>

@@ -1,9 +1,10 @@
 package com.arlbrew.brewshop.fragments;
 
-import android.app.ActionBar;
+import android.support.v7.app.ActionBar;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -166,7 +167,7 @@ public class ProductListFragment extends Fragment implements IProductRetrievedHa
                 id = R.string.homebrew_supplies;
                 break;
         }
-        ActionBar bar = getActivity().getActionBar();
+        ActionBar bar = ((ActionBarActivity)getActivity()).getSupportActionBar();
         if (bar != null) {
             bar.setTitle(getActivity().getResources().getString(id));
         }

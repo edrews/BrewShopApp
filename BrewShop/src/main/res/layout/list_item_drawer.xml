@@ -7,6 +7,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_alignParentLeft="true"
+        android:contentDescription="Icon"
         android:layout_centerVertical="true"/>
 
     <TextView

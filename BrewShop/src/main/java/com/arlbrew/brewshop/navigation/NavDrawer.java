@@ -3,6 +3,7 @@ package com.arlbrew.brewshop.navigation;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
@@ -20,10 +21,10 @@ public class NavDrawer {
     private ListView mDrawerList;
     private NavDrawerConfig mNavConfig;
     private boolean mHomePressed;
-    private Activity mActivity;
+    private FragmentActivity mActivity;
     private NavSelectionHandler mSelectionHander;
 
-    public NavDrawer(Activity activity, NavDrawerConfig config, NavSelectionHandler handler) {
+    public NavDrawer(FragmentActivity activity, NavDrawerConfig config, NavSelectionHandler handler) {
         mActivity = activity;
         mNavConfig = config;
         mSelectionHander = handler;
@@ -47,11 +48,11 @@ public class NavDrawer {
                 mNavConfig.getDrawerCloseDesc()
         ) {
             public void onDrawerClosed(View view) {
-                mActivity.invalidateOptionsMenu();
+                mActivity.supportInvalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView) {
-                mActivity.invalidateOptionsMenu();
+                mActivity.supportInvalidateOptionsMenu();
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -78,7 +79,7 @@ public class NavDrawer {
             case android.R.id.home:
                 if (!mDrawerLayout.isDrawerOpen(mDrawerList)) {
                     mHomePressed = true;
-                    mActivity.invalidateOptionsMenu();
+                    mActivity.supportInvalidateOptionsMenu();
                 }
                 break;
         }

@@ -1,6 +1,5 @@
 package com.arlbrew.brewshop.fragments;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -8,8 +7,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.ActionMode;
+import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,6 +42,7 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
         DialogInterface.OnClickListener,
         AdapterView.OnItemClickListener,
         ActionMode.Callback {
+
     @SuppressWarnings("unused")
     private static final String TAG = RecipeFragment.class.getName();
     private static final String ACTION_MODE = "ActionMode";
@@ -85,12 +86,12 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
         textView = (TextView) root.findViewById(R.id.recipe_name);
         textView.setText(mRecipe.getName());
 
-        ImageView iconView = (ImageView) root.findViewById(R.id.recipe_icon);
+        ImageView iconView = (ImageView) root.findViewById(R.id.recipe_stats_icon);
         iconView.setBackgroundColor(Util.getColor(mRecipe.getSrm()));
 
         textView = (TextView) root.findViewById(R.id.recipe_style);
         String styleName = style.getDisplayName();
-        if (styleName == null || styleName.isEmpty()) {
+        if (styleName == null || styleName.length() == 0) {
             styleName = getActivity().getResources().getString(R.string.select_style);
         }
         textView.setText(styleName);
@@ -169,7 +170,7 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
 
         textView = (TextView) root.findViewById(R.id.recipe_notes);
         String notes;
-        if (mRecipe.getNotes().isEmpty()) {
+        if (mRecipe.getNotes().length() == 0) {
             notes = getActivity().getResources().getString(R.string.add_recipe_notes);
             textView.setTextColor(getActivity().getResources().getColor(R.color.text_dark_secondary));
         } else {
@@ -177,11 +178,7 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
         }
         textView.setText(notes);
         checkResumeActionMode(state);
-        ActionBar bar = getActivity().getActionBar();
-        if (bar != null) {
-            bar.setTitle(findString(R.string.edit_recipe));
-        }
-
+        mFragmentHandler.setTitle(findString(R.string.edit_recipe));
         return root;
     }
 
@@ -448,7 +445,7 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
         for (int i : selectedIndexes) {
             mIngredientView.setSelected(i, true);
         }
-        getActivity().startActionMode(this);
+        ((ActionBarActivity) getActivity()).startSupportActionMode(this);
     }
 
     private void editIngredient(Object ingredient) {

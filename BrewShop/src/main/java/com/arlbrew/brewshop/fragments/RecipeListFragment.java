@@ -1,14 +1,14 @@
 package com.arlbrew.brewshop.fragments;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.ActionMode;
+import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,21 +46,21 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         setHasOptionsMenu(true);
 
         checkResumeActionMode(bundle);
-        ActionBar bar = getActivity().getActionBar();
-        if (bar != null) {
-            bar.setTitle(getActivity().getResources().getString(R.string.homebrew_recipes));
-        }
+        mViewSwitcher.setTitle(getTitle());
 
         mStorage = new BrewStorage(getActivity());
         mRecipeView = new RecipeListView(getActivity(), rootView, mStorage, this);
         mRecipeView.drawRecipeList();
         if (bundle != null) {
             int id = bundle.getInt(SHOWING_ID, -1);
-            Recipe recipe = mStorage.retrieveRecipes().findById(id);
-            showRecipe(recipe);
+            mRecipeView.setShowing(id);
         }
 
         return rootView;
+    }
+
+    public String getTitle() {
+        return getActivity().getResources().getString(R.string.homebrew_recipes);
     }
 
     @Override
@@ -178,6 +178,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
     public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.action_select_all:
+                Log.d(TAG, "Select all");
                 mRecipeView.setAllSelected(true);
                 updateActionBar();
                 return true;
@@ -226,7 +227,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         for (int i = 0; i < selectedIds.length; i++) {
             mRecipeView.setSelected(selectedIds[i], true);
         }
-        getActivity().startActionMode(this);
+        ((ActionBarActivity) getActivity()).startSupportActionMode(this);
     }
 
     private boolean canCreateRecipe() {

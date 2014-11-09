@@ -6,6 +6,8 @@ import android.os.Parcelable;
 
 import com.arlbrew.brewshop.storage.ProductType;
 
+import java.util.Locale;
+
 @SuppressWarnings("unused")
 public class Product implements Parcelable {
     private String mName;
@@ -42,7 +44,7 @@ public class Product implements Parcelable {
     public double getPrice() { return mPrice; }
     public void setPrice(double value) { mPrice = value; }
     public String getPriceString() {
-        return String.format("$%.2f", mPrice);
+        return String.format(Locale.US, "$%.2f", mPrice);
     }
 
     public String getPriceUnit() { return mPriceUnit; }

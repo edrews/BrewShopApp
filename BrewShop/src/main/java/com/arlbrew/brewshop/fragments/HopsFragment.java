@@ -1,8 +1,9 @@
 package com.arlbrew.brewshop.fragments;
 
-import android.app.ActionBar;
+import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +72,7 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
             mTimeEdit.setText(String.valueOf(addition.getTime()));
         }
 
-        ActionBar bar = getActivity().getActionBar();
+        ActionBar bar = ((ActionBarActivity) getActivity()).getSupportActionBar();
         if (bar != null) {
             bar.setTitle(getActivity().getResources().getString(R.string.edit_hop_addition));
         }
@@ -145,7 +146,7 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
             mAlphaEdit.setText(Util.fromDouble(hopsInfo.getAlphaAcid(), 3));
             getHopAddition().getHop().setName(hopsInfo.getName());
         }
-        if (hopsInfo.getDescription().isEmpty()) {
+        if (hopsInfo.getDescription().length() == 0) {
             mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_secondary));
             mDescription.setText(getActivity().getResources().getString(R.string.no_description));
         } else {

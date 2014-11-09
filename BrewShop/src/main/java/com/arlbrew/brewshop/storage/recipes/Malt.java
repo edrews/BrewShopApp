@@ -40,4 +40,13 @@ public class Malt implements Parcelable {
         parcel.writeDouble(gravity);
         parcel.writeDouble(color);
     }
+
+    public static final Parcelable.Creator<Malt> CREATOR = new Parcelable.Creator<Malt>() {
+        public Malt createFromParcel(Parcel in) {
+            return new Malt(in);
+        }
+        public Malt[] newArray(int size) {
+            return new Malt[size];
+        }
+    };
 }

@@ -5,6 +5,7 @@
     <color name="color_primary">#5d4037</color>
     <color name="color_primary_light">#d7ccc8</color>
     <color name="color_primary_dark">#2e1713</color>
+
     <color name="color_accent">#fff080</color>
     <color name="color_accent_light">#fff8b0</color>
 
@@ -20,10 +21,12 @@
 
     <!-- Other -->
     <color name="hop_color">#106010</color>
-    <color name="yeast_color">#ffdab9</color>
+    <color name="yeast_color">#FFDAB9</color>
     <color name="malt_color">#b87333</color>
 
-    <color name="color_white">#ffffff</color>
+    <color name="color_white">#FFFFFF</color>
     <color name="color_gray">#F0F0F0</color>
+    <color name="color_grayer">#E0E0E0</color>
     <color name="color_transparent">#00000000</color>
+    <color name="color_shaded">#10000000</color>
 </resources>

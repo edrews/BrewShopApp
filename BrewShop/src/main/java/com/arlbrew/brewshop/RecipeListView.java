@@ -1,6 +1,7 @@
 package com.arlbrew.brewshop;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -10,9 +11,9 @@ import com.arlbrew.brewshop.storage.RecipeListAdapter;
 import com.arlbrew.brewshop.storage.recipes.Recipe;
 import com.arlbrew.brewshop.storage.recipes.RecipeList;
 
-import java.util.List;
-
 public class RecipeListView {
+    private static final String TAG = RecipeListView.class.getName();
+
     private LinearLayout mRecipeView;
     private RecipeListAdapter mRecipeAdapter;
     private BrewStorage mStorage;
@@ -111,9 +112,11 @@ public class RecipeListView {
     }
 
     public void setAllSelected(boolean selected) {
-        for (int i = 0; i < mStorage.retrieveRecipes().size(); i++) {
-            setSelected(i, selected);
+        for (int i = 0; i < mRecipeView.getChildCount(); i++) {
+            View view = mRecipeView.getChildAt(i);
+            view.setTag(R.integer.is_recipe_selected, selected);
         }
+        updateRecipeListView();
     }
 
     public int getSelectedCount() {

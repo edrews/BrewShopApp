@@ -37,7 +37,7 @@ public class BeerStyle implements Parcelable {
     }
 
     public String getDisplayName() {
-        if (substyle == null || substyle.isEmpty()) {
+        if (substyle == null || substyle.length() == 0) {
             return style;
         } else {
             return substyle;

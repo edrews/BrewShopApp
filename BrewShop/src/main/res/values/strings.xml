@@ -27,7 +27,7 @@
     <string name="max_ingredients_reached">Recipes have a %d ingredient limit</string>
     <string name="no_ingredients">No ingredients</string>
     <string name="unnamed_recipe">Unnamed Recipe</string>
-    <string name="add_recipe_notes">Add recipe notes...</string>
+    <string name="add_recipe_notes">Add recipe notes&#8230;</string>
     <string name="delete_selected_recipes">Delete %d recipes?</string>
     <string name="delete_selected_ingredients">Delete %d ingredients?</string>
     <string name="delete_selected_recipe">Delete recipe?</string>
@@ -39,7 +39,7 @@
     <string name="none_available">None available</string>
     <string name="varies">Varies</string>
     <string name="bjcp_category">BJCP Category</string>
-    <string name="select_style">Select a style...</string>
+    <string name="select_style">Select a style&#8230;</string>
     <string name="no_style_selected">No style selected</string>
     <string name="select_a_recipe">Select a recipe</string>
 
