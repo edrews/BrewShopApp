@@ -85,6 +85,7 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
         yeast.setAttenuation(attenuation);
 
         mStorage.updateRecipe(mRecipe);
+        Util.hideKeyboard(getActivity());
     }
 
     @Override

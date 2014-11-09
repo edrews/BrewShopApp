@@ -103,6 +103,7 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
         addition.setWeight(weight);
 
         mStorage.updateRecipe(mRecipe);
+        Util.hideKeyboard(getActivity());
     }
 
     @Override

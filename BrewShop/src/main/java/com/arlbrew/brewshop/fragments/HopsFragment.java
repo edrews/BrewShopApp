@@ -99,6 +99,7 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
         addition.setTime(Util.toInt(mTimeEdit.getText()));
 
         mStorage.updateRecipe(mRecipe);
+        Util.hideKeyboard(getActivity());
     }
 
     @Override

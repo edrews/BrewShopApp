@@ -26,11 +26,8 @@
                     style="@style/RecipeEditLabel"
                     android:text="Malt Type" />
 
-                <Spinner
-                    android:id="@+id/malt_type"
-                    android:layout_width="fill_parent"
-                    android:layout_height="48dp"
-                    android:layout_weight="1" />
+                <Spinner style="@style/MySpinner"
+                    android:id="@+id/malt_type"/>
 
             </LinearLayout>
 
@@ -47,11 +44,13 @@
                     android:id="@+id/malt_weight_lb"
                     android:hint=""
                     android:inputType="numberDecimal"
-                    android:maxLength="5"/>
+                    android:maxLength="5">
+                    </EditText>
 
                 <TextView
                     style="@style/RecipeEditUnit"
-                    android:text="lb" />
+                    android:text="lb"
+                    android:layout_marginRight="10dp"/>
 
                 <EditText style="@style/RecipeEditValue"
                     android:id="@+id/malt_weight_oz"

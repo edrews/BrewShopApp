@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="RtlHardcoded" severity="ignore" />
+    <issue id="RtlEnabled" severity="ignore" />
+    <issue id="ViewHolder" severity="ignore" />
+    <issue id="IconDensities" severity="ignore" />
+</lint>

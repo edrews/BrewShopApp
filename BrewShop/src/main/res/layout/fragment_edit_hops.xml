@@ -7,7 +7,8 @@
         <TextView style="@style/RecipeHeader"
             android:text="Hop Addition"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="5dp"/>
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"/>
 
         <android.support.v7.widget.CardView
             style="@style/Card">
@@ -26,11 +27,8 @@
                     style="@style/RecipeEditLabel"
                     android:text="Hop Type" />
 
-                <Spinner
-                    android:id="@+id/hops_type"
-                    android:layout_width="fill_parent"
-                    android:layout_height="48dp"
-                    android:layout_weight="1" />
+                <Spinner style="@style/MySpinner"
+                    android:id="@+id/hops_type"/>
 
             </LinearLayout>
 
@@ -47,7 +45,8 @@
                     android:id="@+id/hops_weight"
                     android:hint=""
                     android:inputType="numberDecimal"
-                    android:maxLength="5"/>
+                    android:maxLength="5">
+                    </EditText>
 
                 <TextView
                     style="@style/RecipeEditUnit"
@@ -107,7 +106,8 @@
 
         <TextView style="@style/RecipeHeader"
             android:text="Description"
-            android:layout_marginLeft="5dp"/>
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"/>
 
         <android.support.v7.widget.CardView style="@style/Card">
 

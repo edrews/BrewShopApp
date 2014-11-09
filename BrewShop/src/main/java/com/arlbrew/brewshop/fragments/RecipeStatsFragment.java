@@ -2,6 +2,7 @@ package com.arlbrew.brewshop.fragments;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -166,6 +169,8 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
 
         style.setDescription(mDescription.getText().toString());
         mStorage.updateRecipe(mRecipe);
+
+        Util.hideKeyboard(getActivity());
     }
 
     private VitalStatistics getVitalStatistics() {

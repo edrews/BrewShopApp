@@ -15,6 +15,7 @@ import com.arlbrew.brewshop.FragmentHandler;
 import com.arlbrew.brewshop.R;
 import com.arlbrew.brewshop.storage.BrewStorage;
 import com.arlbrew.brewshop.storage.recipes.Recipe;
+import com.arlbrew.brewshop.util.Util;
 
 public class RecipeNotesFragment extends Fragment {
     @SuppressWarnings("unused")
@@ -61,6 +62,7 @@ public class RecipeNotesFragment extends Fragment {
         super.onPause();
         mRecipe.setNotes(mNotes.getText().toString());
         mStorage.updateRecipe(mRecipe);
+        Util.hideKeyboard(getActivity());
     }
 
     @Override

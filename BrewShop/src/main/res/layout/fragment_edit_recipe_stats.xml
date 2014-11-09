@@ -31,8 +31,10 @@
                     style="@style/RecipeEditValue"
                     android:layout_width="fill_parent"
                     android:hint="Enter name"
+                    android:gravity="start|bottom"
                     android:inputType="textCapWords|textNoSuggestions"
-                    android:maxLength="50"/>
+                    android:maxLength="50">
+                    </EditText>
 
             </LinearLayout>
 
@@ -129,11 +131,9 @@
                     style="@style/RecipeEditLabel"
                     android:text="BJCP Style" />
 
-                <Spinner
+                <Spinner style="@style/MySpinner"
                     android:id="@+id/recipe_style"
-                    android:layout_width="fill_parent"
-                    android:layout_height="48dp"
-                    android:layout_weight="1" />
+                    android:layout_width="fill_parent"/>
 
             </LinearLayout>
 
@@ -147,11 +147,9 @@
                     style="@style/RecipeEditLabel"
                     android:text="Substyle" />
 
-                <Spinner
+                <Spinner style="@style/MySpinner"
                     android:id="@+id/recipe_substyle"
-                    android:layout_width="fill_parent"
-                    android:layout_height="48dp"
-                    android:layout_weight="1" />
+                    android:layout_width="fill_parent"/>
 
             </LinearLayout>
 
@@ -176,6 +174,7 @@
                     android:padding="5dp"
                     android:singleLine="false"
                     android:gravity="center_vertical"
+                    android:textColor="@color/text_dark_primary"
                     android:text="Description"
                     android:textSize="14sp"/>
 

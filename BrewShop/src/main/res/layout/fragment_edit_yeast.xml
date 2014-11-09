@@ -26,11 +26,8 @@
                     style="@style/RecipeEditLabel"
                     android:text="Yeast Type" />
 
-                <Spinner
-                    android:id="@+id/yeast_type"
-                    android:layout_width="fill_parent"
-                    android:layout_height="48dp"
-                    android:layout_weight="1" />
+                <Spinner style="@style/MySpinner"
+                    android:id="@+id/yeast_type"/>
 
             </LinearLayout>
 
@@ -47,7 +44,8 @@
                     android:id="@+id/yeast_attenuation"
                     android:hint=""
                     android:inputType="numberDecimal"
-                    android:maxLength="5"/>
+                    android:maxLength="5">
+                    </EditText>
 
                 <TextView
                     style="@style/RecipeEditUnit"

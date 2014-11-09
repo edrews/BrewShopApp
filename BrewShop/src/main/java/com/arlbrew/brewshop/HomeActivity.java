@@ -1,11 +1,11 @@
 package com.arlbrew.brewshop;
 
-import android.support.v7.app.ActionBar;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -40,25 +40,29 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
         NavSelectionHandler,
         FragmentManager.OnBackStackChangedListener {
 
+    private static final String TAG = HomeActivity.class.getName();
     private static final String CURRENT_RECIPE = "Recipe";
+    private static final String RECIPE_LIST_FRAGMENT_TAG = "RecipeListFragment";
+    private static final String RECIPE_FRAGMENT_TAG = "RecipeFragment";
+    private static final String RECIPE_EDIT_FRAGMENT_TAG = "RecipeEditFragment";
 
     private NavDrawer mNavDrawer;
     private Recipe mCurrentRecipe;
-    private RecipeListFragment mRecipeListFragment;
-    private RecipeFragment mRecipeFragment;
-    private Fragment mEditRecipeFragment;
     private TextView mMessageView;
 
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        FragmentManager manager = getSupportFragmentManager();
+        manager.addOnBackStackChangedListener(this);
+
         ActionBar bar = getSupportActionBar();
         if (bar != null) {
             bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
             bar.setDisplayShowHomeEnabled(true);
             bar.setHomeButtonEnabled(true);
             bar.setDisplayHomeAsUpEnabled(true);
-            bar.setHomeAsUpIndicator(R.drawable.ic_drawer);
+            updateHomeIndicator();
         }
 
         mNavDrawer = new NavDrawer(this, getNavDrawerConfig(), this);
@@ -71,28 +75,7 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
             mCurrentRecipe = bundle.getParcelable(CURRENT_RECIPE);
         }
 
-        FragmentManager manager = getSupportFragmentManager();
-        manager.addOnBackStackChangedListener(this);
-        getFragmentReferences(manager);
-    }
-
-    private void getFragmentReferences(FragmentManager manager) {
-        List<Fragment> fragments = manager.getFragments();
-        if (fragments != null) {
-            Fragment fragment;
-            if (fragments.size() >= 1) {
-                fragment = fragments.get(0);
-                if (fragment instanceof RecipeListFragment) {
-                    mRecipeListFragment = (RecipeListFragment) fragment;
-                }
-            }
-            if (fragments.size() >= 2) {
-                fragment = fragments.get(1);
-                if (fragment instanceof RecipeFragment) {
-                    mRecipeFragment = (RecipeFragment) fragment;
-                }
-            }
-        }
+        updateMessageView();
     }
 
     private NavDrawerConfig getNavDrawerConfig() {
@@ -203,8 +186,8 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
     }
 
     private void showRecipeFragment(Recipe recipe) {
-        mRecipeFragment = new RecipeFragment();
-        mRecipeFragment.setRecipe(recipe);
+        RecipeFragment fragment = new RecipeFragment();
+        fragment.setRecipe(recipe);
         FragmentTransaction trans = getSupportFragmentManager()
                 .beginTransaction()
                 .addToBackStack(null);
@@ -215,15 +198,14 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
             trans.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
         }
 
-        trans.replace(getDetailFrame(), mRecipeFragment).commit();
+        trans.replace(getDetailFrame(), fragment, RECIPE_FRAGMENT_TAG).commit();
     }
 
     @Override
     public void showRecipeStatsEditor(Recipe recipe) {
         RecipeStatsFragment fragment = new RecipeStatsFragment();
-        mEditRecipeFragment = fragment;
         fragment.setRecipe(recipe);
-        transitionTo(fragment);
+        transitionTo(fragment, RECIPE_EDIT_FRAGMENT_TAG);
     }
 
     public void showMessage(int visibility) {
@@ -239,7 +221,7 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
     public void showRecipeNotesEditor(Recipe recipe) {
         RecipeNotesFragment fragment = new RecipeNotesFragment();
         fragment.setRecipe(recipe);
-        transitionTo(fragment);
+        transitionTo(fragment, RECIPE_EDIT_FRAGMENT_TAG);
     }
 
     @Override
@@ -247,7 +229,7 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
         MaltFragment fragment = new MaltFragment();
         fragment.setRecipe(recipe);
         fragment.setMaltIndex(recipe.getMalts().indexOf(addition));
-        transitionTo(fragment);
+        transitionTo(fragment, RECIPE_EDIT_FRAGMENT_TAG);
     }
 
     @Override
@@ -255,7 +237,7 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
         HopsFragment fragment = new HopsFragment();
         fragment.setRecipe(recipe);
         fragment.setHopIndex(recipe.getHops().indexOf(addition));
-        transitionTo(fragment);
+        transitionTo(fragment, RECIPE_EDIT_FRAGMENT_TAG);
     }
 
     @Override
@@ -263,7 +245,7 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
         YeastFragment fragment = new YeastFragment();
         fragment.setRecipe(recipe);
         fragment.setYeastIndex(recipe.getYeast().indexOf(yeast));
-        transitionTo(fragment);
+        transitionTo(fragment, RECIPE_EDIT_FRAGMENT_TAG);
     }
 
     @Override
@@ -278,12 +260,12 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
                 .commit();
     }
 
-    private void transitionTo(Fragment fragment) {
+    private void transitionTo(Fragment fragment, String tag) {
         FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
         if (!isMultiFrame()) {
             trans.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
         }
-        trans.replace(getDetailFrame(), fragment)
+        trans.replace(getDetailFrame(), fragment, tag)
                 .addToBackStack(null)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN | FragmentTransaction.TRANSIT_ENTER_MASK)
                 .commit();
@@ -291,10 +273,10 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
 
     @Override
     public void showRecipeManager() {
-        mRecipeListFragment = new RecipeListFragment();
+        Fragment recipeListFragment = new RecipeListFragment();
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, mRecipeListFragment)
+                .replace(R.id.content_frame, recipeListFragment, RECIPE_LIST_FRAGMENT_TAG)
                 .commit();
     }
 
@@ -313,52 +295,67 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
 
     private void clearBackStack() {
         FragmentManager manager = getSupportFragmentManager();
-        if (mEditRecipeFragment != null) {
-            manager.popBackStack();
-            FragmentTransaction transaction = manager.beginTransaction();
-            transaction.remove(mEditRecipeFragment);
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
-            transaction.commit();
+
+        Fragment editFragment = manager.findFragmentByTag(RECIPE_EDIT_FRAGMENT_TAG);
+        if (editFragment != null) {
+            removeFragment(manager, editFragment);
         }
-        if (mRecipeFragment != null) {
-            manager.popBackStack();
-            FragmentTransaction transaction = manager.beginTransaction();
-            transaction.remove(mRecipeFragment);
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
-            transaction.commit();
+        Fragment recipeFragment = manager.findFragmentByTag(RECIPE_FRAGMENT_TAG);
+        if (recipeFragment != null) {
+            removeFragment(manager, recipeFragment);
         }
+    }
+
+    private void removeFragment(FragmentManager manager, Fragment fragment) {
+        FragmentTransaction trans = manager.beginTransaction();
+        if (!isMultiFrame()) {
+            trans.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
+        }
+        trans.remove(fragment);
+        trans.commit();
+        manager.popBackStack();
     }
 
     @Override
     public void onBackStackChanged() {
-        FragmentManager manager = getSupportFragmentManager();
-        notifyRecipeManager(manager);
-        updateHomeIndicator(manager);
-        updateMessageView(manager);
+        notifyRecipeManager();
+        updateHomeIndicator();
+        updateMessageView();
     }
 
-    private void updateMessageView(FragmentManager manager) {
+    private void updateMessageView() {
+        FragmentManager manager = getSupportFragmentManager();
         if (manager.getBackStackEntryCount() > 0) {
             showMessage(View.GONE);
         } else {
             showMessage(View.VISIBLE);
-            setTitle(mRecipeListFragment.getTitle());
-        }
-    }
-
-    private void notifyRecipeManager(FragmentManager manager) {
-        if (mRecipeListFragment != null && mRecipeFragment != null) {
-            if (manager.getBackStackEntryCount() > 0) {
-                mRecipeListFragment.onRecipeUpdated(mRecipeFragment.getRecipe().getId());
-            } else {
-                mRecipeListFragment.onRecipeClosed(mRecipeFragment.getRecipe().getId());
+            RecipeListFragment recipeListFragment = (RecipeListFragment) manager.findFragmentByTag(RECIPE_LIST_FRAGMENT_TAG);
+            if (recipeListFragment != null) {
+                setTitle(recipeListFragment.getTitle());
             }
         }
     }
 
-    private void updateHomeIndicator(FragmentManager manager) {
+    private void notifyRecipeManager() {
+        FragmentManager manager = getSupportFragmentManager();
+        RecipeFragment recipeFragment = (RecipeFragment) manager.findFragmentByTag(RECIPE_FRAGMENT_TAG);
+        RecipeListFragment recipeListFragment = (RecipeListFragment) manager.findFragmentByTag(RECIPE_LIST_FRAGMENT_TAG);
+
+        if (manager.getBackStackEntryCount() > 0) {
+            if (recipeListFragment != null && recipeFragment != null && recipeFragment.getRecipe() != null) {
+                recipeListFragment.onRecipeUpdated(recipeFragment.getRecipe().getId());
+            }
+        } else {
+            if (recipeListFragment != null) {
+                recipeListFragment.onRecipeClosed(0);
+            }
+        }
+    }
+
+    private void updateHomeIndicator() {
         ActionBar bar = getSupportActionBar();
         if (bar != null) {
+            FragmentManager manager = getSupportFragmentManager();
             if (manager.getBackStackEntryCount() > 0) {
                 bar.setHomeAsUpIndicator(null);
             } else {
@@ -371,6 +368,7 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
     private boolean isMultiFrame() {
         return findViewById(R.id.content_frame_right) != null;
     }
+
     private int getDetailFrame() {
         View view = findViewById(R.id.content_frame_right);
         if (view != null) {

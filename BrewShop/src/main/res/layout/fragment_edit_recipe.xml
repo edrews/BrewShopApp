@@ -43,9 +43,9 @@
                         <TextView
                             android:id="@+id/recipe_style"
                             android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
                             android:layout_weight="2"
-                            android:text="Dry Irish Stout"
+                            android:text="Style name"
                             android:textColor="@color/text_dark_secondary"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -301,6 +301,7 @@
                         android:gravity="center"
                         android:minWidth="48dp"
                         android:background="@drawable/touchable"
+                        android:textColor="@color/text_dark_primary"
                         android:text="ADD" />
 
                 </RelativeLayout>
