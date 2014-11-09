@@ -10,14 +10,8 @@ The only homebrew companion app you'll ever need.
 - Add brew notes to each recipe
 - SRM reflected in recipe icon color
 
-BUGS
-----
-- Rotate from recipe stat, select new recipe stops slide animation
-- Rotate action bar arrow turns to drawer
-
 TODO
 ----
-* Start editing notes on fragment load
 * Custom ingredient names
 * Local inventory
 * Integrate local inventory with recipe viewer

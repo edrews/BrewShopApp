@@ -34,16 +34,16 @@ public class RecipeNotesFragment extends Fragment {
 
         setHasOptionsMenu(true);
         mStorage = new BrewStorage(getActivity());
+        mViewSwitcher.setTitle(getActivity().getResources().getString(R.string.edit_recipe_notes));
 
         if (state != null) {
             mRecipe= state.getParcelable(RECIPE);
         }
 
         if (mRecipe != null) {
-            mNotes.setText(mRecipe.getNotes());
+            mNotes.append(mRecipe.getNotes());
         }
-        mViewSwitcher.setTitle(getActivity().getResources().getString(R.string.edit_recipe_notes));
-
+        Util.showKeyboard(getActivity());
         return root;
     }
 

@@ -158,6 +158,14 @@ public class Util {
         }
     }
 
+    public static void showKeyboard(Activity activity) {
+        InputMethodManager inputManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        View view = activity.getCurrentFocus();
+        if (view != null) {
+            inputManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+        }
+    }
+
     public static String separateSentences(String paragraph) {
         return paragraph.replace(". ", ".\n\n");
     }
