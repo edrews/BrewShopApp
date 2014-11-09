@@ -17,10 +17,6 @@ TODO
 * Integrate local inventory with recipe viewer
 * Save storage remotely
 * Share remote storage
+* Metric units
+* Import recipes with BeerXML
 * Community recipes
-
-Store TODO
-----------
-* Ingredient prices in recipe
-* Running recipe total
-* Recipe purchase
