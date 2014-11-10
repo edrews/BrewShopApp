@@ -1,4 +1,5 @@
 Brew Shop - A homebrew companion Android app
+
 Copyright (C) 2014 The Brew Shop, LLC
 
 This program is free software: you can redistribute it and/or modify
