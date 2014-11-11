@@ -3,12 +3,15 @@ package com.brew.brewshop.storage.recipes;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Yeast implements Parcelable {
+import com.brew.brewshop.storage.Nameable;
+
+public class Yeast implements Parcelable, Nameable {
     private String name;
     private double avgAttenuation;
 
     public Yeast() {
         name = "";
+        avgAttenuation = 0;
     }
 
     public Yeast(Parcel parcel) {
@@ -16,7 +19,10 @@ public class Yeast implements Parcelable {
         avgAttenuation = parcel.readDouble();
     }
 
+    @Override
     public String getName() { return name; }
+
+    @Override
     public void setName(String value) { name = value; }
 
     public double getAttenuation() { return avgAttenuation; }

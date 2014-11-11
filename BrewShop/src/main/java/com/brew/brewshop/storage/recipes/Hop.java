@@ -3,13 +3,15 @@ package com.brew.brewshop.storage.recipes;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Hop implements Parcelable {
+import com.brew.brewshop.storage.Nameable;
+
+public class Hop implements Parcelable, Nameable {
     private String name;
     private double percentAlpha;
 
     public Hop() {
-        name = "Hop";
-        percentAlpha = 5;
+        name = "";
+        percentAlpha = 0;
     }
 
     public Hop(Parcel parcel) {
@@ -17,7 +19,10 @@ public class Hop implements Parcelable {
         percentAlpha = parcel.readDouble();
     }
 
+    @Override
     public String getName() { return name; }
+
+    @Override
     public void setName(String value) { name = value; }
 
     public double getPercentAlpha() { return percentAlpha; }

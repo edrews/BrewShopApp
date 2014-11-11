@@ -15,7 +15,8 @@ public class MaltInfo implements Nameable {
         description = "";
     }
 
-    public int getId() { return 0; }
+    @Override
+    public void setName(String name) { this.name = name; }
 
     @Override
     public String getName() {

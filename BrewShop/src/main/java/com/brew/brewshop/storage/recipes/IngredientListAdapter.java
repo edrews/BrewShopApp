@@ -1,4 +1,4 @@
-package com.brew.brewshop;
+package com.brew.brewshop.storage.recipes;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,12 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import com.brew.brewshop.R;
 
-import com.brew.brewshop.storage.recipes.HopAddition;
-import com.brew.brewshop.storage.recipes.MaltAddition;
-import com.brew.brewshop.storage.recipes.Recipe;
-import com.brew.brewshop.storage.recipes.Weight;
-import com.brew.brewshop.storage.recipes.Yeast;
 import com.brew.brewshop.util.Util;
 
 public class IngredientListAdapter extends ArrayAdapter<Object> {

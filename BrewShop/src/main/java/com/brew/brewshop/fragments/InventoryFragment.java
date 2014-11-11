@@ -8,8 +8,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.support.v7.view.ActionMode;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,161 +23,54 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.brew.brewshop.FragmentHandler;
-import com.brew.brewshop.storage.recipes.IngredientListView;
 import com.brew.brewshop.R;
 import com.brew.brewshop.ViewClickListener;
 import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.recipes.BeerStyle;
 import com.brew.brewshop.storage.recipes.HopAddition;
+import com.brew.brewshop.storage.recipes.IngredientListView;
 import com.brew.brewshop.storage.recipes.MaltAddition;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.storage.recipes.Yeast;
 import com.brew.brewshop.util.Util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class RecipeFragment extends Fragment implements ViewClickListener,
+public class InventoryFragment extends Fragment implements ViewClickListener,
         DialogInterface.OnClickListener,
         AdapterView.OnItemClickListener,
         ActionMode.Callback {
 
     @SuppressWarnings("unused")
-    private static final String TAG = RecipeFragment.class.getName();
+    private static final String TAG = InventoryFragment.class.getName();
     private static final String ACTION_MODE = "ActionMode";
     private static final String SELECTED_INDEXES = "Selected";
-    private static final String RECIPE = "Recipe";
-    private static final String UNIT_GALLON = " gal";
-    private static final String UNIT_MINUTES = " min";
-    private static final String UNIT_PERCENT = "%";
 
-    private Recipe mRecipe;
     private BrewStorage mStorage;
     private FragmentHandler mFragmentHandler;
     private Dialog mSelectIngredient;
     private ActionMode mActionMode;
     private IngredientListView mIngredientView;
     private View mRootView;
+    private Recipe mRecipe;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
-        View root = inflater.inflate(R.layout.fragment_edit_recipe, container, false);
+        View root = inflater.inflate(R.layout.fragment_inventory, container, false);
         mRootView = root;
-        root.findViewById(R.id.recipe_stats_layout).setOnClickListener(this);
-        root.findViewById(R.id.recipe_notes_layout).setOnClickListener(this);
         root.findViewById(R.id.new_ingredient_view).setOnClickListener(this);
 
         setHasOptionsMenu(true);
         mStorage = new BrewStorage(getActivity());
 
-        if (state != null) {
-            mRecipe = state.getParcelable(RECIPE);
-        }
-        if (mRecipe == null) {
-            Log.d(TAG, "Loading recipe from storage");
-            mRecipe = mFragmentHandler.getCurrentRecipe();
-            mStorage.retrieveRecipe(mRecipe);
-        }
-
-        BeerStyle style = mRecipe.getStyle();
-
-        TextView textView;
-        textView = (TextView) root.findViewById(R.id.recipe_name);
-        textView.setText(mRecipe.getName());
-
-        ImageView iconView = (ImageView) root.findViewById(R.id.recipe_stats_icon);
-        iconView.setBackgroundColor(Util.getColor(mRecipe.getSrm()));
-
-        textView = (TextView) root.findViewById(R.id.recipe_style);
-        String styleName = style.getDisplayName();
-        if (styleName == null || styleName.length() == 0) {
-            styleName = getActivity().getResources().getString(R.string.select_style);
-        }
-        textView.setText(styleName);
-
-        textView = (TextView) root.findViewById(R.id.batch_volume);
-        textView.setText(Util.fromDouble(mRecipe.getBatchVolume(), 1) + UNIT_GALLON);
-
-        textView = (TextView) root.findViewById(R.id.boil_volume);
-        textView.setText(Util.fromDouble(mRecipe.getBoilVolume(), 1) + UNIT_GALLON);
-
-        textView = (TextView) root.findViewById(R.id.boil_time);
-        textView.setText(Util.fromDouble(mRecipe.getBoilTime(), 0) + UNIT_MINUTES);
-
-        textView = (TextView) root.findViewById(R.id.efficiency);
-        textView.setText(Util.fromDouble(mRecipe.getEfficiency(), 1) + UNIT_PERCENT);
-
-        updateStats();
-
-        textView = (TextView) root.findViewById(R.id.style_og);
-        if (style.getOgMin() < 0) {
-            textView.setText(getResources().getString(R.string.varies));
-        } else {
-            String og = Util.fromDouble(style.getOgMin(), 3, false);
-            if (style.getOgMax() - style.getOgMin() >= 0.001) {
-                og += " - " + Util.fromDouble(style.getOgMax(), 3, false);
-            }
-            textView.setText(og);
-        }
-
-        textView = (TextView) root.findViewById(R.id.style_ibu);
-        if (style.getIbuMin() < 0) {
-            textView.setText(getResources().getString(R.string.varies));
-        } else {
-            String ibu = Util.fromDouble(style.getIbuMin(), 1);
-            if (style.getIbuMax() - style.getIbuMin() >= 0.1) {
-                ibu += " - " + Util.fromDouble(style.getIbuMax(), 1);
-            }
-            textView.setText(ibu);
-        }
-
-        textView = (TextView) root.findViewById(R.id.style_srm);
-        if (style.getSrmMin() < 0) {
-            textView.setText(getResources().getString(R.string.varies));
-        } else {
-            String srm = Util.fromDouble(style.getSrmMin(), 1);
-            if (style.getSrmMax() - style.getSrmMin() > 0.1) {
-                srm += " - " + Util.fromDouble(style.getSrmMax(), 1);
-            }
-            textView.setText(srm);
-        }
-
-        textView = (TextView) root.findViewById(R.id.style_fg);
-        if (style.getFgMin() < 0) {
-            textView.setText(getResources().getString(R.string.varies));
-        } else {
-            String fg = Util.fromDouble(style.getFgMin(), 3, false);
-            if (style.getFgMax() - style.getFgMin() >= 0.001) {
-                fg += " - " + Util.fromDouble(style.getFgMax(), 3, false);
-            }
-            textView.setText(fg);
-        }
-
-        textView = (TextView) root.findViewById(R.id.style_abv);
-        if (style.getAbvMin() < 0) {
-            textView.setText(getResources().getString(R.string.varies));
-        } else {
-            String abv = Util.fromDouble(style.getAbvMin(), 1);
-            if (style.getAbvMax() - style.getAbvMin() >= 0.1) {
-                abv += " - " + Util.fromDouble(style.getAbvMax(), 1);
-            }
-            textView.setText(abv + UNIT_PERCENT);
-        }
-
+        List<Object> ingredients = new ArrayList<Object>();
         mIngredientView = new IngredientListView(getActivity(), root, mRecipe, this);
         mIngredientView.drawList();
 
-        textView = (TextView) root.findViewById(R.id.recipe_notes);
-        String notes;
-        if (mRecipe.getNotes().length() == 0) {
-            notes = getActivity().getResources().getString(R.string.add_recipe_notes);
-            textView.setTextColor(getActivity().getResources().getColor(R.color.text_dark_secondary));
-        } else {
-            notes = mRecipe.getNotes();
-        }
-        textView.setText(notes);
         checkResumeActionMode(state);
-        mFragmentHandler.setTitle(findString(R.string.edit_recipe));
+        mFragmentHandler.setTitle(findString(R.string.inventory));
         return root;
     }
 
@@ -201,7 +94,6 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
         if (state == null) {
             state = new Bundle();
         }
-        state.putParcelable(RECIPE, mRecipe);
         state.putBoolean(ACTION_MODE, mActionMode != null);
         if (mActionMode != null) {
             state.putIntArray(SELECTED_INDEXES, mIngredientView.getSelectedIndexes());
@@ -217,12 +109,6 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.recipe_stats_layout:
-                mFragmentHandler.showRecipeStatsEditor(mRecipe);
-                break;
-            case R.id.recipe_notes_layout:
-                mFragmentHandler.showRecipeNotesEditor(mRecipe);
-                break;
             case R.id.new_ingredient_view:
                 addNewIngredient();
                 break;
@@ -348,7 +234,6 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
         int deleted = deleteSelected();
         mIngredientView.drawList();
         mActionMode.finish();
-        updateStats();
         toastDeleted(deleted);
     }
 
@@ -360,52 +245,6 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
             }
         }
     }
-
-    private void updateStats() {
-        TextView textView;
-
-        textView = (TextView) mRootView.findViewById(R.id.recipe_og);
-        textView.setText(Util.fromDouble(mRecipe.getOg(), 3, false));
-
-        textView = (TextView) mRootView.findViewById(R.id.recipe_srm);
-        textView.setText(Util.fromDouble(mRecipe.getSrm(), 1));
-
-        textView = (TextView) mRootView.findViewById(R.id.recipe_ibu);
-        textView.setText(Util.fromDouble(mRecipe.getIbu(), 1));
-
-        textView = (TextView) mRootView.findViewById(R.id.recipe_fg);
-        if (mRecipe.hasYeast()) {
-            textView.setText(Util.fromDouble(mRecipe.getFg(), 3, false));
-            textView.setTextColor(getResources().getColor(R.color.text_dark_primary));
-        } else {
-            textView.setText(getResources().getString(R.string.add_yeast));
-            textView.setTextColor(getResources().getColor(R.color.text_dark_secondary));
-        }
-
-        textView = (TextView) mRootView.findViewById(R.id.recipe_abv);
-        if (mRecipe.hasYeast()) {
-            textView.setText(Util.fromDouble(mRecipe.getAbv(), 1) + UNIT_PERCENT);
-            textView.setTextColor(getResources().getColor(R.color.text_dark_primary));
-        } else {
-            textView.setText(getResources().getString(R.string.add_yeast));
-            textView.setTextColor(getResources().getColor(R.color.text_dark_secondary));
-        }
-
-        textView = (TextView) mRootView.findViewById(R.id.recipe_calories);
-        if (mRecipe.hasYeast()) {
-            textView.setText(Util.fromDouble(mRecipe.getCalories(), 1));
-            textView.setTextColor(getResources().getColor(R.color.text_dark_primary));
-        } else {
-            textView.setText(getResources().getString(R.string.add_yeast));
-            textView.setTextColor(getResources().getColor(R.color.text_dark_secondary));
-        }
-    }
-
-    public void setRecipe(Recipe recipe) {
-        mRecipe = recipe;
-    }
-
-    public Recipe getRecipe() { return mRecipe; }
 
     private void toastDeleted(int deleted) {
         Context context = getActivity();

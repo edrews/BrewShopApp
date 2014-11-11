@@ -3,7 +3,6 @@ package com.brew.brewshop.storage.recipes;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.brew.brewshop.IngredientComparator;
 import com.brew.brewshop.util.Util;
 
 import java.util.ArrayList;

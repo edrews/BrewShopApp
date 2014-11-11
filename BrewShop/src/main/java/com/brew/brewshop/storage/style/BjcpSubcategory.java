@@ -16,9 +16,7 @@ public class BjcpSubcategory implements Nameable {
     }
 
     @Override
-    public int getId() {
-        return 0;
-    }
+    public void setName(String name) { this.name = name; }
 
     @Override
     public String toString() {

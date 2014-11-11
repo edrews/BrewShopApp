@@ -1,8 +1,4 @@
-package com.brew.brewshop;
-
-import com.brew.brewshop.storage.recipes.HopAddition;
-import com.brew.brewshop.storage.recipes.MaltAddition;
-import com.brew.brewshop.storage.recipes.Yeast;
+package com.brew.brewshop.storage.recipes;
 
 import java.util.Comparator;
 

@@ -1,29 +1,72 @@
 package com.brew.brewshop.storage;
 
 import android.content.Context;
-import android.view.LayoutInflater;
+import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.brew.brewshop.R;
+
 import java.util.List;
 
-public class NameableAdapter<T extends Nameable> extends ArrayAdapter<T> {
+public class NameableAdapter<T> extends ArrayAdapter<T> {
+    private String mCustomName;
     private Context mContext;
-    private List<T> mNameables;
 
     public NameableAdapter(Context context, List<T> nameables) {
-        super(context, android.R.layout.simple_spinner_item, nameables);
+        this(context, nameables, null);
+    }
+
+    public NameableAdapter(Context context, List<T> nameables, String customName) {
+        super(context, android.R.layout.simple_spinner_item);
+        mCustomName = customName;
         mContext = context;
-        mNameables = nameables;
+        if (mCustomName != null) {
+            add((T) new CustomNameable(customName));
+        }
+        for (T nameable : nameables) {
+            add(nameable);
+        }
+    }
+
+    @Override
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+        View rowView = super.getDropDownView(position, convertView, parent);
+        modifyView(rowView);
+        return rowView;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        TextView rowView = (TextView) inflater.inflate(android.R.layout.simple_spinner_item, parent, false);
-        rowView.setText(mNameables.get(position).getName());
+        View rowView = super.getView(position, convertView, parent);
+        modifyView(rowView);
         return rowView;
+    }
+
+    public void setNamedItem(Nameable selected, Nameable stored, String customName) {
+        if (selected.getName().equals(mCustomName)) {
+            if (customName.length() > 0) {
+                stored.setName(customName);
+            } else {
+                stored.setName(mCustomName);
+            }
+        } else {
+            stored.setName(selected.getName());
+        }
+    }
+
+    private void modifyView(View view) {
+        TextView textView = (TextView) view;
+
+        //Fixes a style bug with HTC Rezound
+        textView.setTextColor(mContext.getResources().getColor(R.color.text_dark_primary));
+
+        if (textView.getText().equals(mCustomName)) {
+            textView.setTypeface(null, Typeface.ITALIC);
+        } else {
+            textView.setTypeface(null, Typeface.NORMAL);
+        }
     }
 }

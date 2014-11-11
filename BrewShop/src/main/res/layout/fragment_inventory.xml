@@ -1,0 +1,30 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/FillParent">
+
+    <android.support.v7.widget.CardView style="@style/Card">
+
+        <LinearLayout android:id="@+id/new_ingredient_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/ingredient_list"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/no_ingredients"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:text="@string/no_ingredients"
+                android:textColor="@color/text_dark_secondary" />
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</ScrollView>

@@ -14,7 +14,10 @@ import android.widget.TextView;
 import com.brew.brewshop.FragmentHandler;
 import com.brew.brewshop.R;
 import com.brew.brewshop.storage.BrewStorage;
+import com.brew.brewshop.storage.Nameable;
 import com.brew.brewshop.storage.NameableAdapter;
+import com.brew.brewshop.storage.hops.HopsInfo;
+import com.brew.brewshop.storage.malt.MaltInfo;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.storage.recipes.Yeast;
 import com.brew.brewshop.storage.yeast.YeastInfo;
@@ -32,11 +35,15 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
     private YeastInfoList mYeastInfo;
     private BrewStorage mStorage;
     private int mYeastIndex;
+    NameableAdapter<YeastInfo> mAdapter;
 
     private Spinner mSpinner;
     private TextView mDescription;
     private EditText mAttenuationEdit;
     private FragmentHandler mViewSwitcher;
+    private EditText mCustomName;
+    private View mCustomNameView;
+    private View mDescriptionView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
@@ -44,6 +51,9 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
         mSpinner = (Spinner) root.findViewById(R.id.yeast_type);
         mAttenuationEdit = (EditText) root.findViewById(R.id.yeast_attenuation);
         mDescription = (TextView) root.findViewById(R.id.description);
+        mCustomName = (EditText) root.findViewById(R.id.custom_name);
+        mCustomNameView = root.findViewById(R.id.custom_name_layout);
+        mDescriptionView = root.findViewById(R.id.description_layout);
 
         setHasOptionsMenu(true);
         mStorage = new BrewStorage(getActivity());
@@ -54,9 +64,10 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
             mYeastIndex = state.getInt(YEAST_INDEX, -1);
         }
 
-        NameableAdapter<YeastInfo> adapter = new NameableAdapter<YeastInfo>(getActivity(), mYeastInfo);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner.setAdapter(adapter);
+        String customName = getActivity().getResources().getString(R.string.custom_yeast);
+        mAdapter = new NameableAdapter<YeastInfo>(getActivity(), mYeastInfo, customName);
+        mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner.setAdapter(mAdapter);
 
         if (mRecipe != null && mYeastIndex >= 0) {
             Yeast yeast = getYeast();
@@ -72,15 +83,16 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
     @Override
     public void onPause() {
         super.onPause();
-        Yeast yeast = mRecipe.getYeast().get(mYeastIndex);
+        Yeast storedYeast = mRecipe.getYeast().get(mYeastIndex);
 
-        YeastInfo info = (YeastInfo) mSpinner.getSelectedItem();
-        yeast.setName(info.getName());
+        Nameable selectedYeast = (Nameable) mSpinner.getSelectedItem();
+        mAdapter.setNamedItem(selectedYeast, storedYeast, mCustomName.getText().toString());
+
         double attenuation = Util.toDouble(mAttenuationEdit.getText());
         if (attenuation > 100) {
             attenuation = 100;
         }
-        yeast.setAttenuation(attenuation);
+        storedYeast.setAttenuation(attenuation);
 
         mStorage.updateRecipe(mRecipe);
         Util.hideKeyboard(getActivity());
@@ -120,9 +132,14 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
         YeastInfo info = mYeastInfo.findByName(yeast.getName());
         int index = mYeastInfo.indexOf(info);
         if (index < 0 ) {
+            mCustomName.setText(yeast.getName());
+            mCustomNameView.setVisibility(View.VISIBLE);
+            mDescriptionView.setVisibility(View.GONE);
             mSpinner.setSelection(0);
         } else {
-            mSpinner.setSelection(index);
+            mSpinner.setSelection(index + 1);
+            mCustomNameView.setVisibility(View.GONE);
+            mDescriptionView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -136,7 +153,11 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        YeastInfo info = (YeastInfo) mSpinner.getSelectedItem();
+        Nameable item = (Nameable) mSpinner.getSelectedItem();
+        if (handleCustomName(item)) {
+            return;
+        }
+        YeastInfo info = (YeastInfo) item;
         if (!info.getName().equals(getYeast().getName())) {
             getYeast().setName(info.getName());
             mAttenuationEdit.setText(Util.fromDouble(getAttenuation(info), 3));
@@ -148,6 +169,24 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
             mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_primary));
             mDescription.setText(Util.separateSentences(info.getDescription()));
         }
+    }
+
+    private boolean handleCustomName(Nameable item) {
+        boolean handled = false;
+        String customName = getActivity().getResources().getString(R.string.custom_yeast);
+        if (item.getName().equals(customName)) {
+            if (!mCustomName.getText().toString().equals(getYeast().getName())) {
+                mCustomName.setText("");
+                mAttenuationEdit.setText("0");
+            }
+            mCustomNameView.setVisibility(View.VISIBLE);
+            mDescriptionView.setVisibility(View.GONE);
+            handled = true;
+        } else {
+            mCustomNameView.setVisibility(View.GONE);
+            mDescriptionView.setVisibility(View.VISIBLE);
+        }
+        return handled;
     }
 
     private double getAttenuation(YeastInfo info) {

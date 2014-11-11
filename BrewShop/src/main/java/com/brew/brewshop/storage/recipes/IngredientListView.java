@@ -1,11 +1,12 @@
-package com.brew.brewshop;
+package com.brew.brewshop.storage.recipes;
 
 import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.brew.brewshop.R;
 
-import com.brew.brewshop.storage.recipes.Recipe;
+import com.brew.brewshop.ViewClickListener;
 
 public class IngredientListView {
     private LinearLayout mIngredientView;

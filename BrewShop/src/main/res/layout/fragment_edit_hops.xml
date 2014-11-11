@@ -32,6 +32,27 @@
 
             </LinearLayout>
 
+            <LinearLayout android:id="@+id/custom_name_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/RecipeEditLabel"
+                    android:text="Name" />
+
+                <EditText
+                    android:id="@+id/custom_name"
+                    style="@style/RecipeEditValue"
+                    android:layout_width="fill_parent"
+                    android:hint="Hop name"
+                    android:gravity="start|bottom"
+                    android:inputType="textCapWords|textNoSuggestions"
+                    android:maxLength="32">
+                </EditText>
+
+            </LinearLayout>
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.brew.brewshop.fragments.HopsFragment;
+import com.brew.brewshop.fragments.InventoryFragment;
 import com.brew.brewshop.fragments.MaltFragment;
 import com.brew.brewshop.fragments.ProductListFragment;
 import com.brew.brewshop.fragments.RecipeFragment;
@@ -84,6 +85,11 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
         menu.add(factory.newSection(R.string.homebrew_tools));
         menu.add(factory.newEntry(101, R.string.homebrew_recipes, R.drawable.folder));
 
+        boolean showInventory = getResources().getBoolean(R.bool.show_inventory);
+        if (showInventory) {
+            menu.add(factory.newEntry(102, R.string.inventory, R.drawable.folder));
+        }
+
         boolean showStore = getResources().getBoolean(R.bool.show_store_drawer_items);
         if (showStore) {
             menu.add(factory.newSection(R.string.homebrew_shop));
@@ -121,6 +127,9 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
         switch (id) {
             case 101:
                 showRecipeManager();
+                break;
+            case 102:
+                showInventoryManager();
                 break;
             case 201:
                 showProducts(ProductType.BEER);
@@ -277,6 +286,14 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_frame, recipeListFragment, RECIPE_LIST_FRAGMENT_TAG)
+                .commit();
+    }
+
+    public void showInventoryManager() {
+        Fragment fragment = new InventoryFragment();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, fragment)
                 .commit();
     }
 

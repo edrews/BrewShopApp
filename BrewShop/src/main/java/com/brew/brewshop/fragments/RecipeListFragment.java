@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.brew.brewshop.FragmentHandler;
 import com.brew.brewshop.R;
-import com.brew.brewshop.RecipeListView;
 import com.brew.brewshop.ViewClickListener;
 import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.recipes.Recipe;

@@ -3,7 +3,9 @@ package com.brew.brewshop.storage.recipes;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Malt implements Parcelable {
+import com.brew.brewshop.storage.Nameable;
+
+public class Malt implements Parcelable, Nameable {
     private String name;
     private double gravity; //gravity per pound per gallon
     private double color; //in Lovibond
@@ -11,7 +13,7 @@ public class Malt implements Parcelable {
     public Malt() {
         name = "";
         gravity = 1;
-        color = 1;
+        color = 0;
     }
 
     public Malt(Parcel parcel) {
@@ -20,7 +22,10 @@ public class Malt implements Parcelable {
         color = parcel.readDouble();
     }
 
+    @Override
     public void setName(String value) { name = value; }
+
+    @Override
     public String getName() { return name; }
 
     public void setGravity(double value) { gravity = value; }

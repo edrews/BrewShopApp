@@ -12,7 +12,7 @@ The only homebrew companion app you'll ever need.
 
 TODO
 ----
-* Custom ingredient names
+* White Labs and Fermentis yeasts
 * Local inventory
 * Integrate local inventory with recipe viewer
 * Save storage remotely
