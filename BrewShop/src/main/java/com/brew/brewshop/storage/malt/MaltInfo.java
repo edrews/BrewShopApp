@@ -7,11 +7,13 @@ public class MaltInfo implements Nameable {
     private String description;
     private double srm;
     private double gravity;
+    private boolean mashed;
 
-    public MaltInfo(String name, double srm, double gravity) {
+    public MaltInfo(String name, double srm, double gravity, boolean mashed) {
         this.name = name;
         this.srm = srm;
         this.gravity = gravity;
+        this.mashed = mashed;
         description = "";
     }
 
@@ -34,6 +36,8 @@ public class MaltInfo implements Nameable {
     public double getGravity() {
         return gravity;
     }
+
+    public boolean isMashed() { return mashed; }
 
     @Override
     public String toString() {

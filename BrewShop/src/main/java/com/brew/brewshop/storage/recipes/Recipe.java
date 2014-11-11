@@ -149,9 +149,13 @@ public class Recipe implements Parcelable {
     public double getOg() {
         double gravityPoints = 0;
         for (MaltAddition addition : getMalts()) {
-            gravityPoints += addition.getWeight().getPounds() * (addition.getMalt().getGravity() - 1);
+            double gravity = addition.getWeight().getPounds() * (addition.getMalt().getGravity() - 1);
+            if (addition.getMalt().isMashed()) {
+                gravity *= getEfficiency() * 0.01;
+            }
+            gravityPoints += gravity;
         }
-        gravityPoints = (gravityPoints * getEfficiency() * .01) / getBatchVolume();
+        gravityPoints /= getBatchVolume();
         return (gravityPoints + 1);
     }
 

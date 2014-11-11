@@ -32,7 +32,7 @@
 
             </LinearLayout>
 
-            <LinearLayout android:id="@+id/custom_name_layout"
+            <LinearLayout android:id="@+id/custom_malt_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">

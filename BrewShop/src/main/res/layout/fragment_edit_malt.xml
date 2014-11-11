@@ -31,7 +31,12 @@
 
             </LinearLayout>
 
-            <LinearLayout android:id="@+id/custom_name_layout"
+            <LinearLayout android:id="@+id/custom_malt_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -49,6 +54,26 @@
                     android:inputType="textCapWords|textNoSuggestions"
                     android:maxLength="32">
                 </EditText>
+
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/mashed_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <View style="@style/RecipeEditLabel"/>
+
+                <CheckBox
+                    android:id="@+id/is_mashed"
+                    style="@style/RecipeEditValue"
+                    android:layout_width="fill_parent"
+                    android:maxLength="99"
+                    android:text="Mashed"
+                    android:gravity="center|left">
+                </CheckBox>
+
+            </LinearLayout>
 
             </LinearLayout>
 

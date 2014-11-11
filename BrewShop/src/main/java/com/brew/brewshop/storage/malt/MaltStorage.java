@@ -35,7 +35,8 @@ public class MaltStorage {
                 String name = rowData[0];
                 double srm = Double.parseDouble(rowData[1].split("\\s+")[0]);
                 double gravity = Double.parseDouble(rowData[2].split("\\s+")[0]);
-                MaltInfo info = new MaltInfo(name, srm, gravity);
+                boolean mashed = Integer.parseInt(rowData[3]) == 1;
+                MaltInfo info = new MaltInfo(name, srm, gravity, mashed);
                 sMaltCache.add(info);
             }
         } catch (IOException e) {

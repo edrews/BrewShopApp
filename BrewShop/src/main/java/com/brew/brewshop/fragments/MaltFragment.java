@@ -1,14 +1,15 @@
 package com.brew.brewshop.fragments;
 
-import android.os.Parcelable;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -45,8 +46,9 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
     private EditText mGravityEdit;
     private EditText mColorEdit;
     private EditText mCustomName;
-    private View mCustomNameView;
+    private View mCustomMaltView;
     private View mDescriptionView;
+    private CheckBox mMashedEdit;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
@@ -58,8 +60,9 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
         mGravityEdit = (EditText) root.findViewById(R.id.malt_gravity);
         mDescription = (TextView) root.findViewById(R.id.description);
 
+        mCustomMaltView = root.findViewById(R.id.custom_malt_layout);
         mCustomName = (EditText) root.findViewById(R.id.custom_name);
-        mCustomNameView = root.findViewById(R.id.custom_name_layout);
+        mMashedEdit = (CheckBox) root.findViewById(R.id.is_mashed);
         mDescriptionView = root.findViewById(R.id.description_layout);
 
         setHasOptionsMenu(true);
@@ -81,6 +84,7 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
             MaltAddition addition = getMaltAddition();
             setMalt(addition.getMalt());
             setWeight(addition.getWeight());
+            mMashedEdit.setChecked(addition.getMalt().isMashed());
             mColorEdit.setText(Util.fromDouble(addition.getMalt().getColor(), 1));
             mGravityEdit.setText(Util.fromDouble(addition.getMalt().getGravity(), 3, false));
         }
@@ -107,6 +111,7 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
             gravity = 1;
         }
         storedMalt.setGravity(gravity);
+        storedMalt.setMashed(mMashedEdit.isChecked());
 
         mAdapter.setNamedItem(selectedMalt, storedMalt, mCustomName.getText().toString());
 
@@ -140,12 +145,12 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
         int index = mMaltInfoList.indexOf(info);
         if (index < 0 ) {
             mCustomName.setText(malt.getName());
-            mCustomNameView.setVisibility(View.VISIBLE);
+            mCustomMaltView.setVisibility(View.VISIBLE);
             mDescriptionView.setVisibility(View.GONE);
             mMaltSpinner.setSelection(0);
         } else {
             mMaltSpinner.setSelection(index + 1);
-            mCustomNameView.setVisibility(View.GONE);
+            mCustomMaltView.setVisibility(View.GONE);
             mDescriptionView.setVisibility(View.VISIBLE);
         }
     }
@@ -176,6 +181,8 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
         MaltInfo info = (MaltInfo) item;
         if (!info.getName().equals(getMaltAddition().getMalt().getName())) {
             getMaltAddition().getMalt().setName(info.getName());
+            Log.d(TAG, "Mashed: " + info.isMashed());
+            mMashedEdit.setChecked(info.isMashed());
             mColorEdit.setText(Util.fromDouble(info.getSrm(), 1));
             mGravityEdit.setText(Util.fromDouble(info.getGravity(), 3, false));
         }
@@ -194,14 +201,15 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
         if (item.getName().equals(customName)) {
             if (!mCustomName.getText().toString().equals(getMaltAddition().getMalt().getName())) {
                 mCustomName.setText("");
+                mMashedEdit.setChecked(true);
                 mColorEdit.setText("0");
                 mGravityEdit.setText("1.000");
             }
-            mCustomNameView.setVisibility(View.VISIBLE);
+            mCustomMaltView.setVisibility(View.VISIBLE);
             mDescriptionView.setVisibility(View.GONE);
             handled = true;
         } else {
-            mCustomNameView.setVisibility(View.GONE);
+            mCustomMaltView.setVisibility(View.GONE);
             mDescriptionView.setVisibility(View.VISIBLE);
         }
         return handled;

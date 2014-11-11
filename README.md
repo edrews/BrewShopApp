@@ -12,12 +12,15 @@ The only homebrew companion app you'll ever need.
 
 TODO
 ----
-* White Labs and Fermentis yeasts
+* Metric units
+* Dry hop options, FWH, Mash Hops, etc.
 * Local inventory
 * Integrate local inventory with recipe viewer
+* Add custom ingredients
+* Add water
+* Single Recipe photo
+
 * Save storage remotely
 * Share remote storage
-* Metric units
-* Import recipes with BeerXML
-* Community recipes
-
+* Import/export recipes with BeerXML
+* Share recipe with community

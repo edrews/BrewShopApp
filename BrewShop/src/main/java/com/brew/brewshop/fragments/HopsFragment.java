@@ -19,7 +19,6 @@ import com.brew.brewshop.storage.NameableAdapter;
 import com.brew.brewshop.storage.hops.HopsInfo;
 import com.brew.brewshop.storage.hops.HopsInfoList;
 import com.brew.brewshop.storage.hops.HopsStorage;
-import com.brew.brewshop.storage.malt.MaltInfo;
 import com.brew.brewshop.storage.recipes.Hop;
 import com.brew.brewshop.storage.recipes.HopAddition;
 import com.brew.brewshop.storage.recipes.Recipe;
@@ -56,7 +55,7 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
         mTimeEdit = (EditText) root.findViewById(R.id.hops_time);
         mDescription = (TextView) root.findViewById(R.id.description);
         mCustomName = (EditText) root.findViewById(R.id.custom_name);
-        mCustomNameView = root.findViewById(R.id.custom_name_layout);
+        mCustomNameView = root.findViewById(R.id.custom_malt_layout);
         mDescriptionView = root.findViewById(R.id.description_layout);
 
         setHasOptionsMenu(true);

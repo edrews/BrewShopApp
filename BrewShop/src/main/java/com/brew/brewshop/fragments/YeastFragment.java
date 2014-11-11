@@ -16,8 +16,6 @@ import com.brew.brewshop.R;
 import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.Nameable;
 import com.brew.brewshop.storage.NameableAdapter;
-import com.brew.brewshop.storage.hops.HopsInfo;
-import com.brew.brewshop.storage.malt.MaltInfo;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.storage.recipes.Yeast;
 import com.brew.brewshop.storage.yeast.YeastInfo;
@@ -52,7 +50,7 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
         mAttenuationEdit = (EditText) root.findViewById(R.id.yeast_attenuation);
         mDescription = (TextView) root.findViewById(R.id.description);
         mCustomName = (EditText) root.findViewById(R.id.custom_name);
-        mCustomNameView = root.findViewById(R.id.custom_name_layout);
+        mCustomNameView = root.findViewById(R.id.custom_malt_layout);
         mDescriptionView = root.findViewById(R.id.description_layout);
 
         setHasOptionsMenu(true);
