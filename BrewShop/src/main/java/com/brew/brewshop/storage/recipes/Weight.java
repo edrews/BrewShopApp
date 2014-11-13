@@ -30,6 +30,10 @@ public class Weight implements Parcelable {
     public double getPounds() { return ounces / 16;}
     public void setPounds(double value) { ounces = value * 16; }
 
+    public void add(Weight weight) {
+        ounces += weight.getOunces();
+    }
+
     @Override
     public int describeContents() {
         return 0;

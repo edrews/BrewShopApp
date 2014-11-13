@@ -147,11 +147,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Calculated Stats"
+                        android:textColor="@color/text_dark_primary"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/text_dark_primary"
                         android:layout_alignParentRight="true"
                         android:text="Style"
                         android:textStyle="bold" />

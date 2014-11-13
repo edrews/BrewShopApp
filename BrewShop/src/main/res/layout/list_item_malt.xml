@@ -19,61 +19,72 @@
         android:layout_gravity="center_vertical"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/weight"
+                android:layout_alignParentLeft="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:gravity="center_vertical"
                 android:text="1 lb."
                 android:textColor="@color/text_dark_primary"
                 android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/name"
-                android:layout_width="fill_parent"
+                android:layout_toRightOf="@id/weight"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:gravity="center_vertical"
                 android:singleLine="true"
                 android:ellipsize="end"
                 android:text="Malt"
                 android:textColor="@color/text_dark_primary"
                 android:textSize="18sp" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/gravity"
+                android:layout_alignParentLeft="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:gravity="center_vertical"
-                android:text="1.030/lb./gal.,"
+                android:text="1.030"
                 android:textColor="@color/text_dark_secondary"
                 android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/color"
+                android:layout_toRightOf="@+id/gravity"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:gravity="center_vertical"
-                android:text="5.5°L"
+                android:text="5.5 SRM"
                 android:textColor="@color/text_dark_secondary"
                 android:textSize="14sp" />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/percent"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:text="10.0%"
+                android:textColor="@color/text_dark_secondary"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 

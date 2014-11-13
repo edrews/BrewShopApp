@@ -11,6 +11,7 @@ import com.brew.brewshop.R;
 import com.brew.brewshop.util.Util;
 
 public class IngredientListAdapter extends ArrayAdapter<Object> {
+    private static final double MIN_MALT_WEIGHT = 0.0001; //ounces
     private Context mContext;
     private Recipe mRecipe;
 
@@ -50,6 +51,14 @@ public class IngredientListAdapter extends ArrayAdapter<Object> {
         view = (TextView) parent.findViewById(R.id.name);
         view.setText(addition.getMalt().getName());
 
+        view = (TextView) parent.findViewById(R.id.percent);
+        if (mRecipe.getTotalMaltWeight().getOunces() < MIN_MALT_WEIGHT) {
+            view.setText("0.0%");
+        } else {
+            double percent = 100 * addition.getWeight().getOunces() / mRecipe.getTotalMaltWeight().getOunces();
+            view.setText(Util.fromDouble(percent, 1, false) + "%");
+        }
+
         view = (TextView) parent.findViewById(R.id.gravity);
         double gravity = addition.getMalt().getGravity();
         view.setText(String.format("%1.3f", gravity));
@@ -70,6 +79,14 @@ public class IngredientListAdapter extends ArrayAdapter<Object> {
 
         view = (TextView) parent.findViewById(R.id.name);
         view.setText(addition.getHop().getName());
+
+        view = (TextView) parent.findViewById(R.id.ibu);
+        double ibu = Util.getTinsethIbu(addition.getTime(),
+                addition.getWeight().getOunces(),
+                addition.getHop().getPercentAlpha(),
+                mRecipe.getBatchVolume(),
+                mRecipe.getOg());
+        view.setText(Util.fromDouble(ibu, 1, false) + " IBU");
 
         view = (TextView) parent.findViewById(R.id.alpha);
         double alpha = addition.getHop().getPercentAlpha();

@@ -126,6 +126,14 @@ public class Recipe implements Parcelable {
         return (yeast.size() > 0);
     }
 
+    public Weight getTotalMaltWeight() {
+        Weight total = new Weight();
+        for (MaltAddition malt : malts) {
+            total.add(malt.getWeight());
+        }
+        return total;
+    }
+
     public double getSrm() {
         double maltColorUnits = 0;
         for (MaltAddition malt : getMalts()) {

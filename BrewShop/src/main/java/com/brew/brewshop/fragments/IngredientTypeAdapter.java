@@ -16,7 +16,7 @@ public class IngredientTypeAdapter extends ArrayAdapter<String> {
     private List<String> mIngredients;
 
     public IngredientTypeAdapter(Context context, List<String> ingredients) {
-        super(context, R.layout.list_item_malt, ingredients);
+        super(context, R.layout.list_item_ingredient, ingredients);
         mContext = context;
         mIngredients = ingredients;
     }

@@ -19,13 +19,13 @@
         android:layout_gravity="center_vertical"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/weight"
+                android:layout_alignParentLeft="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -36,7 +36,8 @@
 
             <TextView
                 android:id="@+id/name"
-                android:layout_width="fill_parent"
+                android:layout_toRightOf="@+id/weight"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:gravity="center_vertical"
@@ -46,25 +47,26 @@
                 android:text="Hops"
                 android:textSize="18sp" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/alpha"
+                android:layout_alignParentLeft="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:gravity="center_vertical"
                 android:textColor="@color/text_dark_secondary"
-                android:text="4.2% Alpha,"
+                android:text="4.2% Alpha"
                 android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/time"
+                android:layout_toRightOf="@+id/alpha"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -73,7 +75,17 @@
                 android:text="10 min"
                 android:textSize="14sp" />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/ibu"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="10 IBU"
+                android:textColor="@color/text_dark_secondary"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 
