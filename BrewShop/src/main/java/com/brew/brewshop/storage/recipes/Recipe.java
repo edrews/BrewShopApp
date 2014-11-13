@@ -182,8 +182,6 @@ public class Recipe implements Parcelable {
         return -668.962 + (1262.45 * sg) - (776.43 * Math.pow(sg, 2)) + (182.94 * Math.pow(sg, 3));
     }
 
-    // Glenn Tinseth's Equation
-    // http://www.rooftopbrew.net/ibu.php
     public double getIbu() {
         double ibu = 0;
         for (HopAddition hop : hops) {
@@ -193,7 +191,8 @@ public class Recipe implements Parcelable {
             if (hopTime > boilTime) {
                 hopTime = boilTime;
             }
-            ibu += Util.getTinsethIbu(hopTime, ounces, percentAlpha, boilVolume, getOg());
+
+            ibu += Util.getTinsethIbu(hopTime, ounces, percentAlpha, batchVolume, getOg());
         }
         return ibu;
     }
