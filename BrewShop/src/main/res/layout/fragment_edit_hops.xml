@@ -2,6 +2,9 @@
     style="@style/FillParent">
 
     <LinearLayout style="@style/FillParent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:id="@+id/root_view"
         android:orientation="vertical">
 
         <TextView style="@style/RecipeHeader"
@@ -82,6 +85,21 @@
 
                 <TextView
                     style="@style/RecipeEditLabel"
+                    android:text="Usage" />
+
+                <Spinner style="@style/MySpinner"
+                    android:id="@+id/hops_usage"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/alpha_acid_view"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/RecipeEditLabel"
                     android:text="Alpha Acid" />
 
                 <EditText
@@ -99,21 +117,44 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/boil_time_view"
                 android:orientation="horizontal">
 
                 <TextView
                     style="@style/RecipeEditLabel"
-                    android:text="Time" />
+                    android:text="Boil Time" />
 
                 <EditText
-                    android:id="@+id/hops_time"
+                    android:id="@+id/boil_duration"
                     style="@style/RecipeEditValue"
-                    android:inputType="number|"
+                    android:inputType="number"
                     android:maxLength="3"/>
 
                 <TextView
                     style="@style/RecipeEditUnit"
                     android:text="min" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/dry_hop_view"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/RecipeEditLabel"
+                    android:text="Duration" />
+
+                <EditText
+                    android:id="@+id/dryhop_days"
+                    style="@style/RecipeEditValue"
+                    android:inputType="number"
+                    android:maxLength="2"/>
+
+                <TextView
+                    style="@style/RecipeEditUnit"
+                    android:text="days" />
 
             </LinearLayout>
 

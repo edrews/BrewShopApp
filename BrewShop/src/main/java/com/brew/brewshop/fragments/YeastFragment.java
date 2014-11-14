@@ -75,6 +75,7 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
 
         mSpinner.setOnItemSelectedListener(this);
         mViewSwitcher.setTitle(getActivity().getResources().getString(R.string.edit_yeast_addition));
+        root.findViewById(R.id.root_view).requestFocus();
         return root;
     }
 

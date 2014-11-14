@@ -190,17 +190,28 @@ public class Recipe implements Parcelable {
         return -668.962 + (1262.45 * sg) - (776.43 * Math.pow(sg, 2)) + (182.94 * Math.pow(sg, 3));
     }
 
-    public double getIbu() {
+    public double getTotalIbu() {
         double ibu = 0;
         for (HopAddition hop : hops) {
-            double ounces = hop.getWeight().getOunces();
-            double percentAlpha = hop.getHop().getPercentAlpha();
-            double hopTime = hop.getTime();
+            if (hop.getUsage() == HopUsage.BOIL || hop.getUsage() == HopUsage.FIRST_WORT) {
+                ibu += getIbuContribution(hop);
+            }
+        }
+        return ibu;
+    }
+
+    public double getIbuContribution(HopAddition addition) {
+        double ibu = 0;
+        double ounces = addition.getWeight().getOunces();
+        double percentAlpha = addition.getHop().getPercentAlpha();
+        if (addition.getUsage() == HopUsage.BOIL) {
+            double hopTime = addition.getBoilTime();
             if (hopTime > boilTime) {
                 hopTime = boilTime;
             }
-
-            ibu += Util.getTinsethIbu(hopTime, ounces, percentAlpha, batchVolume, getOg());
+            ibu = Util.getTinsethIbu(hopTime, ounces, percentAlpha, batchVolume, getOg());
+        } else if (addition.getUsage() == HopUsage.FIRST_WORT) {
+            ibu = Util.getTinsethIbu(boilTime, ounces, percentAlpha, batchVolume, getOg()) * 1.1;
         }
         return ibu;
     }

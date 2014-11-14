@@ -12,14 +12,13 @@ The only homebrew companion app you'll ever need.
 
 TODO
 ----
+* Late additions for extracts and sugars
 * Metric units
-* Dry hop options, FWH, Mash Hops, etc.
 * Local inventory
 * Integrate local inventory with recipe viewer
 * Add custom ingredients
 * Add water
 * Single Recipe photo
-
 * Save storage remotely
 * Share remote storage
 * Import/export recipes with BeerXML

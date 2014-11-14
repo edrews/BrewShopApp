@@ -13,8 +13,8 @@ android {
         applicationId "com.brew.brewshop"
         minSdkVersion 7
         targetSdkVersion 21
-        versionCode 8
-        versionName "1.4.1"
+        versionCode 10
+        versionName "1.6"
     }
     signingConfigs {
         release {

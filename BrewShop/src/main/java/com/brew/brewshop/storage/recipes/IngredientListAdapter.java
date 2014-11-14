@@ -80,21 +80,30 @@ public class IngredientListAdapter extends ArrayAdapter<Object> {
         view = (TextView) parent.findViewById(R.id.name);
         view.setText(addition.getHop().getName());
 
-        view = (TextView) parent.findViewById(R.id.ibu);
-        double ibu = Util.getTinsethIbu(addition.getTime(),
-                addition.getWeight().getOunces(),
-                addition.getHop().getPercentAlpha(),
-                mRecipe.getBatchVolume(),
-                mRecipe.getOg());
-        view.setText(Util.fromDouble(ibu, 1, false) + " IBU");
+        TextView ibuView = (TextView) parent.findViewById(R.id.ibu);
+        double ibu = mRecipe.getIbuContribution(addition);
+        ibuView.setText(Util.fromDouble(ibu, 1, true) + " IBU");
+        ibuView.setVisibility(View.GONE);
 
-        view = (TextView) parent.findViewById(R.id.alpha);
+        view = (TextView) parent.findViewById(R.id.details);
         double alpha = addition.getHop().getPercentAlpha();
-        view.setText(String.format("%.1f%% Alpha", alpha));
-
-        view = (TextView) parent.findViewById(R.id.time);
-        int minutes = addition.getTime();
-        view.setText(String.format("%d min", minutes));
+        switch (addition.getUsage()) {
+            case FIRST_WORT:
+                view.setText("First Wort, " + Util.fromDouble(alpha, 1, true) + "% AA");
+                ibuView.setVisibility(View.VISIBLE);
+                break;
+            case BOIL:
+                int minutes = addition.getBoilTime();
+                view.setText(String.format("%d min, ", minutes) + Util.fromDouble(alpha, 1, true) + "% AA");
+                ibuView.setVisibility(View.VISIBLE);
+                break;
+            case WHIRLPOOL:
+                view.setText("Whirlpool");
+                break;
+            case DRY_HOP:
+                view.setText(String.format("Dry Hop %d days", addition.getDryHopDays()));
+                break;
+        }
     }
 
     public void populateView(View parent, Yeast yeast) {
@@ -104,8 +113,8 @@ public class IngredientListAdapter extends ArrayAdapter<Object> {
         view.setText(yeast.getName());
 
         view = (TextView) parent.findViewById(R.id.attenuation);
-        double gravity = yeast.getAttenuation();
-        view.setText(String.format("~%.1f%% Attenuation", gravity));
+        double attenuation = yeast.getAttenuation();
+        view.setText("~" + Util.fromDouble(attenuation, 1, true) + "% Attenuation");
     }
 
     private String formatWeight(Weight weight) {
@@ -119,7 +128,8 @@ public class IngredientListAdapter extends ArrayAdapter<Object> {
             if (pounds > 0) {
                 builder.append(" ");
             }
-            builder.append(String.format("%.1f oz.", ounces));
+            Util.fromDouble(ounces, 1, true);
+            builder.append(Util.fromDouble(ounces, 1, true) + " oz.");
         }
         return builder.toString();
     }

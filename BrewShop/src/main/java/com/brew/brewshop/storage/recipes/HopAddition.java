@@ -3,21 +3,26 @@ package com.brew.brewshop.storage.recipes;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class HopAddition implements Parcelable{
+public class HopAddition implements Parcelable {
     private int minutes;
     private Hop hop;
     private Weight weight;
+    private String usage;
+    private int dryhop_days;
 
     public HopAddition() {
         weight = new Weight();
         hop = new Hop();
         minutes = 60;
+        dryhop_days = 5;
+        usage = HopUsage.BOIL.getText();
     }
 
     public HopAddition(Parcel parcel) {
         minutes = parcel.readInt();
         hop = parcel.readParcelable(Hop.class.getClassLoader());
         weight = parcel.readParcelable(Weight.class.getClassLoader());
+        usage = parcel.readString();
     }
 
     public Hop getHop() { return hop; }
@@ -26,8 +31,14 @@ public class HopAddition implements Parcelable{
     public Weight getWeight() { return weight; }
     public void setWeight(Weight value) { weight = value; }
 
-    public int getTime() { return minutes; }
-    public void setTime(int value) { minutes = value; }
+    public int getBoilTime() { return minutes; }
+    public void setBoilTime(int value) { minutes = value; }
+
+    public int getDryHopDays() { return dryhop_days; }
+    public void setDryHopDays(int value) { dryhop_days = value; }
+
+    public HopUsage getUsage() { return HopUsage.fromString(usage); }
+    public void setUsage(HopUsage value) { usage = value.getText(); }
 
     public static final Parcelable.Creator<HopAddition> CREATOR = new Parcelable.Creator<HopAddition>() {
         public HopAddition createFromParcel(Parcel in) {
@@ -48,5 +59,6 @@ public class HopAddition implements Parcelable{
         parcel.writeInt(minutes);
         parcel.writeParcelable(hop, 0);
         parcel.writeParcelable(weight, 0);
+        parcel.writeString(usage);
     }
 }

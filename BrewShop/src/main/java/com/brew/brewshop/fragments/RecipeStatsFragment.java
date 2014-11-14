@@ -94,6 +94,7 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
             mEfficiency.setText(Util.fromDouble(mRecipe.getEfficiency(), 5));
         }
         mViewSwitcher.setTitle(getActivity().getResources().getString(R.string.edit_recipe_stats));
+        root.findViewById(R.id.root_view).requestFocus();
         return root;
     }
 

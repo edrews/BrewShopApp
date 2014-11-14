@@ -371,7 +371,7 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
         textView.setText(Util.fromDouble(mRecipe.getSrm(), 1));
 
         textView = (TextView) mRootView.findViewById(R.id.recipe_ibu);
-        textView.setText(Util.fromDouble(mRecipe.getIbu(), 1));
+        textView.setText(Util.fromDouble(mRecipe.getTotalIbu(), 1));
 
         textView = (TextView) mRootView.findViewById(R.id.recipe_fg);
         if (mRecipe.hasYeast()) {
@@ -387,7 +387,7 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
             textView.setText(Util.fromDouble(mRecipe.getAbv(), 1) + UNIT_PERCENT);
             textView.setTextColor(getResources().getColor(R.color.text_dark_primary));
         } else {
-            textView.setText(getResources().getString(R.string.add_yeast));
+            textView.setText("-");
             textView.setTextColor(getResources().getColor(R.color.text_dark_secondary));
         }
 
@@ -396,7 +396,7 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
             textView.setText(Util.fromDouble(mRecipe.getCalories(), 1));
             textView.setTextColor(getResources().getColor(R.color.text_dark_primary));
         } else {
-            textView.setText(getResources().getString(R.string.add_yeast));
+            textView.setText("-");
             textView.setTextColor(getResources().getColor(R.color.text_dark_secondary));
         }
     }

@@ -54,25 +54,15 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/alpha"
+                android:id="@+id/details"
                 android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/ibu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:gravity="center_vertical"
                 android:textColor="@color/text_dark_secondary"
                 android:text="4.2% Alpha"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/time"
-                android:layout_toRightOf="@+id/alpha"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:gravity="center_vertical"
-                android:textColor="@color/text_dark_secondary"
-                android:text="10 min"
                 android:textSize="14sp" />
 
             <TextView

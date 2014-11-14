@@ -93,7 +93,7 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
         if (bar != null) {
             bar.setTitle(getActivity().getResources().getString(R.string.edit_malt_addition));
         }
-
+        root.findViewById(R.id.root_view).requestFocus();
         return root;
     }
 

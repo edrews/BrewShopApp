@@ -33,17 +33,44 @@ public class IngredientComparator implements Comparator<Object> {
     }
 
     private int compareHops(HopAddition o1, HopAddition o2) {
-        int result;
-        if (o1.getTime() != o2.getTime()) {
-            if (o1.getTime() < o2.getTime()) {
-                result = 1;
-            } else {
-                result = -1;
+        // Different usage
+        if (o1.getUsage() != o2.getUsage()) {
+            switch (o1.getUsage()) {
+                case FIRST_WORT:
+                    return -1;
+                case BOIL:
+                    if (o2.getUsage() == HopUsage.FIRST_WORT) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                case WHIRLPOOL:
+                    if (o2.getUsage() == HopUsage.DRY_HOP) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                case DRY_HOP:
+                    return 1;
             }
-        } else {
-            result = o1.getHop().getName().compareToIgnoreCase(o2.getHop().getName());
         }
-        return result;
+
+        // Same usage
+        if (o1.getUsage() == HopUsage.BOIL) {
+            if (o1.getBoilTime() < o2.getBoilTime()) {
+                return 1;
+            } else if (o1.getBoilTime() > o2.getBoilTime()) {
+                return -1;
+            }
+        } else if (o1.getUsage() == HopUsage.DRY_HOP) {
+            if (o1.getDryHopDays() > o2.getDryHopDays()) {
+                return -1;
+            } else if (o1.getDryHopDays() < o2.getDryHopDays()) {
+                return 1;
+            }
+        }
+
+        return o1.getHop().getName().compareToIgnoreCase(o2.getHop().getName());
     }
 
     private int compareYeast(Yeast o1, Yeast o2) {

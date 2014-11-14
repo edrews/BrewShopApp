@@ -196,7 +196,7 @@
 
                         <TextView
                             style="@style/RecipeStat"
-                            android:text="Calories" />
+                            android:text="12oz. kCal" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -223,17 +223,17 @@
                         <TextView
                             android:id="@+id/recipe_fg"
                             style="@style/RecipeStatRight"
-                            android:text="~0.000" />
+                            android:text="0.000" />
 
                         <TextView
                             android:id="@+id/recipe_abv"
                             style="@style/RecipeStatRight"
-                            android:text="~0.0" />
+                            android:text="99%" />
 
                         <TextView
                             android:id="@+id/recipe_calories"
                             style="@style/RecipeStatRight"
-                            android:text="Add Yeast" />
+                            android:text="999" />
                     </LinearLayout>
 
                     <View
@@ -270,7 +270,7 @@
                         <TextView
                             android:id="@+id/style_abv"
                             style="@style/RecipeStatRight"
-                            android:text="1.3 - 2.4" />
+                            android:text="1.3 - 2.4%" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

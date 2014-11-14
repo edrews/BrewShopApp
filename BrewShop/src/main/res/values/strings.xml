@@ -69,4 +69,15 @@
         <item>@string/hops</item>
         <item>@string/yeast</item>
     </string-array>
+
+    <string name="first_wort">First Wort</string>
+    <string name="boil">Boil</string>
+    <string name="whirlpool">Whirlpool</string>
+    <string name="dry_hop">Dry Hop</string>
+    <string-array name="hops_usage">
+        <item>@string/first_wort</item>
+        <item>@string/boil</item>
+        <item>@string/whirlpool</item>
+        <item>@string/dry_hop</item>
+    </string-array>
 </resources>

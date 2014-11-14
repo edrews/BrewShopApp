@@ -2,6 +2,9 @@
     style="@style/FillParent">
 
     <LinearLayout style="@style/FillParent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:id="@+id/root_view"
         android:orientation="vertical">
 
         <TextView style="@style/RecipeHeader"
@@ -157,6 +160,8 @@
 
     <LinearLayout style="@style/FillParent"
         android:id="@+id/description_layout"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
 
         <TextView style="@style/RecipeHeader"
