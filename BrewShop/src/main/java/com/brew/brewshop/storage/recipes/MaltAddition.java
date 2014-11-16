@@ -30,7 +30,8 @@ public class MaltAddition implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-
+        parcel.writeParcelable(malt, 0);
+        parcel.writeParcelable(weight, 0);
     }
 
     public static final Parcelable.Creator<MaltAddition> CREATOR = new Parcelable.Creator<MaltAddition>() {
