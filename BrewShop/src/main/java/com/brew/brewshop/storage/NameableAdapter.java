@@ -60,10 +60,6 @@ public class NameableAdapter<T> extends ArrayAdapter<T> {
 
     private void modifyView(View view) {
         TextView textView = (TextView) view;
-
-        //Fixes a style bug with HTC Rezound
-        //textView.setTextColor(mContext.getResources().getColor(R.color.text_dark_primary));
-
         if (textView.getText().equals(mCustomName)) {
             textView.setTypeface(null, Typeface.ITALIC);
         } else {
