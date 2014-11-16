@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,6 +31,9 @@ import com.brew.brewshop.storage.inventory.InventoryList;
 import com.brew.brewshop.storage.recipes.Hop;
 import com.brew.brewshop.storage.recipes.Malt;
 import com.brew.brewshop.storage.recipes.Yeast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class InventoryFragment extends Fragment implements DialogInterface.OnClickListener,
         TabHost.OnTabChangeListener,
@@ -222,14 +226,19 @@ public class InventoryFragment extends Fragment implements DialogInterface.OnCli
         if (tag.equals(MALT_TAG)) {
             InventoryItem item = new InventoryItem(new Malt());
             mStorage.createInventoryItem(item);
+            Log.d(TAG, "Creating item id: " + item.getId());
             mFragmentHandler.showMaltEditor(item);
         } else if (tag.equals(HOPS_TAG)) {
             InventoryItem item = new InventoryItem(new Hop());
             mStorage.createInventoryItem(item);
+            Log.d(TAG, "Creating item id: " + item.getId());
+
             mFragmentHandler.showHopsEditor(item);
         } else if (tag.equals(YEAST_TAG)) {
             InventoryItem item = new InventoryItem(new Yeast());
             mStorage.createInventoryItem(item);
+            Log.d(TAG, "Creating item id: " + item.getId());
+
             mFragmentHandler.showYeastEditor(item);
         }
     }
@@ -362,13 +371,18 @@ public class InventoryFragment extends Fragment implements DialogInterface.OnCli
 
     private int deleteSelected() {
         int deleted = 0;
-        SparseBooleanArray checkedItems = getCurrentList().getCheckedItemPositions();
+        ListView list = getCurrentList();
+        SparseBooleanArray checkedItems = list.getCheckedItemPositions();
+        List<InventoryItem> items = new ArrayList<InventoryItem>();
         for (int i = 0; i < checkedItems.size(); i++) {
             if (checkedItems.valueAt(i)) {
-                InventoryItem item = mInventoryList.get(checkedItems.keyAt(i));
-                mStorage.deleteInventoryItem(item);
-                deleted++;
+                InventoryItem item = (InventoryItem) list.getItemAtPosition(checkedItems.keyAt(i));
+                items.add(item);
             }
+        }
+        for (InventoryItem item : items) {
+            mStorage.deleteInventoryItem(item);
+            deleted++;
         }
         mInventoryList = mStorage.retrieveInventory();
         return deleted;
