@@ -3,86 +3,9 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <LinearLayout style="@style/RecipeIngredient"
-        android:id="@+id/ingredient_layout"
-        android:orientation="horizontal"
-        android:background="@drawable/touchable">
-
-        <TextView style="@style/IngredientIcon"
-            android:id="@+id/icon"
-            android:text="H"
-            android:background="@color/hop_color"/>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:orientation="vertical">
-
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/weight"
-                android:layout_alignParentLeft="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:gravity="center_vertical"
-                android:textColor="@color/text_dark_primary"
-                android:text="2 oz."
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/name"
-                android:layout_toRightOf="@+id/weight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:gravity="center_vertical"
-                android:singleLine="true"
-                android:ellipsize="end"
-                android:textColor="@color/text_dark_primary"
-                android:text="Hops"
-                android:textSize="18sp" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/details"
-                android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@+id/ibu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:gravity="center_vertical"
-                android:textColor="@color/text_dark_secondary"
-                android:text="4.2% Alpha"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/ibu"
-                android:layout_alignParentRight="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:text="10 IBU"
-                android:textColor="@color/text_dark_secondary"
-                android:textSize="14sp" />
-
-        </RelativeLayout>
-
-    </LinearLayout>
-
-</LinearLayout>
-
+    <include layout="@layout/list_item_hops_touchable"/>
 
     <View style="@style/HorizontalSeparator"
     android:id="@+id/separator"/>
 
-        </LinearLayout>
+</LinearLayout>

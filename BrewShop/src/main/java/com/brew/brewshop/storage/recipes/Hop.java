@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import com.brew.brewshop.storage.Nameable;
 
-public class Hop implements Parcelable, Nameable {
+public class Hop implements Ingredient {
     private String name;
     private double percentAlpha;
 

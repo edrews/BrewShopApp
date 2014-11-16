@@ -2,6 +2,7 @@
 <resources>
     <integer name="max_recipes">100</integer>
     <integer name="max_ingredients">50</integer>
+    <integer name="max_inventory">100</integer>
     <integer name="max_notes_characters">1000</integer>
 
     <integer name="ingredient_index">0</integer>

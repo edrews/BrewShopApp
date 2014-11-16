@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <bool name="show_store_drawer_items">false</bool>
-    <bool name="show_inventory">false</bool>
+    <bool name="show_inventory">true</bool>
 </resources>

@@ -9,17 +9,5 @@ The only homebrew companion app you'll ever need.
 - Compare your recipe to one of several available styles
 - Add brew notes to each recipe
 - SRM reflected in recipe icon color
+- Keep track of homebrew ingredients inventory
 
-TODO
-----
-* Late additions for extracts and sugars
-* Metric units
-* Local inventory
-* Integrate local inventory with recipe viewer
-* Add custom ingredients
-* Add water
-* Single Recipe photo
-* Save storage remotely
-* Share remote storage
-* Import/export recipes with BeerXML
-* Share recipe with community

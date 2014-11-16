@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import com.brew.brewshop.storage.Nameable;
 
-public class Yeast implements Parcelable, Nameable {
+public class Yeast implements Ingredient {
     private String name;
     private double avgAttenuation;
 

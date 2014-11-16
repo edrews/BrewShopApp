@@ -20,9 +20,11 @@ import com.brew.brewshop.storage.NameableAdapter;
 import com.brew.brewshop.storage.hops.HopsInfo;
 import com.brew.brewshop.storage.hops.HopsInfoList;
 import com.brew.brewshop.storage.hops.HopsStorage;
+import com.brew.brewshop.storage.inventory.InventoryItem;
 import com.brew.brewshop.storage.recipes.Hop;
 import com.brew.brewshop.storage.recipes.HopAddition;
 import com.brew.brewshop.storage.recipes.HopUsage;
+import com.brew.brewshop.storage.recipes.Malt;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.storage.recipes.Weight;
 import com.brew.brewshop.util.Util;
@@ -34,9 +36,11 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
     @SuppressWarnings("unused")
     private static final String TAG = HopsFragment.class.getName();
     private static final String RECIPE = "Recipe";
+    private static final String INVENTORY_ITEM = "InventoryItem";
     private static final String HOP_INDEX = "HopIndex";
 
     private Recipe mRecipe;
+    private InventoryItem mInventoryItem;
     private HopsInfoList mHopInfo;
     private BrewStorage mStorage;
     private int mHopIndex;
@@ -80,6 +84,7 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
         if (state != null) {
             mRecipe = state.getParcelable(RECIPE);
             mHopIndex = state.getInt(HOP_INDEX, -1);
+            mInventoryItem = state.getParcelable(INVENTORY_ITEM);
         }
 
         String customName = getActivity().getResources().getString(R.string.custom_hop);
@@ -94,12 +99,19 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
         mHopUsageSpinner.setAdapter(adapter);
         mHopUsageSpinner.setOnItemSelectedListener(this);
 
-        if (mRecipe != null && mHopIndex >= 0) {
+        if (mInventoryItem != null) {
+            root.findViewById(R.id.hops_usage_view).setVisibility(View.GONE);
+            TextView title = (TextView) root.findViewById(R.id.hop_addition_title);
+            title.setText(getResources().getString(R.string.inventory_hop));
+            mDryHopView.setVisibility(View.GONE);
+            mBoilTimeView.setVisibility(View.GONE);
+            setHop(mInventoryItem.getHop());
+            setWeight(mInventoryItem.getQuantity());
+        } else if (mRecipe != null && mHopIndex >= 0) {
             HopAddition addition = getHopAddition();
             setHop(addition.getHop());
+            setWeight(addition.getWeight());
             setHopUsageView();
-            mWeightEdit.setText(Util.fromDouble(addition.getWeight().getOunces(), 3));
-            mAlphaEdit.setText(Util.fromDouble(addition.getHop().getPercentAlpha(), 3));
             mDryHopDaysEdit.setText(String.valueOf(getHopAddition().getDryHopDays()));
             mTimeEdit.setText(String.valueOf(getHopAddition().getBoilTime()));
         }
@@ -115,8 +127,33 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
     @Override
     public void onPause() {
         super.onPause();
-        HopAddition addition = getHopAddition();
+        super.onPause();
+        if (mRecipe != null) {
+            updateRecipe();
+        } else if (mInventoryItem != null) {
+            updateInventoryItem();
+        }
+        Util.hideKeyboard(getActivity());
+    }
 
+    private void updateRecipe() {
+        HopAddition addition = getHopAddition();
+        addition.setHop(getHopData());
+        addition.setWeight(getWeightData());
+        CharSequence usage = (CharSequence) mHopUsageSpinner.getSelectedItem();
+        addition.setUsage(HopUsage.fromString(usage.toString()));
+        addition.setBoilTime(Util.toInt(mTimeEdit.getText()));
+        addition.setDryHopDays(Util.toInt(mDryHopDaysEdit.getText()));
+        mStorage.updateRecipe(mRecipe);
+    }
+
+    private void updateInventoryItem() {
+        mInventoryItem.setIngredient(getHopData());
+        mInventoryItem.setQuantity(getWeightData());
+        mStorage.updateInventoryItem(mInventoryItem);
+    }
+
+    private Hop getHopData() {
         Nameable selectedHop = (Nameable) mHopTypeSpinner.getSelectedItem();
         Hop storedHop = new Hop();
         double alpha = Util.toDouble(mAlphaEdit.getText());
@@ -125,17 +162,11 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
         }
         storedHop.setPercentAlpha(alpha);
         mAdapter.setNamedItem(selectedHop, storedHop, mCustomName.getText().toString());
-        addition.setHop(storedHop);
+        return storedHop;
+    }
 
-        Weight weight = new Weight(0, Util.toDouble(mWeightEdit.getText()));
-        addition.setWeight(weight);
-        CharSequence usage = (CharSequence) mHopUsageSpinner.getSelectedItem();
-        addition.setUsage(HopUsage.fromString(usage.toString()));
-        addition.setBoilTime(Util.toInt(mTimeEdit.getText()));
-        addition.setDryHopDays(Util.toInt(mDryHopDaysEdit.getText()));
-
-        mStorage.updateRecipe(mRecipe);
-        Util.hideKeyboard(getActivity());
+    private Weight getWeightData() {
+        return new Weight(0, Util.toDouble(mWeightEdit.getText()));
     }
 
     @Override
@@ -151,6 +182,7 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
             state = new Bundle();
         }
         state.putParcelable(RECIPE, mRecipe);
+        state.putParcelable(INVENTORY_ITEM, mInventoryItem);
         state.putInt(HOP_INDEX, mHopIndex);
     }
 
@@ -171,6 +203,11 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
             mCustomNameView.setVisibility(View.GONE);
             mDescriptionView.setVisibility(View.VISIBLE);
         }
+        mAlphaEdit.setText(Util.fromDouble(hop.getPercentAlpha(), 3));
+    }
+
+    private void setWeight(Weight weight) {
+        mWeightEdit.setText(Util.fromDouble(weight.getOunces(), 3));
     }
 
     private void setHopUsageView() {
@@ -200,6 +237,10 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
         mRecipe = recipe;
     }
 
+    public void setInventoryItem(InventoryItem item) {
+        mInventoryItem = item;
+    }
+
     public void setHopIndex(int index) {
         mHopIndex = index;
     }
@@ -216,6 +257,16 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
         }
     }
 
+    private Hop getHop() {
+        Hop hop = null;
+        if (mRecipe != null) {
+            hop = getHopAddition().getHop();
+        } else if (mInventoryItem != null) {
+            hop = mInventoryItem.getHop();
+        }
+        return hop;
+    }
+
     private void onHopsUsageSelected() {
         String usage = mHopUsageSpinner.getSelectedItem().toString();
         if (!usage.equals(getHopAddition().getUsage())) {
@@ -230,9 +281,9 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
             return;
         }
         HopsInfo hopsInfo = (HopsInfo) item;
-        if (!hopsInfo.getName().equals(getHopAddition().getHop().getName())) {
+        if (!hopsInfo.getName().equals(getHop().getName())) {
             mAlphaEdit.setText(Util.fromDouble(hopsInfo.getAlphaAcid(), 3));
-            getHopAddition().getHop().setName(hopsInfo.getName());
+            getHop().setName(hopsInfo.getName());
         }
         if (hopsInfo.getDescription().length() == 0) {
             mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_secondary));
@@ -247,7 +298,7 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
         boolean handled = false;
         String customName = getActivity().getResources().getString(R.string.custom_hop);
         if (item.getName().equals(customName)) {
-            if (!mCustomName.getText().toString().equals(getHopAddition().getHop().getName())) {
+            if (!mCustomName.getText().toString().equals(getHop().getName())) {
                 mCustomName.setText("");
                 mAlphaEdit.setText("0");
             }

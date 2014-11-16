@@ -18,17 +18,22 @@
     <string name="deleted_recipe">Recipe deleted</string>
     <string name="deleted_ingredients">Deleted %d ingredients</string>
     <string name="deleted_ingredient">Ingredient deleted</string>
+    <string name="deleted_items">Deleted %d items</string>
+    <string name="deleted_item">Item deleted</string>
     <string name="max_recipes_reached">App has a %d recipe limit</string>
     <string name="ingredients">Ingredients</string>
     <string name="add_ingredient">Add Ingredient</string>
     <string name="max_ingredients_reached">Recipes have a %d ingredient limit</string>
+    <string name="max_inventory_reached">Inventory has a %d item limit</string>
     <string name="no_ingredients">No ingredients</string>
     <string name="unnamed_recipe">Unnamed Recipe</string>
     <string name="add_recipe_notes">Add recipe notes&#8230;</string>
     <string name="delete_selected_recipes">Delete %d recipes?</string>
     <string name="delete_selected_ingredients">Delete %d ingredients?</string>
+    <string name="delete_selected_items">Delete %d items?</string>
     <string name="delete_selected_recipe">Delete recipe?</string>
     <string name="delete_selected_ingredient">Delete ingredient?</string>
+    <string name="delete_selected_item">Delete item?</string>
     <string name="no_description">No description available.</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
@@ -43,6 +48,12 @@
     <string name="custom_malt">Custom Malt</string>
     <string name="custom_hop">Custom Hop</string>
     <string name="custom_yeast">Custom Yeast</string>
+    <string name="add_item">Add Item</string>
+    <string name="select_items">Select Items</string>
+    <string name="inventory_empty">Inventory is empty</string>
+    <string name="inventory_malt">Inventory Malt</string>
+    <string name="inventory_hop">Inventory Hops</string>
+    <string name="inventory_yeast">Inventory Yeast</string>
 
     <!-- Navigation -->
     <string name="homebrew_tools">Homebrew Tools</string>

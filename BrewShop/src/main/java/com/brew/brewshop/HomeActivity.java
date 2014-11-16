@@ -29,6 +29,7 @@ import com.brew.brewshop.navigation.NavDrawerItem;
 import com.brew.brewshop.navigation.NavItemFactory;
 import com.brew.brewshop.navigation.NavSelectionHandler;
 import com.brew.brewshop.storage.ProductType;
+import com.brew.brewshop.storage.inventory.InventoryItem;
 import com.brew.brewshop.storage.recipes.HopAddition;
 import com.brew.brewshop.storage.recipes.MaltAddition;
 import com.brew.brewshop.storage.recipes.Recipe;
@@ -46,6 +47,7 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
     private static final String RECIPE_LIST_FRAGMENT_TAG = "RecipeListFragment";
     private static final String RECIPE_FRAGMENT_TAG = "RecipeFragment";
     private static final String RECIPE_EDIT_FRAGMENT_TAG = "RecipeEditFragment";
+    private static final String INVENTORY_EDIT_FRAGMENT_TAG = "InventoryEditFragment";
 
     private NavDrawer mNavDrawer;
     private Recipe mCurrentRecipe;
@@ -255,6 +257,27 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
         fragment.setRecipe(recipe);
         fragment.setYeastIndex(recipe.getYeast().indexOf(yeast));
         transitionTo(fragment, RECIPE_EDIT_FRAGMENT_TAG);
+    }
+
+    @Override
+    public void showMaltEditor(InventoryItem item) {
+        MaltFragment fragment = new MaltFragment();
+        fragment.setInventoryItem(item);
+        transitionTo(fragment, INVENTORY_EDIT_FRAGMENT_TAG);
+    }
+
+    @Override
+    public void showHopsEditor(InventoryItem item) {
+        HopsFragment fragment = new HopsFragment();
+        fragment.setInventoryItem(item);
+        transitionTo(fragment, INVENTORY_EDIT_FRAGMENT_TAG);
+    }
+
+    @Override
+    public void showYeastEditor(InventoryItem item) {
+        YeastFragment fragment = new YeastFragment();
+        fragment.setInventoryItem(item);
+        transitionTo(fragment, INVENTORY_EDIT_FRAGMENT_TAG);
     }
 
     @Override

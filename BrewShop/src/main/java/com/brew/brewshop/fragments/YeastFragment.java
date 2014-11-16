@@ -16,6 +16,7 @@ import com.brew.brewshop.R;
 import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.Nameable;
 import com.brew.brewshop.storage.NameableAdapter;
+import com.brew.brewshop.storage.inventory.InventoryItem;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.storage.recipes.Yeast;
 import com.brew.brewshop.storage.yeast.YeastInfo;
@@ -27,9 +28,11 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
     @SuppressWarnings("unused")
     private static final String TAG = YeastFragment.class.getName();
     private static final String RECIPE = "Recipe";
+    private static final String INVENTORY_ITEM = "InventoryItem";
     private static final String YEAST_INDEX = "YeastIndex";
 
     private Recipe mRecipe;
+    private InventoryItem mInventoryItem;
     private YeastInfoList mYeastInfo;
     private BrewStorage mStorage;
     private int mYeastIndex;
@@ -60,6 +63,7 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
         if (state != null) {
             mRecipe = state.getParcelable(RECIPE);
             mYeastIndex = state.getInt(YEAST_INDEX, -1);
+            mInventoryItem = state.getParcelable(INVENTORY_ITEM);
         }
 
         String customName = getActivity().getResources().getString(R.string.custom_yeast);
@@ -67,10 +71,13 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
         mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(mAdapter);
 
-        if (mRecipe != null && mYeastIndex >= 0) {
+        if (mInventoryItem != null) {
+            TextView title = (TextView) root.findViewById(R.id.yeast_addition_title);
+            title.setText(getResources().getString(R.string.inventory_yeast));
+            setYeast(mInventoryItem.getYeast());
+        } else if (mRecipe != null && mYeastIndex >= 0) {
             Yeast yeast = getYeast();
             setYeast(yeast);
-            mAttenuationEdit.setText(Util.fromDouble(yeast.getAttenuation(), 3));
         }
 
         mSpinner.setOnItemSelectedListener(this);
@@ -82,19 +89,34 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
     @Override
     public void onPause() {
         super.onPause();
-        Yeast storedYeast = mRecipe.getYeast().get(mYeastIndex);
+        if (mRecipe != null) {
+            updateRecipe();
+        } else if (mInventoryItem != null) {
+            updateInventoryItem();
+        }
+        Util.hideKeyboard(getActivity());
+    }
 
+    private void updateRecipe() {
+        Yeast yeast = mRecipe.getYeast().get(mYeastIndex);
+        getYeastData(yeast);
+        mStorage.updateRecipe(mRecipe);
+    }
+
+    private void updateInventoryItem() {
+        Yeast yeast = mInventoryItem.getYeast();
+        getYeastData(yeast);
+        mStorage.updateInventoryItem(mInventoryItem);
+    }
+
+    private void getYeastData(Yeast yeast) {
         Nameable selectedYeast = (Nameable) mSpinner.getSelectedItem();
-        mAdapter.setNamedItem(selectedYeast, storedYeast, mCustomName.getText().toString());
-
+        mAdapter.setNamedItem(selectedYeast, yeast, mCustomName.getText().toString());
         double attenuation = Util.toDouble(mAttenuationEdit.getText());
         if (attenuation > 100) {
             attenuation = 100;
         }
-        storedYeast.setAttenuation(attenuation);
-
-        mStorage.updateRecipe(mRecipe);
-        Util.hideKeyboard(getActivity());
+        yeast.setAttenuation(attenuation);
     }
 
     @Override
@@ -121,10 +143,17 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
         }
         state.putParcelable(RECIPE, mRecipe);
         state.putInt(YEAST_INDEX, mYeastIndex);
+        state.putParcelable(INVENTORY_ITEM, mInventoryItem);
     }
 
     private Yeast getYeast() {
-        return mRecipe.getYeast().get(mYeastIndex);
+        Yeast yeast = null;
+        if (mRecipe != null) {
+            yeast = mRecipe.getYeast().get(mYeastIndex);
+        } else if (mInventoryItem != null) {
+            yeast = mInventoryItem.getYeast();
+        }
+        return yeast;
     }
 
     private void setYeast(Yeast yeast) {
@@ -140,6 +169,7 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
             mCustomNameView.setVisibility(View.GONE);
             mDescriptionView.setVisibility(View.VISIBLE);
         }
+        mAttenuationEdit.setText(Util.fromDouble(yeast.getAttenuation(), 3));
     }
 
     public void setRecipe(Recipe recipe) {
@@ -148,6 +178,10 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
 
     public void setYeastIndex(int index) {
         mYeastIndex = index;
+    }
+
+    public void setInventoryItem(InventoryItem item) {
+        mInventoryItem = item;
     }
 
     @Override

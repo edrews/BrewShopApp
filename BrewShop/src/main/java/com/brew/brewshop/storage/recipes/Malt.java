@@ -5,14 +5,14 @@ import android.os.Parcelable;
 
 import com.brew.brewshop.storage.Nameable;
 
-public class Malt implements Parcelable, Nameable {
+public class Malt implements Ingredient {
     private String name;
     private double gravity; //gravity per pound per gallon
     private double color; //in Lovibond
     private boolean mashed;
 
     public Malt() {
-        name = "";
+        name = "Malt";
         gravity = 1;
         color = 0;
         mashed = true;

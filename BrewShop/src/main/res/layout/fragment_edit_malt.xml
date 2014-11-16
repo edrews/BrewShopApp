@@ -8,6 +8,7 @@
         android:orientation="vertical">
 
         <TextView style="@style/RecipeHeader"
+            android:id="@+id/malt_addition_title"
             android:text="Malt Addition"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="5dp"/>

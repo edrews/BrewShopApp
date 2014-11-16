@@ -3,15 +3,15 @@ package com.brew.brewshop.storage.recipes;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.brew.brewshop.storage.Storeable;
 import com.brew.brewshop.util.Util;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Recipe implements Parcelable {
+public class Recipe implements Parcelable, Storeable {
     private static final int VERSION = 1;
-    private static final double MIN_BOIL_TIME = 10;
 
     private int id;
     private String name;
@@ -85,7 +85,10 @@ public class Recipe implements Parcelable {
         return 0;
     }
 
+    @Override
     public int getId() { return id; }
+
+    @Override
     public void setId(int value) { id = value; }
 
     public String getName() { return name; }

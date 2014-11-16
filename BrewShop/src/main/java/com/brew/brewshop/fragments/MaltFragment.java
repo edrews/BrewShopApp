@@ -18,6 +18,7 @@ import com.brew.brewshop.R;
 import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.Nameable;
 import com.brew.brewshop.storage.NameableAdapter;
+import com.brew.brewshop.storage.inventory.InventoryItem;
 import com.brew.brewshop.storage.malt.MaltInfo;
 import com.brew.brewshop.storage.malt.MaltInfoList;
 import com.brew.brewshop.storage.malt.MaltStorage;
@@ -31,9 +32,11 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
     @SuppressWarnings("unused")
     private static final String TAG = MaltFragment.class.getName();
     private static final String RECIPE = "Recipe";
+    private static final String INVENTORY_ITEM = "InventoryItem";
     private static final String MALT_INDEX = "MaltIndex";
 
     private Recipe mRecipe;
+    private InventoryItem mInventoryItem;
     private MaltInfoList mMaltInfoList;
     private BrewStorage mStorage;
     private int mMaltIndex;
@@ -72,6 +75,7 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
         if (state != null) {
             mRecipe = state.getParcelable(RECIPE);
             mMaltIndex = state.getInt(MALT_INDEX, -1);
+            mInventoryItem = state.getParcelable(INVENTORY_ITEM);
         }
 
         String customName = getActivity().getResources().getString(R.string.custom_malt);
@@ -80,13 +84,14 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
         mMaltSpinner.setAdapter(mAdapter);
         mMaltSpinner.setOnItemSelectedListener(this);
 
-        if (mRecipe != null && mMaltIndex >= 0) {
-            MaltAddition addition = getMaltAddition();
-            setMalt(addition.getMalt());
-            setWeight(addition.getWeight());
-            mMashedEdit.setChecked(addition.getMalt().isMashed());
-            mColorEdit.setText(Util.fromDouble(addition.getMalt().getColor(), 1));
-            mGravityEdit.setText(Util.fromDouble(addition.getMalt().getGravity(), 3, false));
+        if (mInventoryItem != null) {
+            TextView title = (TextView) root.findViewById(R.id.malt_addition_title);
+            title.setText(getResources().getString(R.string.inventory_malt));
+            setMalt(mInventoryItem.getMalt());
+            setWeight(mInventoryItem.getQuantity());
+        } else if (mRecipe != null && mMaltIndex >= 0) {
+            setMalt(getMaltAddition().getMalt());
+            setWeight(getMaltAddition().getWeight());
         }
 
         ActionBar bar = ((ActionBarActivity) getActivity()).getSupportActionBar();
@@ -100,8 +105,32 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
     @Override
     public void onPause() {
         super.onPause();
-        MaltAddition addition = getMaltAddition();
+        if (mRecipe != null) {
+            updateRecipe();
+        } else if (mInventoryItem != null) {
+            updateInventoryItem();
+        }
+        Util.hideKeyboard(getActivity());
+    }
 
+    private void updateRecipe() {
+        MaltAddition addition = getMaltAddition();
+        addition.setMalt(getMaltData());
+        addition.setWeight(getWeightData());
+        mStorage.updateRecipe(mRecipe);
+    }
+
+    private void updateInventoryItem() {
+        mInventoryItem.setIngredient(getMaltData());
+        mInventoryItem.setQuantity(getWeightData());
+        mStorage.updateInventoryItem(mInventoryItem);
+    }
+
+    private Weight getWeightData() {
+        return new Weight(Util.toDouble(mWeightLbEdit.getText()), Util.toDouble(mWeightOzEdit.getText()));
+    }
+
+    private Malt getMaltData() {
         Nameable selectedMalt = (Nameable) mMaltSpinner.getSelectedItem();
         Malt storedMalt = new Malt();
         storedMalt.setColor(Util.toDouble(mColorEdit.getText()));
@@ -114,14 +143,7 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
         storedMalt.setMashed(mMashedEdit.isChecked());
 
         mAdapter.setNamedItem(selectedMalt, storedMalt, mCustomName.getText().toString());
-
-        addition.setMalt(storedMalt);
-
-        Weight weight = new Weight(Util.toDouble(mWeightLbEdit.getText()), Util.toDouble(mWeightOzEdit.getText()));
-        addition.setWeight(weight);
-
-        mStorage.updateRecipe(mRecipe);
-        Util.hideKeyboard(getActivity());
+        return storedMalt;
     }
 
     @Override
@@ -137,6 +159,7 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
             state = new Bundle();
         }
         state.putParcelable(RECIPE, mRecipe);
+        state.putParcelable(INVENTORY_ITEM, mInventoryItem);
         state.putInt(MALT_INDEX, mMaltIndex);
     }
 
@@ -153,6 +176,9 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
             mCustomMaltView.setVisibility(View.GONE);
             mDescriptionView.setVisibility(View.VISIBLE);
         }
+        mMashedEdit.setChecked(malt.isMashed());
+        mColorEdit.setText(Util.fromDouble(malt.getColor(), 1));
+        mGravityEdit.setText(Util.fromDouble(malt.getGravity(), 3, false));
     }
 
     private void setWeight(Weight weight) {
@@ -164,8 +190,22 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
         return mRecipe.getMalts().get(mMaltIndex);
     }
 
+    private Malt getMalt() {
+        Malt malt = null;
+        if (mRecipe != null) {
+            malt = getMaltAddition().getMalt();
+        } else if (mInventoryItem != null) {
+            malt = mInventoryItem.getMalt();
+        }
+        return malt;
+    }
+
     public void setRecipe(Recipe recipe) {
         mRecipe = recipe;
+    }
+
+    public void setInventoryItem(InventoryItem item) {
+        mInventoryItem = item;
     }
 
     public void setMaltIndex(int index) {
@@ -179,9 +219,8 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
             return;
         }
         MaltInfo info = (MaltInfo) item;
-        if (!info.getName().equals(getMaltAddition().getMalt().getName())) {
-            getMaltAddition().getMalt().setName(info.getName());
-            Log.d(TAG, "Mashed: " + info.isMashed());
+        if (!info.getName().equals(getMalt().getName())) {
+            getMalt().setName(info.getName());
             mMashedEdit.setChecked(info.isMashed());
             mColorEdit.setText(Util.fromDouble(info.getSrm(), 1));
             mGravityEdit.setText(Util.fromDouble(info.getGravity(), 3, false));
@@ -199,7 +238,7 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
         boolean handled = false;
         String customName = getActivity().getResources().getString(R.string.custom_malt);
         if (item.getName().equals(customName)) {
-            if (!mCustomName.getText().toString().equals(getMaltAddition().getMalt().getName())) {
+            if (!mCustomName.getText().toString().equals(getMalt().getName())) {
                 mCustomName.setText("");
                 mMashedEdit.setChecked(true);
                 mColorEdit.setText("0");

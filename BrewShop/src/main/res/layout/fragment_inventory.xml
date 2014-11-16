@@ -1,30 +1,81 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/FillParent">
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tabHost"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
-    <android.support.v7.widget.CardView style="@style/Card">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
 
-        <LinearLayout android:id="@+id/new_ingredient_view"
+        <TabWidget
+            android:id="@android:id/tabs"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content" />
 
-            <LinearLayout
-                android:id="@+id/ingredient_list"
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-            </LinearLayout>
+                android:layout_height="fill_parent"
+                android:background="@color/color_white">
+
+                <FrameLayout
+                    android:id="@+id/malt_tab"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <ListView
+                        android:id="@+id/malt_list"
+                        android:listSelector="@drawable/touchable"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/hops_tab"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <ListView
+                        android:id="@+id/hops_list"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:listSelector="@drawable/touchable" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/yeast_tab"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <ListView
+                        android:id="@+id/yeast_list"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent" />
+
+                </FrameLayout>
+            </FrameLayout>
 
             <TextView
-                android:id="@+id/no_ingredients"
+                android:id="@+id/inventory_message_view"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:gravity="center_vertical"
-                android:minHeight="48dp"
-                android:text="@string/no_ingredients"
-                android:textColor="@color/text_dark_secondary" />
+                android:layout_height="fill_parent"
+                android:text="@string/inventory_empty"
+                android:textColor="@color/text_dark_secondary"
+                android:visibility="gone"
+                android:gravity="center"/>
 
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
-</ScrollView>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="8dp"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/drawer_shadow_down" />
+        </RelativeLayout>
+    </LinearLayout>
+</TabHost>
