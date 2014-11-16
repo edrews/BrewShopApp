@@ -96,16 +96,16 @@ public class InventoryFragment extends Fragment implements DialogInterface.OnCli
 
         TabHost.TabSpec maltSpec = mTabHost.newTabSpec(MALT_TAG);
         maltSpec.setContent(R.id.malt_tab);
-        maltSpec.setIndicator("MALT");
+        maltSpec.setIndicator(getResources().getString(R.string.malt));
         mTabHost.addTab(maltSpec);
 
         TabHost.TabSpec hopsSpec = mTabHost.newTabSpec(HOPS_TAG);
-        hopsSpec.setIndicator("HOPS");
+        hopsSpec.setIndicator(getResources().getString(R.string.hops));
         hopsSpec.setContent(R.id.hops_tab);
         mTabHost.addTab(hopsSpec);
 
         TabHost.TabSpec yeastSpec = mTabHost.newTabSpec(YEAST_TAG);
-        yeastSpec.setIndicator("YEAST");
+        yeastSpec.setIndicator(getResources().getString(R.string.yeast));
         yeastSpec.setContent(R.id.yeast_tab);
         mTabHost.addTab(yeastSpec);
 

@@ -13,6 +13,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                android:textColor="@color/text_dark_primary"
                 android:text="Notes"
                 android:textSize="22sp" />
             <View
@@ -25,6 +26,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_marginTop="5dp"
+                android:textColor="@color/text_dark_primary"
                 android:background="@android:color/white"
                 android:gravity="left|top"
                 android:hint="@string/add_recipe_notes"

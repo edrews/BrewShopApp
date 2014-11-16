@@ -89,13 +89,12 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
 
         String customName = getActivity().getResources().getString(R.string.custom_hop);
         mAdapter = new NameableAdapter<HopsInfo>(getActivity(), mHopInfo, customName);
-        mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mHopTypeSpinner.setAdapter(mAdapter);
         mHopTypeSpinner.setOnItemSelectedListener(this);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                getActivity(), R.array.hops_usage, android.R.layout.simple_spinner_item );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                getActivity(), R.array.hops_usage, R.layout.spinner_item);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         mHopUsageSpinner.setAdapter(adapter);
         mHopUsageSpinner.setOnItemSelectedListener(this);
 

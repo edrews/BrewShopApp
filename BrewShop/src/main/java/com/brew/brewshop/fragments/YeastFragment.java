@@ -68,7 +68,6 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
 
         String customName = getActivity().getResources().getString(R.string.custom_yeast);
         mAdapter = new NameableAdapter<YeastInfo>(getActivity(), mYeastInfo, customName);
-        mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(mAdapter);
 
         if (mInventoryItem != null) {

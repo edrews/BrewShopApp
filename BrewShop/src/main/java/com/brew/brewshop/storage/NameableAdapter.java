@@ -20,7 +20,8 @@ public class NameableAdapter<T> extends ArrayAdapter<T> {
     }
 
     public NameableAdapter(Context context, List<T> nameables, String customName) {
-        super(context, android.R.layout.simple_spinner_item);
+        super(context, R.layout.spinner_item);
+        setDropDownViewResource(R.layout.spinner_dropdown_item);
         mCustomName = customName;
         mContext = context;
         if (mCustomName != null) {
@@ -61,7 +62,7 @@ public class NameableAdapter<T> extends ArrayAdapter<T> {
         TextView textView = (TextView) view;
 
         //Fixes a style bug with HTC Rezound
-        textView.setTextColor(mContext.getResources().getColor(R.color.text_dark_primary));
+        //textView.setTextColor(mContext.getResources().getColor(R.color.text_dark_primary));
 
         if (textView.getText().equals(mCustomName)) {
             textView.setTypeface(null, Typeface.ITALIC);

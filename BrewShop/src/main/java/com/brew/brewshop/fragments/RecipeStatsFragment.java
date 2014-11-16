@@ -70,7 +70,6 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
 
             mStyle = (Spinner) root.findViewById(R.id.recipe_style);
             NameableAdapter styleAdapter = new NameableAdapter(getActivity(), mBjcpCategoryList);
-            styleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             mStyle.setAdapter(styleAdapter);
             mStyle.setOnItemSelectedListener(this);
 
@@ -110,7 +109,6 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
 
     private void setSubstyleList(List<BjcpSubcategory> subcategories) {
         NameableAdapter substyleAdapter = new NameableAdapter(getActivity(), subcategories);
-        substyleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSubstyle.setAdapter(substyleAdapter);
     }
 

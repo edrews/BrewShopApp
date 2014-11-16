@@ -80,7 +80,6 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
 
         String customName = getActivity().getResources().getString(R.string.custom_malt);
         mAdapter = new NameableAdapter<MaltInfo>(getActivity(), mMaltInfoList, customName);
-        mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mMaltSpinner.setAdapter(mAdapter);
         mMaltSpinner.setOnItemSelectedListener(this);
 

@@ -168,14 +168,7 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
         mIngredientView.drawList();
 
         textView = (TextView) root.findViewById(R.id.recipe_notes);
-        String notes;
-        if (mRecipe.getNotes().length() == 0) {
-            notes = getActivity().getResources().getString(R.string.add_recipe_notes);
-            textView.setTextColor(getActivity().getResources().getColor(R.color.text_dark_secondary));
-        } else {
-            notes = mRecipe.getNotes();
-        }
-        textView.setText(notes);
+        textView.setText(mRecipe.getNotes());
         checkResumeActionMode(state);
         mFragmentHandler.setTitle(findString(R.string.edit_recipe));
         return root;
