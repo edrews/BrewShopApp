@@ -182,7 +182,7 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
 
     private void setWeight(Weight weight) {
         mWeightLbEdit.setText(String.valueOf(weight.getPoundsPortion()));
-        mWeightOzEdit.setText(Util.fromDouble(weight.getOuncesPortion(), 1));
+        mWeightOzEdit.setText(Util.fromDouble(weight.getOuncesPortion(), 2));
     }
 
     private MaltAddition getMaltAddition() {
