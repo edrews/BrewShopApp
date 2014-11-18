@@ -20,7 +20,7 @@ public class IngredientViewPopulator {
         TextView view;
 
         view = (TextView) parent.findViewById(R.id.weight);
-        view.setText(formatWeight(item.getQuantity()));
+        view.setText(formatWeight(item.getQuantity(), 2));
 
         view = (TextView) parent.findViewById(R.id.percent);
         view.setVisibility(View.GONE);
@@ -32,7 +32,7 @@ public class IngredientViewPopulator {
         TextView view;
 
         view = (TextView) parent.findViewById(R.id.weight);
-        view.setText(formatWeight(addition.getWeight()));
+        view.setText(formatWeight(addition.getWeight(), 2));
 
         view = (TextView) parent.findViewById(R.id.percent);
         if (totalMaltWeight.getOunces() < MIN_MALT_WEIGHT) {
@@ -67,7 +67,7 @@ public class IngredientViewPopulator {
         TextView view;
 
         view = (TextView) parent.findViewById(R.id.weight);
-        view.setText(formatWeight(addition.getWeight()));
+        view.setText(formatWeight(addition.getWeight(), 3));
 
         TextView ibuView = (TextView) parent.findViewById(R.id.ibu);
         ibuView.setText(Util.fromDouble(ibuContribution, 1, true) + " IBU");
@@ -100,7 +100,7 @@ public class IngredientViewPopulator {
         TextView view;
 
         view = (TextView) parent.findViewById(R.id.weight);
-        view.setText(formatWeight(item.getQuantity()));
+        view.setText(formatWeight(item.getQuantity(), 3));
 
         view = (TextView) parent.findViewById(R.id.ibu);
         view.setVisibility(View.GONE);
@@ -133,19 +133,20 @@ public class IngredientViewPopulator {
         view.setText("~" + Util.fromDouble(attenuation, 1, true) + "% Attenuation");
     }
 
-    private String formatWeight(Weight weight) {
+    private String formatWeight(Weight weight, int significance) {
         StringBuilder builder = new StringBuilder();
         int pounds = weight.getPoundsPortion();
         if (pounds > 0) {
             builder.append(String.format("%d lb.", pounds));
         }
         double ounces = weight.getOuncesPortion();
-        if (pounds == 0 || ounces > 0.05) {
+        double min = Math.pow(10 ,-significance) * .5;
+        if (pounds == 0 || ounces > min) {
             if (pounds > 0) {
                 builder.append(" ");
             }
             Util.fromDouble(ounces, 1, true);
-            builder.append(Util.fromDouble(ounces, 1, true) + " oz.");
+            builder.append(Util.fromDouble(ounces, significance, true) + " oz.");
         }
         return builder.toString();
     }
