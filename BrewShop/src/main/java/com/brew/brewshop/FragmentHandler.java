@@ -21,7 +21,5 @@ public interface FragmentHandler {
     public void showYeastEditor(Recipe recipe, Yeast yeast);
     public Recipe getCurrentRecipe();
 
-    public void showMaltEditor(InventoryItem item);
-    public void showHopsEditor(InventoryItem item);
-    public void showYeastEditor(InventoryItem item);
+    public void showInventoryItem(InventoryItem item);
 }

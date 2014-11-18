@@ -10,8 +10,12 @@ public class Yeast implements Ingredient {
     private double avgAttenuation;
 
     public Yeast() {
-        name = "";
-        avgAttenuation = 0;
+        this("", 0);
+    }
+
+    public Yeast(String name, double attenuation) {
+        this.name = name;
+        this.avgAttenuation = attenuation;
     }
 
     public Yeast(Parcel parcel) {

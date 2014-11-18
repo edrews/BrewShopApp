@@ -2,6 +2,9 @@
 <resources>
     <string name="app_name">Brew Shop</string>
     <string name="new_recipe">New Recipe</string>
+    <string name="new_malt">New Malt</string>
+    <string name="new_hops">New Hops</string>
+    <string name="new_yeast">New Yeast</string>
     <string name="edit_recipe">Edit Recipe</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_delete">Delete</string>
@@ -44,6 +47,7 @@
     <string name="select_style">Select a style&#8230;</string>
     <string name="no_style_selected">No style selected</string>
     <string name="select_a_recipe">Select a recipe</string>
+    <string name="select_an_item">Select an item</string>
     <string name="inventory">Inventory</string>
     <string name="custom_malt">Custom Malt</string>
     <string name="custom_hop">Custom Hop</string>
