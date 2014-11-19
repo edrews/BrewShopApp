@@ -29,4 +29,8 @@
     <color name="color_grayer">#E0E0E0</color>
     <color name="color_transparent">#00000000</color>
     <color name="color_shaded">#10000000</color>
+
+    <color name="new_recipe">#106010</color>
+    <color name="open">#FFDAB9</color>
+
 </resources>

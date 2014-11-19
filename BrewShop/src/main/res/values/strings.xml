@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Brew Shop</string>
     <string name="new_recipe">New Recipe</string>
+    <string name="open">Open</string>
     <string name="edit_recipe">Edit Recipe</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_delete">Delete</string>
@@ -79,6 +80,11 @@
         <item>@string/malt</item>
         <item>@string/hops</item>
         <item>@string/yeast</item>
+    </string-array>
+
+    <string-array name="new_recipe_types">
+        <item>@string/new_recipe</item>
+        <item>@string/open</item>
     </string-array>
 
     <string name="first_wort">First Wort</string>
