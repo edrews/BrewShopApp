@@ -31,13 +31,13 @@ public class IngredientTypeAdapter extends ArrayAdapter<String> {
         TextView icon = (TextView) rowView.findViewById(R.id.ingredient_icon);
         if (mContext.getResources().getString(R.string.hops).equals(ingredientType)) {
             icon.setBackgroundResource(R.color.hop_color);
-            icon.setText("H");
+            icon.setText(mContext.getResources().getString(R.string.hops).substring(0,1));
         } else if (mContext.getResources().getString(R.string.malt).equals(ingredientType)) {
             icon.setBackgroundResource(R.color.malt_color);
-            icon.setText("M");
+            icon.setText(mContext.getResources().getString(R.string.malt).substring(0,1));
         } else if (mContext.getResources().getString(R.string.yeast).equals(ingredientType)) {
             icon.setBackgroundResource(R.color.yeast_color);
-            icon.setText("Y");
+            icon.setText(mContext.getResources().getString(R.string.yeast).substring(0,1));
         }
 
         TextView nameView = (TextView) rowView.findViewById(R.id.ingredient_name);
