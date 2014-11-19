@@ -20,6 +20,12 @@ public class InventoryItem implements Storeable {
     @SuppressWarnings("unused")
     public InventoryItem() { }
 
+    public InventoryItem(int id, Ingredient item, Weight weight) {
+        this.id = id;
+        setIngredient(item);
+        this.quantity = weight;
+    }
+
     public InventoryItem(Ingredient item) {
         this.id = -1;
         this.quantity = new Weight(0, 0);
@@ -28,9 +34,9 @@ public class InventoryItem implements Storeable {
 
     public InventoryItem(Parcel parcel) {
         id = parcel.readInt();
-        Ingredient item =  parcel.readParcelable(null);
+        Ingredient item =  parcel.readParcelable(getClass().getClassLoader());
         setIngredient(item);
-        quantity = parcel.readParcelable(Weight.class.getClassLoader());
+        quantity = parcel.readParcelable(getClass().getClassLoader());
     }
 
     @Override
