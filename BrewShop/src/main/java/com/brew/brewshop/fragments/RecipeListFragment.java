@@ -2,6 +2,7 @@ package com.brew.brewshop.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -15,16 +16,26 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.brew.brewshop.FragmentHandler;
 import com.brew.brewshop.R;
 import com.brew.brewshop.ViewClickListener;
+import com.brew.brewshop.fragments.com.brew.brewshop.fragments.NewRecipeAdapter;
 import com.brew.brewshop.storage.BrewStorage;
+import com.brew.brewshop.storage.recipes.HopAddition;
+import com.brew.brewshop.storage.recipes.MaltAddition;
 import com.brew.brewshop.storage.recipes.Recipe;
+import com.brew.brewshop.storage.recipes.Yeast;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class RecipeListFragment extends Fragment implements ViewClickListener,
         DialogInterface.OnClickListener,
+        AdapterView.OnItemClickListener,
         RecipeChangeHandler,
         ActionMode.Callback {
 
@@ -38,6 +49,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
     private FragmentHandler mViewSwitcher;
     private ActionMode mActionMode;
     private RecipeListView mRecipeView;
+    private Dialog mSelectNewRecipe = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
@@ -133,13 +145,25 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.action_new_recipe && canCreateRecipe()) {
-            Recipe recipe = new Recipe();
-            mStorage.createRecipe(recipe);
-            mRecipeView.drawRecipeList();
-            showRecipe(recipe);
+            mSelectNewRecipe = new Dialog(getActivity());
+            mSelectNewRecipe.setContentView(R.layout.select_ingredient);
+
+            NewRecipeAdapter newRecipeAdapter = new NewRecipeAdapter(getActivity(), getNewRecipeTypes());
+
+            ListView listView = (ListView) mSelectNewRecipe.findViewById(R.id.recipe_list);
+            listView.setAdapter(newRecipeAdapter);
+            listView.setOnItemClickListener(this);
+            mSelectNewRecipe.setCancelable(true);
+            mSelectNewRecipe.setTitle(findString(R.string.new_recipe));
+            mSelectNewRecipe.show();
             return true;
         }
         return false;
+    }
+
+    private List<String> getNewRecipeTypes() {
+        String[] ingredients = getActivity().getResources().getStringArray(R.array.new_recipe_types);
+        return Arrays.asList(ingredients);
     }
 
     private void showRecipe(Recipe recipe) {
@@ -282,6 +306,24 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         if (mRecipeView != null) {
             mRecipeView.setShowing(recipeId);
             mRecipeView.drawRecipeList();
+        }
+    }
+
+    private String findString(int id) {
+        return getActivity().getResources().getString(id);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        mSelectNewRecipe.dismiss();
+        String type = getNewRecipeTypes().get(position);
+        if (findString(R.string.new_recipe).equals(type)) {
+            Recipe recipe = new Recipe();
+            mStorage.createRecipe(recipe);
+            mRecipeView.drawRecipeList();
+            showRecipe(recipe);
+        } else if (findString(R.string.open).equals(type)) {
+            // TODO: Add open file stuff here
         }
     }
 }
