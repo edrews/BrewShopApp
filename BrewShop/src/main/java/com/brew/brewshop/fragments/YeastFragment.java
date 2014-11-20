@@ -43,6 +43,7 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
     private EditText mAttenuationEdit;
     private FragmentHandler mViewSwitcher;
     private EditText mCustomName;
+    private EditText mQuantityEdit;
     private View mCustomNameView;
     private View mDescriptionView;
 
@@ -53,6 +54,7 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
         mAttenuationEdit = (EditText) root.findViewById(R.id.yeast_attenuation);
         mDescription = (TextView) root.findViewById(R.id.description);
         mCustomName = (EditText) root.findViewById(R.id.custom_name);
+        mQuantityEdit = (EditText) root.findViewById(R.id.yeast_quantity);
         mCustomNameView = root.findViewById(R.id.custom_malt_layout);
         mDescriptionView = root.findViewById(R.id.description_layout);
 
@@ -71,6 +73,8 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
         mSpinner.setAdapter(mAdapter);
 
         if (mInventoryItem != null) {
+            root.findViewById(R.id.yeast_quantity_layout).setVisibility(View.VISIBLE);
+            mQuantityEdit.setText(Util.fromDouble(mInventoryItem.getCount(), 1));
             TextView title = (TextView) root.findViewById(R.id.yeast_addition_title);
             title.setText(getResources().getString(R.string.inventory_yeast));
             setYeast(mInventoryItem.getYeast());
@@ -105,6 +109,7 @@ public class YeastFragment extends Fragment implements AdapterView.OnItemSelecte
     private void updateInventoryItem() {
         Yeast yeast = mInventoryItem.getYeast();
         getYeastData(yeast);
+        mInventoryItem.setCount(Util.toDouble(mQuantityEdit.getText()));
         mStorage.updateInventoryItem(mInventoryItem);
     }
 

@@ -1,11 +1,9 @@
 package com.brew.brewshop.fragments;
 
-import android.content.Context;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,7 +86,7 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
             TextView title = (TextView) root.findViewById(R.id.malt_addition_title);
             title.setText(getResources().getString(R.string.inventory_malt));
             setMalt(mInventoryItem.getMalt());
-            setWeight(mInventoryItem.getQuantity());
+            setWeight(mInventoryItem.getWeight());
         } else if (mRecipe != null && mMaltIndex >= 0) {
             setMalt(getMaltAddition().getMalt());
             setWeight(getMaltAddition().getWeight());
@@ -122,7 +120,7 @@ public class MaltFragment extends Fragment implements AdapterView.OnItemSelected
 
     private void updateInventoryItem() {
         mInventoryItem.setIngredient(getMaltData());
-        mInventoryItem.setQuantity(getWeightData());
+        mInventoryItem.setWeight(getWeightData());
         mStorage.updateInventoryItem(mInventoryItem);
     }
 

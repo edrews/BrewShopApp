@@ -28,6 +28,6 @@ public class InventoryItemTest extends TestCase {
         InventoryItem itemOut = InventoryItem.CREATOR.createFromParcel(parcel);
         assertEquals(item.getId(), itemOut.getId());
         assertEquals(item.getIngredient().getName(), itemOut.getIngredient().getName());
-        assertEquals(item.getQuantity().getOunces(), itemOut.getQuantity().getOunces());
+        assertEquals(item.getWeight().getOunces(), itemOut.getWeight().getOunces());
     }
 }

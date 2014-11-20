@@ -19,8 +19,8 @@ public class IngredientViewPopulator {
     public void populateMalt(View parent, InventoryItem item) {
         TextView view;
 
-        view = (TextView) parent.findViewById(R.id.weight);
-        view.setText(formatWeight(item.getQuantity(), 2));
+        view = (TextView) parent.findViewById(R.id.quantity);
+        view.setText(formatWeight(item.getWeight(), 2));
 
         view = (TextView) parent.findViewById(R.id.percent);
         view.setVisibility(View.GONE);
@@ -31,7 +31,7 @@ public class IngredientViewPopulator {
     public void populateMalt(View parent, MaltAddition addition, Weight totalMaltWeight) {
         TextView view;
 
-        view = (TextView) parent.findViewById(R.id.weight);
+        view = (TextView) parent.findViewById(R.id.quantity);
         view.setText(formatWeight(addition.getWeight(), 2));
 
         view = (TextView) parent.findViewById(R.id.percent);
@@ -66,7 +66,7 @@ public class IngredientViewPopulator {
     public void populateHops(View parent, HopAddition addition, double ibuContribution) {
         TextView view;
 
-        view = (TextView) parent.findViewById(R.id.weight);
+        view = (TextView) parent.findViewById(R.id.quantity);
         view.setText(formatWeight(addition.getWeight(), 3));
 
         TextView ibuView = (TextView) parent.findViewById(R.id.ibu);
@@ -99,8 +99,8 @@ public class IngredientViewPopulator {
     public void populateHops(View parent, InventoryItem item) {
         TextView view;
 
-        view = (TextView) parent.findViewById(R.id.weight);
-        view.setText(formatWeight(item.getQuantity(), 3));
+        view = (TextView) parent.findViewById(R.id.quantity);
+        view.setText(formatWeight(item.getWeight(), 3));
 
         view = (TextView) parent.findViewById(R.id.ibu);
         view.setVisibility(View.GONE);
@@ -120,6 +120,10 @@ public class IngredientViewPopulator {
 
     public void populateYeast(View parent, InventoryItem item) {
         populateYeast(parent, item.getYeast());
+
+        TextView view;
+        view = (TextView) parent.findViewById(R.id.quantity);
+        view.setText(Util.fromDouble(item.getCount(), 1) + " Pkg.");
     }
 
     public void populateYeast(View parent, Yeast yeast) {
