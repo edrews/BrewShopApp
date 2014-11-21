@@ -6,7 +6,13 @@ import android.os.Parcelable;
 public class Weight implements Parcelable {
     private double ounces;
 
-    public Weight() { }
+    public Weight() {
+        ounces = 0;
+    }
+
+    public Weight(Weight weight) {
+        ounces = weight.getOunces();
+    }
 
     public Weight(double pounds, double ounces) {
         setOunces(pounds * 16 + ounces);
@@ -32,6 +38,14 @@ public class Weight implements Parcelable {
 
     public void add(Weight weight) {
         ounces += weight.getOunces();
+    }
+
+    public void subtract(Weight weight) {
+        ounces -= weight.getOunces();
+    }
+
+    public boolean greaterThan(Weight weight) {
+        return ounces > weight.getOunces();
     }
 
     @Override

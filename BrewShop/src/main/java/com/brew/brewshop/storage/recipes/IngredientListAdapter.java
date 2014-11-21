@@ -19,7 +19,7 @@ public class IngredientListAdapter extends ArrayAdapter<Object> {
         super(context, R.layout.list_item_malt);
         mContext = context;
         mRecipe = recipe;
-        mPopulator = new IngredientViewPopulator();
+        mPopulator = new IngredientViewPopulator(mContext);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class IngredientListAdapter extends ArrayAdapter<Object> {
             mPopulator.populateHops(rowView, addition, mRecipe.getIbuContribution(addition));
         } else if (ingredient instanceof Yeast) {
             rowView = inflater.inflate(R.layout.list_item_yeast, parent, false);
-            mPopulator.populateYeast(rowView, (Yeast) ingredient);
+            mPopulator.populateYeastFromRecipe(rowView, (Yeast) ingredient);
         }
         if (position == mRecipe.getIngredients().size() - 1 && rowView != null) {
             rowView.findViewById(R.id.separator).setVisibility(View.GONE);

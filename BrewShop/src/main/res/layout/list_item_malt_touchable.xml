@@ -24,7 +24,6 @@
                 android:layout_alignParentLeft="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:text="1 lb."
                 android:textColor="@color/text_dark_primary"
                 android:textSize="18sp" />
@@ -32,7 +31,7 @@
             <TextView
                 android:id="@+id/name"
                 android:layout_toRightOf="@id/quantity"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:singleLine="true"
@@ -49,36 +48,34 @@
 
             <TextView
                 android:id="@+id/gravity"
+                style="@style/IngredientDetails"
                 android:layout_alignParentLeft="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:gravity="center_vertical"
-                android:text="1.030"
-                android:textColor="@color/text_dark_secondary"
-                android:textSize="14sp" />
+                android:text="1.030"/>
 
             <TextView
                 android:id="@+id/color"
+                style="@style/IngredientDetails"
                 android:layout_toRightOf="@+id/gravity"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:gravity="center_vertical"
-                android:text="5.5 SRM"
-                android:textColor="@color/text_dark_secondary"
-                android:textSize="14sp" />
+                android:text="5.5 SRM"/>
 
             <TextView
                 android:id="@+id/percent"
+                style="@style/IngredientDetails"
+                android:layout_toRightOf="@+id/color"
+                android:text="10%"/>
+
+            <ImageView
+                android:id="@+id/check"
+                style="@style/CheckMark"
+                android:layout_alignParentRight="true"/>
+
+            <TextView
+                android:id="@+id/inventory_message"
+                style="@style/IngredientDetails"
                 android:layout_alignParentRight="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="(Xlb. Xoz.)"
                 android:layout_marginRight="5dp"
-                android:layout_marginLeft="5dp"
-                android:text="10.0%"
-                android:textColor="@color/text_dark_secondary"
-                android:textSize="14sp" />
+                android:textColor="@color/text_red"/>
 
         </RelativeLayout>
 

@@ -26,7 +26,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_marginLeft="5dp"
                 android:gravity="center_vertical"
                 android:text="2 oz."
                 android:textColor="@color/text_dark_primary"
@@ -34,7 +33,7 @@
 
             <TextView
                 android:id="@+id/name"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/quantity"
@@ -52,26 +51,29 @@
             android:layout_height="wrap_content">
 
             <TextView
+                style="@style/IngredientDetails"
                 android:id="@+id/details"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_marginLeft="5dp"
-                android:layout_toLeftOf="@+id/ibu"
-                android:gravity="center_vertical"
-                android:text="4.2% Alpha"
-                android:textColor="@color/text_dark_secondary"
-                android:textSize="14sp" />
+                android:text="4.2% Alpha"/>
 
             <TextView
+                style="@style/IngredientDetails"
                 android:id="@+id/ibu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/details"
+                android:text="10 IBU"/>
+
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:id="@+id/check"
+                style="@style/CheckMark"/>
+
+            <TextView
+                style="@style/IngredientDetails"
+                android:id="@+id/inventory_message"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="5dp"
-                android:text="10 IBU"
-                android:textColor="@color/text_dark_secondary"
-                android:textSize="14sp" />
+                android:text="(X.X oz.)"
+                android:textColor="@color/text_red"/>
 
         </RelativeLayout>
 

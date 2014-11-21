@@ -28,7 +28,7 @@ public class InventoryAdapter extends BaseAdapter {
         mContext = context;
         mStorage = new BrewStorage(mContext);
         mClass = clazz;
-        mPopulator = new IngredientViewPopulator();
+        mPopulator = new IngredientViewPopulator(context);
         mInventoryList = loadItems();
     }
 
@@ -60,7 +60,7 @@ public class InventoryAdapter extends BaseAdapter {
             mPopulator.populateHops(rowView, item);
         } else if (item.getIngredient() instanceof Yeast) {
             rowView = inflater.inflate(R.layout.list_item_yeast_touchable, parent, false);
-            mPopulator.populateYeast(rowView, item);
+            mPopulator.populateYeastFromInventory(rowView, item);
         }
 
         ListView list = (ListView) parent;
