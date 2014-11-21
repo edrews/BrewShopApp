@@ -20,9 +20,11 @@ public class IngredientViewPopulator {
     private static final double MIN_MALT_WEIGHT = 0.0001; //ounces
 
     private InventoryList mInventory;
+    private boolean mShowInventory;
 
     public IngredientViewPopulator(Context context) {
         mInventory = new BrewStorage(context).retrieveInventory();
+        mShowInventory = true;
     }
 
     public void populateMalt(View parent, InventoryItem item) {
@@ -52,6 +54,10 @@ public class IngredientViewPopulator {
         Weight adjusted = new Weight(inventoryWeight).subtract(accountedFor);
         setInventoryView(parent, adjusted, recipeWeight);
 
+        if (!mShowInventory) {
+            hideInventoryView(parent);
+        }
+
         parent.findViewById(R.id.gravity).setVisibility(View.GONE);
         parent.findViewById(R.id.color).setVisibility(View.GONE);
 
@@ -74,6 +80,10 @@ public class IngredientViewPopulator {
         Weight recipeWeight = addition.getWeight();
         Weight adjusted = new Weight(inventoryWeight).subtract(accountedFor);
         setInventoryView(parent, adjusted, recipeWeight);
+
+        if (!mShowInventory) {
+            hideInventoryView(parent);
+        }
 
         TextView ibuView = (TextView) parent.findViewById(R.id.ibu);
         ibuView.setText("(" + Util.fromDouble(ibuContribution, 1, true) + " IBU)");
@@ -139,6 +149,11 @@ public class IngredientViewPopulator {
         } else {
             check.setVisibility(View.VISIBLE);
         }
+
+        if (!mShowInventory) {
+            hideInventoryView(parent);
+        }
+
         populateYeast(parent, yeast);
     }
 
@@ -158,6 +173,10 @@ public class IngredientViewPopulator {
         } else {
             check.setVisibility(View.VISIBLE);
         }
+    }
+
+    public void showInventory(boolean show) {
+        mShowInventory = show;
     }
 
     private void populateMalt(View parent, Malt malt) {

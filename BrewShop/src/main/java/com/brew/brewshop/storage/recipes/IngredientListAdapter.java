@@ -70,6 +70,10 @@ public class IngredientListAdapter extends BaseAdapter {
         return rowView;
     }
 
+    public void showInventory(boolean show) {
+        mPopulator.showInventory(show);
+    }
+
     private List<Object> getIngredients() {
         return mRecipe.getIngredients();
     }
