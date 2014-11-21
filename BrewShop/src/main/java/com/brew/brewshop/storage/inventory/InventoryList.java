@@ -22,8 +22,7 @@ public class InventoryList extends ArrayList<InventoryItem> {
         InventoryList typeList = getType(clazz);
         for (InventoryItem item : typeList) {
             if (item.getIngredient().getName().equals(name)) {
-                weight = item.getWeight();
-                break;
+                weight.add(item.getWeight());
             }
         }
         return weight;
@@ -34,8 +33,7 @@ public class InventoryList extends ArrayList<InventoryItem> {
         InventoryList typeList = getType(clazz);
         for (InventoryItem item : typeList) {
             if (item.getIngredient().getName().equals(name)) {
-                count = item.getCount();
-                break;
+                count += item.getCount();
             }
         }
         return count;

@@ -2,12 +2,15 @@ package com.brew.brewshop.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import java.math.BigDecimal;
 
 public class Util {
+    private static final String TAG = Util.class.getName();
+
     private static final double MIN_GALLONS = 1.0;
 
     private static int[] SRM_COLORS = new int[] {
@@ -80,10 +83,13 @@ public class Util {
     }
 
     public static double toDouble(CharSequence value) {
-        if (value.length() == 0) {
-            return 0;
+        double converted = 0;
+        try {
+            converted = Double.parseDouble(value.toString());
+        } catch (NumberFormatException e) {
+            Log.d(TAG, "Error converting to double: " + value);
         }
-        return Double.parseDouble(value.toString());
+        return converted;
     }
 
     public static String fromDouble(double d, int precision) {

@@ -36,12 +36,14 @@ public class Weight implements Parcelable {
     public double getPounds() { return ounces / 16;}
     public void setPounds(double value) { ounces = value * 16; }
 
-    public void add(Weight weight) {
+    public Weight add(Weight weight) {
         ounces += weight.getOunces();
+        return this;
     }
 
-    public void subtract(Weight weight) {
+    public Weight subtract(Weight weight) {
         ounces -= weight.getOunces();
+        return this;
     }
 
     public boolean greaterThan(Weight weight) {

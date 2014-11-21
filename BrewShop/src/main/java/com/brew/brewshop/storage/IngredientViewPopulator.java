@@ -43,35 +43,37 @@ public class IngredientViewPopulator {
         populateMalt(parent, item.getMalt());
     }
 
-    public void populateMalt(View parent, MaltAddition addition, Weight totalMaltWeight) {
+    public void populateMalt(View parent, MaltAddition addition, Weight totalMaltWeight, Weight accountedFor) {
         TextView view = (TextView) parent.findViewById(R.id.quantity);
         view.setText(formatWeight(addition.getWeight(), 2));
 
         Weight inventoryWeight = mInventory.getItemWeight(Malt.class, addition.getMalt().getName());
         Weight recipeWeight = addition.getWeight();
-        setInventoryView(parent, inventoryWeight, recipeWeight);
+        Weight adjusted = new Weight(inventoryWeight).subtract(accountedFor);
+        setInventoryView(parent, adjusted, recipeWeight);
 
         parent.findViewById(R.id.gravity).setVisibility(View.GONE);
         parent.findViewById(R.id.color).setVisibility(View.GONE);
 
         view = (TextView) parent.findViewById(R.id.percent);
-        if (totalMaltWeight.getOunces() < MIN_MALT_WEIGHT) {
-            view.setText("0%");
-        } else {
-            double percent = 100 * addition.getWeight().getOunces() / totalMaltWeight.getOunces();
-            view.setText(Util.fromDouble(percent, 1, true) + "% of grist");
+        double total = totalMaltWeight.getOunces();
+        if (total < MIN_MALT_WEIGHT) {
+            total = MIN_MALT_WEIGHT;
         }
+        double percent = 100 * addition.getWeight().getOunces() / total;
+        view.setText(Util.fromDouble(percent, 1, true) + "% of grist");
 
         populateMalt(parent, addition.getMalt());
     }
 
-    public void populateHops(View parent, HopAddition addition, double ibuContribution) {
+    public void populateHops(View parent, HopAddition addition, double ibuContribution, Weight accountedFor) {
         TextView view = (TextView) parent.findViewById(R.id.quantity);
         view.setText(formatWeight(addition.getWeight(), 3));
 
         Weight inventoryWeight = mInventory.getItemWeight(Hop.class, addition.getHop().getName());
         Weight recipeWeight = addition.getWeight();
-        setInventoryView(parent, inventoryWeight, recipeWeight);
+        Weight adjusted = new Weight(inventoryWeight).subtract(accountedFor);
+        setInventoryView(parent, adjusted, recipeWeight);
 
         TextView ibuView = (TextView) parent.findViewById(R.id.ibu);
         ibuView.setText("(" + Util.fromDouble(ibuContribution, 1, true) + " IBU)");
@@ -122,33 +124,36 @@ public class IngredientViewPopulator {
         view.setText(Util.fromDouble(item.getCount(), 1) + " Pkg.");
     }
 
-    public void populateYeastFromRecipe(View parent, Yeast yeast) {
+    public void populateYeastFromRecipe(View parent, Yeast yeast, int packsAccountedFor) {
         TextView view = (TextView) parent.findViewById(R.id.inventory_message);
         view.setVisibility(View.GONE);
         ImageView check = (ImageView) parent.findViewById(R.id.check);
         check.setVisibility(View.GONE);
-        check.setAlpha(0.5f);
-        double count = mInventory.getItemCount(Yeast.class, yeast.getName());
-        if (count < 1) {
+
+        double inInventory = mInventory.getItemCount(Yeast.class, yeast.getName());
+        inInventory -= packsAccountedFor;
+        if (inInventory < 0) inInventory = 0;
+        if (inInventory < 1) {
             view.setVisibility(View.VISIBLE);
-            view.setText("(1 Pkg.)");
+            view.setText("(" + Util.fromDouble(1 - inInventory, 1) + " Pkg.)");
         } else {
             check.setVisibility(View.VISIBLE);
         }
         populateYeast(parent, yeast);
     }
 
-    private void setInventoryView(View parent, Weight inventoryWeight, Weight recipeWeight) {
+    private void setInventoryView(View parent, Weight adjustedInventoryWeight, Weight recipeWeight) {
         TextView textView = (TextView) parent.findViewById(R.id.inventory_message);
         textView.setVisibility(View.GONE);
         ImageView check = (ImageView) parent.findViewById(R.id.check);
         check.setVisibility(View.GONE);
-        check.setAlpha(0.5f);
 
-        if (recipeWeight.greaterThan(inventoryWeight)) {
+        if (recipeWeight.greaterThan(adjustedInventoryWeight)) {
             textView.setVisibility(View.VISIBLE);
             Weight difference = new Weight(recipeWeight);
-            difference.subtract(inventoryWeight);
+            if (adjustedInventoryWeight.greaterThan(new Weight())) { // > 0
+                difference.subtract(adjustedInventoryWeight);
+            }
             textView.setText("(" + formatWeight(difference, 2) + ")");
         } else {
             check.setVisibility(View.VISIBLE);
