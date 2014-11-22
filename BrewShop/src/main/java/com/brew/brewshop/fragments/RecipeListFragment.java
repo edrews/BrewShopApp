@@ -3,10 +3,19 @@ package com.brew.brewshop.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.support.v7.view.ActionMode;
@@ -25,11 +34,15 @@ import com.brew.brewshop.R;
 import com.brew.brewshop.ViewClickListener;
 import com.brew.brewshop.fragments.com.brew.brewshop.fragments.NewRecipeAdapter;
 import com.brew.brewshop.storage.BrewStorage;
-import com.brew.brewshop.storage.recipes.HopAddition;
-import com.brew.brewshop.storage.recipes.MaltAddition;
 import com.brew.brewshop.storage.recipes.Recipe;
-import com.brew.brewshop.storage.recipes.Yeast;
+import com.brew.brewshop.xml.BeerXML;
+import com.brew.brewshop.xml.ParseXML;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,6 +57,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
     private static final String ACTION_MODE = "ActionMode";
     private static final String SELECTED_INDEXES = "Selected";
     private static final String SHOWING_ID = "ShowingId";
+    private static final int READ_REQUEST_CODE = 1;
 
     private BrewStorage mStorage;
     private FragmentHandler mViewSwitcher;
@@ -323,7 +337,63 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
             mRecipeView.drawRecipeList();
             showRecipe(recipe);
         } else if (findString(R.string.open).equals(type)) {
-            // TODO: Add open file stuff here
+            // Use the system file chooser only showing XML files we can open
+            Intent fileIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            fileIntent.addCategory(Intent.CATEGORY_OPENABLE);
+            fileIntent.setType("application/xml");
+            fileIntent.setType("text/xml");
+            startActivityForResult(fileIntent, READ_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            // We got a file. Open it for parsing.
+            Uri recipeUri = null;
+
+            if (resultData != null) {
+                recipeUri = resultData.getData();
+                Recipe[] recipes = null;
+                try {
+                    InputStream recipeStream =
+                            getActivity().getContentResolver().openInputStream(recipeUri);
+
+                    byte[] buffer = new byte[100];
+                    String type = null;
+
+                    try {
+                        recipeStream.read(buffer);
+                        type = ParseXML.checkRecipeType(new String(buffer));
+                        recipeStream.close();
+                    } catch (IOException ioe) {
+                        Log.e("BrewShop", "Couldn't check file type");
+                        return;
+                    }
+
+                    if (type == null) {
+                        return;
+                    }
+                    recipeStream =
+                            getActivity().getContentResolver().openInputStream(recipeUri);
+                    recipes = ParseXML.readRecipe(recipeStream, type);
+                } catch (FileNotFoundException fnfe) {
+                    // Shouldn't happen
+                    Log.e("BrewShop", "Couldn't find file: " + fnfe.getMessage(), fnfe);
+                    return;
+                }
+
+                if (recipes != null && recipes.length > 0) {
+                    for (Recipe recipe: recipes) {
+                        mStorage.createRecipe(recipe);
+                    }
+                    mRecipeView.drawRecipeList();
+
+                    if (recipes.length == 1) {
+                        showRecipe(recipes[0]);
+                    }
+                }
+            }
         }
     }
 }
