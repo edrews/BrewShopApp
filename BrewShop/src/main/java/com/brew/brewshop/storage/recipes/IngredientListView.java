@@ -42,6 +42,10 @@ public class IngredientListView {
         }
     }
 
+    public IngredientListAdapter getAdapter() {
+        return mIngredientAdapter;
+    }
+
     public boolean areAllSelected() {
         return (mRecipe.getIngredients().size() == getSelectedCount());
     }

@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,7 +26,6 @@ import com.brew.brewshop.R;
 import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.inventory.InventoryAdapter;
 import com.brew.brewshop.storage.inventory.InventoryItem;
-import com.brew.brewshop.storage.inventory.InventoryList;
 import com.brew.brewshop.storage.recipes.Hop;
 import com.brew.brewshop.storage.recipes.Malt;
 import com.brew.brewshop.storage.recipes.Yeast;
@@ -44,6 +42,8 @@ public class InventoryFragment extends Fragment implements DialogInterface.OnCli
     @SuppressWarnings("unused")
     private static final String TAG = InventoryFragment.class.getName();
     private static final String ACTION_MODE = "ActionMode";
+    private static final String SHOWING_ID = "ShowingId";
+
     private static final String TAB_TAG = "TabTag";
 
     private static final String MALT_TAG = "Malt";
@@ -56,9 +56,10 @@ public class InventoryFragment extends Fragment implements DialogInterface.OnCli
     private ListView mMaltList;
     private ListView mHopsList;
     private ListView mYeastList;
-    private InventoryList mInventoryList;
     private TabHost mTabHost;
     private TextView mMessageView;
+    private int mSelectedId;
+    private boolean mCreatingItem;
 
     public InventoryFragment() {
         setArguments(new Bundle());
@@ -73,7 +74,6 @@ public class InventoryFragment extends Fragment implements DialogInterface.OnCli
         mMessageView = (TextView) root.findViewById(R.id.inventory_message_view);
 
         mStorage = new BrewStorage(getActivity());
-        mInventoryList = mStorage.retrieveInventory();
 
         InventoryAdapter maltAdapter = new InventoryAdapter(getActivity(), Malt.class);
         mMaltList.setAdapter(maltAdapter);
@@ -110,9 +110,13 @@ public class InventoryFragment extends Fragment implements DialogInterface.OnCli
         mTabHost.addTab(yeastSpec);
 
         setHasOptionsMenu(true);
-        mFragmentHandler.setTitle(findString(R.string.inventory));
+        mFragmentHandler.setTitle(getTitle());
         onRestoreInstanceState(state);
         return root;
+    }
+
+    public String getTitle() {
+        return getActivity().getResources().getString(R.string.inventory);
     }
 
     @Override
@@ -143,9 +147,35 @@ public class InventoryFragment extends Fragment implements DialogInterface.OnCli
             state = new Bundle();
         }
         state.putBoolean(ACTION_MODE, mActionMode != null);
+        state.putInt(SHOWING_ID, mSelectedId);
         if (mTabHost != null) {
             state.putString(TAB_TAG, mTabHost.getCurrentTabTag());
         }
+    }
+
+    private void setSelectedId(int id) {
+        mSelectedId = id;
+        ((InventoryAdapter) mMaltList.getAdapter()).setSelectedId(id);
+        ((InventoryAdapter) mHopsList.getAdapter()).setSelectedId(id);
+        ((InventoryAdapter) mYeastList.getAdapter()).setSelectedId(id);
+        notifyDataSetChanged();
+    }
+
+    public void onEditComplete() {
+        setSelectedId(-1);
+    }
+
+    public void onEditVisible(int id) {
+        mCreatingItem = false;
+        invalidateOptionsMenu();
+        setSelectedId(id);
+    }
+
+    private void notifyDataSetChanged() {
+        ((InventoryAdapter) mMaltList.getAdapter()).notifyDataSetChanged();
+        ((InventoryAdapter) mHopsList.getAdapter()).notifyDataSetChanged();
+        ((InventoryAdapter) mYeastList.getAdapter()).notifyDataSetChanged();
+        checkShowMessage();
     }
 
     private void onRestoreInstanceState(Bundle bundle) {
@@ -164,6 +194,7 @@ public class InventoryFragment extends Fragment implements DialogInterface.OnCli
         if (tag != null) {
             mTabHost.setCurrentTabByTag(tag);
         }
+        setSelectedId(bundle.getInt(SHOWING_ID, -1));
     }
 
     private void checkShowMessage() {
@@ -200,7 +231,7 @@ public class InventoryFragment extends Fragment implements DialogInterface.OnCli
     }
 
     public boolean canAddItem() {
-        return mInventoryList.size() < getResources().getInteger(R.integer.max_inventory);
+        return mStorage.retrieveInventory().size() < getResources().getInteger(R.integer.max_inventory);
     }
 
     @Override
@@ -222,25 +253,20 @@ public class InventoryFragment extends Fragment implements DialogInterface.OnCli
     }
 
     private void showNewItem() {
+        mCreatingItem = true;
+        invalidateOptionsMenu();
+
         String tag = mTabHost.getCurrentTabTag();
+        InventoryItem item = null;
         if (tag.equals(MALT_TAG)) {
-            InventoryItem item = new InventoryItem(new Malt());
-            mStorage.createInventoryItem(item);
-            Log.d(TAG, "Creating item id: " + item.getId());
-            mFragmentHandler.showMaltEditor(item);
+            item = new InventoryItem(new Malt(getResources().getString(R.string.new_malt)));
         } else if (tag.equals(HOPS_TAG)) {
-            InventoryItem item = new InventoryItem(new Hop());
-            mStorage.createInventoryItem(item);
-            Log.d(TAG, "Creating item id: " + item.getId());
-
-            mFragmentHandler.showHopsEditor(item);
+            item = new InventoryItem(new Hop(getResources().getString(R.string.new_hops), 5));
         } else if (tag.equals(YEAST_TAG)) {
-            InventoryItem item = new InventoryItem(new Yeast());
-            mStorage.createInventoryItem(item);
-            Log.d(TAG, "Creating item id: " + item.getId());
-
-            mFragmentHandler.showYeastEditor(item);
+            item = new InventoryItem(new Yeast(getResources().getString(R.string.new_yeast), 75));
         }
+        mStorage.createInventoryItem(item);
+        editItem(item);
     }
 
     private void onInventoryItemClicked(ListView view, int position) {
@@ -250,9 +276,16 @@ public class InventoryFragment extends Fragment implements DialogInterface.OnCli
             }
             updateActionBar();
         } else {
-            InventoryItem ingredient = (InventoryItem) view.getItemAtPosition(position);
-            editIngredient(ingredient);
+            InventoryItem item = (InventoryItem) view.getItemAtPosition(position);
+            if (item.getId() != mSelectedId) {
+                editItem(item);
+            }
         }
+    }
+
+    private void editItem(InventoryItem item) {
+        setSelectedId(item.getId());
+        mFragmentHandler.showInventoryItem(item);
     }
 
     private int getCheckedItemCount(ListView view) {
@@ -288,6 +321,12 @@ public class InventoryFragment extends Fragment implements DialogInterface.OnCli
         mActionMode.getMenu().findItem(R.id.action_delete).setVisible(itemsChecked);
         mActionMode.getMenu().findItem(R.id.action_select_all).setVisible(!areAllSelected());
         return true;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.action_new_item);
+        item.setEnabled(!mCreatingItem);
     }
 
     private boolean areAllSelected() {
@@ -383,8 +422,11 @@ public class InventoryFragment extends Fragment implements DialogInterface.OnCli
         for (InventoryItem item : items) {
             mStorage.deleteInventoryItem(item);
             deleted++;
+            if (item.getId() == mSelectedId) {
+                mFragmentHandler.showInventoryItem(null);
+            }
         }
-        mInventoryList = mStorage.retrieveInventory();
+        notifyDataSetChanged();
         return deleted;
     }
 
@@ -394,18 +436,12 @@ public class InventoryFragment extends Fragment implements DialogInterface.OnCli
         }
     }
 
-    private void startActionMode() {
-        ((ActionBarActivity) getActivity()).startSupportActionMode(this);
+    private void invalidateOptionsMenu() {
+        ((ActionBarActivity) getActivity()).invalidateOptionsMenu();
     }
 
-    private void editIngredient(InventoryItem item) {
-        if (item.getIngredient() instanceof Malt) {
-            mFragmentHandler.showMaltEditor(item);
-        } else if (item.getIngredient() instanceof Hop) {
-            mFragmentHandler.showHopsEditor(item);
-        } else if (item.getIngredient() instanceof Yeast) {
-            mFragmentHandler.showYeastEditor(item);
-        }
+    private void startActionMode() {
+        ((ActionBarActivity) getActivity()).startSupportActionMode(this);
     }
 
     private String findString(int id) {

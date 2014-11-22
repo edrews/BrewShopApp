@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -51,6 +52,8 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
     private static final String UNIT_MINUTES = " min";
     private static final String UNIT_PERCENT = "%";
 
+    private static final String SHOW_INVENTORY_PREF = "ShowInventory";
+
     private Recipe mRecipe;
     private BrewStorage mStorage;
     private FragmentHandler mFragmentHandler;
@@ -58,6 +61,7 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
     private ActionMode mActionMode;
     private IngredientListView mIngredientView;
     private View mRootView;
+    private ImageView mShowInventory;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
@@ -164,8 +168,15 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
             textView.setText(abv + UNIT_PERCENT);
         }
 
+        SharedPreferences prefs = getActivity().getSharedPreferences("prefs", 0);
+        boolean showInventory = prefs.getBoolean(SHOW_INVENTORY_PREF, true);
+
         mIngredientView = new IngredientListView(getActivity(), root, mRecipe, this);
+        mIngredientView.getAdapter().showInventory(showInventory);
         mIngredientView.drawList();
+
+        mShowInventory = (ImageView) root.findViewById(R.id.show_inventory);
+        mShowInventory.setOnClickListener(this);
 
         textView = (TextView) root.findViewById(R.id.recipe_notes);
         textView.setText(mRecipe.getNotes());
@@ -218,6 +229,9 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
                 break;
             case R.id.new_ingredient_view:
                 addNewIngredient();
+                break;
+            case R.id.show_inventory:
+                showHideInventory();
                 break;
         }
 
@@ -343,6 +357,17 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
         mActionMode.finish();
         updateStats();
         toastDeleted(deleted);
+    }
+
+    private void showHideInventory() {
+        SharedPreferences prefs = getActivity().getSharedPreferences("prefs", 0);
+        boolean showInventory = !prefs.getBoolean(SHOW_INVENTORY_PREF, false);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(SHOW_INVENTORY_PREF, showInventory);
+        editor.commit();
+
+        mIngredientView.getAdapter().showInventory(showInventory);
+        mIngredientView.drawList();
     }
 
     private void checkResumeActionMode(Bundle bundle) {

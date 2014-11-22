@@ -12,10 +12,18 @@ public class Malt implements Ingredient {
     private boolean mashed;
 
     public Malt() {
-        name = "Malt";
-        gravity = 1;
-        color = 0;
-        mashed = true;
+        this("");
+    }
+
+    public Malt(String name) {
+        this(name, 1, 0, true);
+    }
+
+    public Malt(String name, double gravity, double color, boolean mashed) {
+        this.name = name;
+        this.gravity = gravity;
+        this.color = color;
+        this.mashed = mashed;
     }
 
     public Malt(Parcel parcel) {

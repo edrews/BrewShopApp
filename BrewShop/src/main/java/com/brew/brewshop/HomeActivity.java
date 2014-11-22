@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,7 +31,10 @@ import com.brew.brewshop.navigation.NavItemFactory;
 import com.brew.brewshop.navigation.NavSelectionHandler;
 import com.brew.brewshop.storage.ProductType;
 import com.brew.brewshop.storage.inventory.InventoryItem;
+import com.brew.brewshop.storage.recipes.Hop;
 import com.brew.brewshop.storage.recipes.HopAddition;
+import com.brew.brewshop.storage.recipes.Ingredient;
+import com.brew.brewshop.storage.recipes.Malt;
 import com.brew.brewshop.storage.recipes.MaltAddition;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.storage.recipes.Yeast;
@@ -44,13 +48,16 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
 
     private static final String TAG = HomeActivity.class.getName();
     private static final String CURRENT_RECIPE = "Recipe";
+    private static final String CURRENT_INVENTORY_ITEM = "InventoryItem";
     private static final String RECIPE_LIST_FRAGMENT_TAG = "RecipeListFragment";
     private static final String RECIPE_FRAGMENT_TAG = "RecipeFragment";
     private static final String RECIPE_EDIT_FRAGMENT_TAG = "RecipeEditFragment";
+    private static final String INVENTORY_LIST_FRAGMENT_TAG = "InventoryListFragment";
     private static final String INVENTORY_EDIT_FRAGMENT_TAG = "InventoryEditFragment";
 
     private NavDrawer mNavDrawer;
     private Recipe mCurrentRecipe;
+    private InventoryItem mCurrentInventoryItem;
     private TextView mMessageView;
 
     @Override
@@ -76,6 +83,7 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
             }
         } else {
             mCurrentRecipe = bundle.getParcelable(CURRENT_RECIPE);
+            mCurrentInventoryItem = bundle.getParcelable(CURRENT_INVENTORY_ITEM);
         }
 
         updateMessageView();
@@ -121,6 +129,7 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
             state = new Bundle();
         }
         state.putParcelable(CURRENT_RECIPE, mCurrentRecipe);
+        state.putParcelable(CURRENT_INVENTORY_ITEM, mCurrentInventoryItem);
     }
 
     @Override
@@ -196,6 +205,31 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
         }
     }
 
+    public void showInventoryItem(InventoryItem item) {
+        clearBackStack();
+        mCurrentInventoryItem = item;
+        if (item == null) {
+            showMessage(View.VISIBLE);
+        } else {
+            Ingredient ingredient = item.getIngredient();
+            if (ingredient instanceof Malt) {
+                MaltFragment fragment = new MaltFragment();
+                fragment.setInventoryItem(item);
+                slideTransition(fragment, INVENTORY_EDIT_FRAGMENT_TAG);
+            } else if (ingredient instanceof Hop) {
+                HopsFragment fragment = new HopsFragment();
+                fragment.setInventoryItem(item);
+                slideTransition(fragment, INVENTORY_EDIT_FRAGMENT_TAG);
+            } else if (ingredient instanceof Yeast) {
+                YeastFragment fragment = new YeastFragment();
+                fragment.setInventoryItem(item);
+                slideTransition(fragment, INVENTORY_EDIT_FRAGMENT_TAG);
+            } else {
+                throw new RuntimeException("No editor available for inventory item");
+            }
+        }
+    }
+
     private void showRecipeFragment(Recipe recipe) {
         RecipeFragment fragment = new RecipeFragment();
         fragment.setRecipe(recipe);
@@ -216,15 +250,26 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
     public void showRecipeStatsEditor(Recipe recipe) {
         RecipeStatsFragment fragment = new RecipeStatsFragment();
         fragment.setRecipe(recipe);
-        transitionTo(fragment, RECIPE_EDIT_FRAGMENT_TAG);
+        fadeTransition(fragment, RECIPE_EDIT_FRAGMENT_TAG);
     }
 
     public void showMessage(int visibility) {
+        getMessageView();
+        if (mMessageView != null) {
+            mMessageView.setVisibility(visibility);
+        }
+    }
+
+    private void getMessageView() {
         if (mMessageView == null) {
             mMessageView = (TextView) findViewById(android.R.id.content).findViewById(R.id.message_view);
         }
+    }
+
+    private void setMessage(int id) {
+        getMessageView();
         if (mMessageView != null) {
-            mMessageView.setVisibility(visibility);
+            mMessageView.setText(getResources().getString(id));
         }
     }
 
@@ -232,7 +277,7 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
     public void showRecipeNotesEditor(Recipe recipe) {
         RecipeNotesFragment fragment = new RecipeNotesFragment();
         fragment.setRecipe(recipe);
-        transitionTo(fragment, RECIPE_EDIT_FRAGMENT_TAG);
+        fadeTransition(fragment, RECIPE_EDIT_FRAGMENT_TAG);
     }
 
     @Override
@@ -240,7 +285,7 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
         MaltFragment fragment = new MaltFragment();
         fragment.setRecipe(recipe);
         fragment.setMaltIndex(recipe.getMalts().indexOf(addition));
-        transitionTo(fragment, RECIPE_EDIT_FRAGMENT_TAG);
+        fadeTransition(fragment, RECIPE_EDIT_FRAGMENT_TAG);
     }
 
     @Override
@@ -248,7 +293,7 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
         HopsFragment fragment = new HopsFragment();
         fragment.setRecipe(recipe);
         fragment.setHopIndex(recipe.getHops().indexOf(addition));
-        transitionTo(fragment, RECIPE_EDIT_FRAGMENT_TAG);
+        fadeTransition(fragment, RECIPE_EDIT_FRAGMENT_TAG);
     }
 
     @Override
@@ -256,28 +301,7 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
         YeastFragment fragment = new YeastFragment();
         fragment.setRecipe(recipe);
         fragment.setYeastIndex(recipe.getYeast().indexOf(yeast));
-        transitionTo(fragment, RECIPE_EDIT_FRAGMENT_TAG);
-    }
-
-    @Override
-    public void showMaltEditor(InventoryItem item) {
-        MaltFragment fragment = new MaltFragment();
-        fragment.setInventoryItem(item);
-        transitionTo(fragment, INVENTORY_EDIT_FRAGMENT_TAG);
-    }
-
-    @Override
-    public void showHopsEditor(InventoryItem item) {
-        HopsFragment fragment = new HopsFragment();
-        fragment.setInventoryItem(item);
-        transitionTo(fragment, INVENTORY_EDIT_FRAGMENT_TAG);
-    }
-
-    @Override
-    public void showYeastEditor(InventoryItem item) {
-        YeastFragment fragment = new YeastFragment();
-        fragment.setInventoryItem(item);
-        transitionTo(fragment, INVENTORY_EDIT_FRAGMENT_TAG);
+        fadeTransition(fragment, RECIPE_EDIT_FRAGMENT_TAG);
     }
 
     @Override
@@ -292,7 +316,7 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
                 .commit();
     }
 
-    private void transitionTo(Fragment fragment, String tag) {
+    private void fadeTransition(Fragment fragment, String tag) {
         FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
         if (!isMultiFrame()) {
             trans.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
@@ -303,8 +327,22 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
                 .commit();
     }
 
+    private void slideTransition(Fragment fragment, String tag) {
+        FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
+        if (isMultiFrame()) {
+            trans.setCustomAnimations(R.anim.slide_in_left, R.anim.fade_out_fast, R.anim.slide_in_left, R.anim.fade_out_fast);
+        } else {
+            trans.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
+        }
+        trans.replace(getDetailFrame(), fragment, tag)
+                .addToBackStack(null)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN | FragmentTransaction.TRANSIT_ENTER_MASK)
+                .commit();
+    }
+
     @Override
     public void showRecipeManager() {
+        setMessage(R.string.select_a_recipe);
         Fragment recipeListFragment = new RecipeListFragment();
         getSupportFragmentManager()
                 .beginTransaction()
@@ -313,10 +351,11 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
     }
 
     public void showInventoryManager() {
+        setMessage(R.string.select_an_item);
         Fragment fragment = new InventoryFragment();
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, fragment)
+                .replace(R.id.content_frame, fragment, INVENTORY_LIST_FRAGMENT_TAG)
                 .commit();
     }
 
@@ -336,6 +375,10 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
     private void clearBackStack() {
         FragmentManager manager = getSupportFragmentManager();
 
+        Fragment itemEditFragment = manager.findFragmentByTag(INVENTORY_EDIT_FRAGMENT_TAG);
+        if (itemEditFragment != null) {
+            removeFragment(manager, itemEditFragment);
+        }
         Fragment editFragment = manager.findFragmentByTag(RECIPE_EDIT_FRAGMENT_TAG);
         if (editFragment != null) {
             removeFragment(manager, editFragment);
@@ -359,6 +402,7 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
     @Override
     public void onBackStackChanged() {
         notifyRecipeManager();
+        notifyInventoryManager();
         updateHomeIndicator();
         updateMessageView();
     }
@@ -372,6 +416,12 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
             RecipeListFragment recipeListFragment = (RecipeListFragment) manager.findFragmentByTag(RECIPE_LIST_FRAGMENT_TAG);
             if (recipeListFragment != null) {
                 setTitle(recipeListFragment.getTitle());
+                setMessage(R.string.select_a_recipe);
+            }
+            InventoryFragment inventoryFragment = (InventoryFragment) manager.findFragmentByTag(INVENTORY_LIST_FRAGMENT_TAG);
+            if (inventoryFragment != null) {
+                setTitle(inventoryFragment.getTitle());
+                setMessage(R.string.select_an_item);
             }
         }
     }
@@ -391,6 +441,18 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
             }
         }
     }
+
+    private void notifyInventoryManager() {
+        FragmentManager manager = getSupportFragmentManager();
+        InventoryFragment fragment = (InventoryFragment) manager.findFragmentByTag(INVENTORY_LIST_FRAGMENT_TAG);
+        if (fragment != null) {
+            if (manager.getBackStackEntryCount() > 0) {
+                fragment.onEditVisible(mCurrentInventoryItem.getId());
+            } else if (manager.getBackStackEntryCount() == 0) {
+                fragment.onEditComplete();
+            }
+        }
+     }
 
     private void updateHomeIndicator() {
         ActionBar bar = getSupportActionBar();

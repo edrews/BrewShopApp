@@ -80,8 +80,8 @@
 
     <style name="RecipeIngredient">
         <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">56dp</item>
-        <item name="android:padding">4dp</item>
+        <item name="android:layout_height">54dp</item>
+        <item name="android:padding">2dp</item>
         <item name="android:textColor">@color/text_dark_primary</item>
     </style>
 
@@ -135,13 +135,16 @@
     </style>
 
     <style name="IngredientIcon">
-        <item name="android:layout_width">40dp</item>
-        <item name="android:layout_height">40dp</item>
-        <item name="android:layout_margin">5dp</item>
+        <item name="android:layout_width">42dp</item>
+        <item name="android:layout_height">42dp</item>
+        <item name="android:layout_marginLeft">3dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:layout_marginBottom">3dp</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">#d0ffffff</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">22sp</item>
     </style>
 
     <style name="VerticalSeparator">
@@ -162,5 +165,26 @@
     <style name="MySpinner">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">48dp</item>
+    </style>
+
+    <style name="CheckMark">
+        <item name="android:layout_width">16dp</item>
+        <item name="android:layout_height">16dp</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:background">@drawable/green_check</item>
+        <item name="android:layout_alignParentRight">true</item>
+    </style>
+
+    <style name="IngredientDetails">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
+        <item name="android:layout_marginRight">2dp</item>
+        <item name="android:layout_marginLeft">1dp</item>
+        <item name="android:textColor">@color/text_dark_secondary</item>
+        <item name="android:textSize">14sp</item>
     </style>
 </resources>

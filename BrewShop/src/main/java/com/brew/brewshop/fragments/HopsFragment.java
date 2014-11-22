@@ -24,13 +24,9 @@ import com.brew.brewshop.storage.inventory.InventoryItem;
 import com.brew.brewshop.storage.recipes.Hop;
 import com.brew.brewshop.storage.recipes.HopAddition;
 import com.brew.brewshop.storage.recipes.HopUsage;
-import com.brew.brewshop.storage.recipes.Malt;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.storage.recipes.Weight;
 import com.brew.brewshop.util.Util;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class HopsFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     @SuppressWarnings("unused")
@@ -105,7 +101,7 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
             mDryHopView.setVisibility(View.GONE);
             mBoilTimeView.setVisibility(View.GONE);
             setHop(mInventoryItem.getHop());
-            setWeight(mInventoryItem.getQuantity());
+            setWeight(mInventoryItem.getWeight());
         } else if (mRecipe != null && mHopIndex >= 0) {
             HopAddition addition = getHopAddition();
             setHop(addition.getHop());
@@ -148,7 +144,7 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
 
     private void updateInventoryItem() {
         mInventoryItem.setIngredient(getHopData());
-        mInventoryItem.setQuantity(getWeightData());
+        mInventoryItem.setWeight(getWeightData());
         mStorage.updateInventoryItem(mInventoryItem);
     }
 

@@ -6,11 +6,6 @@ import junit.framework.TestCase;
 public class UtilTest extends TestCase {
     private static final String TAG = UtilTest.class.getName();
 
-    @Override
-    public void setUp() {
-
-    }
-
     public void testGetHopUtilization() {
         double util;
         util = Util.calculateHopUtilization(60, 1);

@@ -9,7 +9,13 @@ public class Weight implements Parcelable {
     private double ounces;
     private Quantity quantity;
 
-    public Weight() { }
+    public Weight() {
+        ounces = 0;
+    }
+
+    public Weight(Weight weight) {
+        ounces = weight.getOunces();
+    }
 
     public Weight(double pounds, double ounces) {
         setOunces(pounds * 16 + ounces);
@@ -33,8 +39,18 @@ public class Weight implements Parcelable {
     public double getPounds() { return ounces / 16;}
     public void setPounds(double value) { ounces = value * 16; }
 
-    public void add(Weight weight) {
+    public Weight add(Weight weight) {
         ounces += weight.getOunces();
+        return this;
+    }
+
+    public Weight subtract(Weight weight) {
+        ounces -= weight.getOunces();
+        return this;
+    }
+
+    public boolean greaterThan(Weight weight) {
+        return ounces > weight.getOunces();
     }
 
     @Override

@@ -16,21 +16,31 @@ public class InventoryItem implements Storeable {
     private Hop hop;
     private Yeast yeast;
     private Weight quantity;
+    private double count;
 
     @SuppressWarnings("unused")
     public InventoryItem() { }
+
+    public InventoryItem(int id, Ingredient item, Weight weight) {
+        this.id = id;
+        setIngredient(item);
+        this.quantity = weight;
+        count = 1;
+    }
 
     public InventoryItem(Ingredient item) {
         this.id = -1;
         this.quantity = new Weight(0, 0);
         setIngredient(item);
+        this.count = 1;
     }
 
     public InventoryItem(Parcel parcel) {
         id = parcel.readInt();
-        Ingredient item =  parcel.readParcelable(null);
+        Ingredient item =  parcel.readParcelable(getClass().getClassLoader());
         setIngredient(item);
-        quantity = parcel.readParcelable(Weight.class.getClassLoader());
+        quantity = parcel.readParcelable(getClass().getClassLoader());
+        count = parcel.readDouble();
     }
 
     @Override
@@ -48,6 +58,7 @@ public class InventoryItem implements Storeable {
         parcel.writeInt(id);
         parcel.writeParcelable(getIngredient(), 0);
         parcel.writeParcelable(quantity, 0);
+        parcel.writeDouble(count);
     }
 
     @Override
@@ -88,8 +99,11 @@ public class InventoryItem implements Storeable {
         return yeast;
     }
 
-    public void setQuantity(Weight value) { quantity = value; }
-    public Weight getQuantity() { return quantity; }
+    public void setWeight(Weight value) { quantity = value; }
+    public Weight getWeight() { return quantity; }
+
+    public void setCount(double value) { count = value; }
+    public double getCount() { return count; }
 
     public static final Parcelable.Creator<InventoryItem> CREATOR = new Parcelable.Creator<InventoryItem>() {
         public InventoryItem createFromParcel(Parcel in) {

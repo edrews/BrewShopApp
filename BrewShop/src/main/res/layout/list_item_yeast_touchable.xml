@@ -21,10 +21,9 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/weight"
+                android:id="@+id/quantity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:gravity="center_vertical"
                 android:textColor="@color/text_dark_primary"
                 android:text="1 Pkg."
@@ -44,23 +43,30 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/attenuation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:gravity="center_vertical"
-                android:textColor="@color/text_dark_secondary"
-                android:text="~80% Attenuation"
-                android:textSize="14sp" />
+                style="@style/IngredientDetails"
+                android:layout_alignParentLeft="true"
+                android:text="~80% Attenuation"/>
 
-        </LinearLayout>
+            <ImageView
+                android:id="@+id/check"
+                android:layout_alignParentRight="true"
+                style="@style/CheckMark"/>
+
+            <TextView
+                android:id="@+id/inventory_message"
+                style="@style/IngredientDetails"
+                android:layout_marginRight="5dp"
+                android:layout_alignParentRight="true"
+                android:text="(X Pkg.)"
+                android:textColor="@color/text_red"/>
+
+        </RelativeLayout>
 
     </LinearLayout>
-
 </LinearLayout>

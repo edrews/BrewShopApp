@@ -10,8 +10,12 @@ public class Hop implements Ingredient {
     private double percentAlpha;
 
     public Hop() {
-        name = "";
-        percentAlpha = 0;
+        this("", 0);
+    }
+
+    public Hop(String name, double percentAlpha) {
+        this.name = name;
+        this.percentAlpha = percentAlpha;
     }
 
     public Hop(Parcel parcel) {

@@ -1,12 +1,11 @@
 package com.brew.brewshop.storage.inventory;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 
 import com.brew.brewshop.R;
 import com.brew.brewshop.storage.BrewStorage;
@@ -22,27 +21,30 @@ public class InventoryAdapter extends BaseAdapter {
     private BrewStorage mStorage;
     private Class mClass;
     private IngredientViewPopulator mPopulator;
+    private int mSelectedId;
+    private InventoryList mInventoryList;
 
     public InventoryAdapter(Context context, Class clazz) {
         mContext = context;
         mStorage = new BrewStorage(mContext);
         mClass = clazz;
-        mPopulator = new IngredientViewPopulator();
+        mPopulator = new IngredientViewPopulator(context);
+        mInventoryList = loadItems();
     }
 
     @Override
     public int getCount() {
-        return getItems().size();
+        return mInventoryList.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return getItems().get(i);
+        return mInventoryList.get(i);
     }
 
     @Override
     public long getItemId(int i) {
-        return getItems().get(i).getId();
+        return mInventoryList.get(i).getId();
     }
 
     @Override
@@ -58,12 +60,29 @@ public class InventoryAdapter extends BaseAdapter {
             mPopulator.populateHops(rowView, item);
         } else if (item.getIngredient() instanceof Yeast) {
             rowView = inflater.inflate(R.layout.list_item_yeast_touchable, parent, false);
-            mPopulator.populateYeast(rowView, item);
+            mPopulator.populateYeastFromInventory(rowView, item);
+        }
+
+        ListView list = (ListView) parent;
+        if (item.getId() == mSelectedId && !list.isItemChecked(position)) {
+            rowView.setBackgroundResource(R.color.color_accent_light);
+        } else {
+            rowView.setBackgroundResource(R.drawable.touchable);
         }
         return rowView;
     }
 
-    private InventoryList getItems() {
+    public void setSelectedId(int id) {
+        mSelectedId = id;
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+        mInventoryList = loadItems();
+    }
+
+    private InventoryList loadItems() {
         return mStorage.retrieveInventory().getType(mClass);
     }
 }
