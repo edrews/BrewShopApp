@@ -3,8 +3,11 @@ package com.brew.brewshop.storage.recipes;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.IllegalFormatException;
+
 public class Weight implements Parcelable {
     private double ounces;
+    private Quantity quantity;
 
     public Weight() { }
 
@@ -52,4 +55,20 @@ public class Weight implements Parcelable {
             return new Weight[size];
         }
     };
+
+    public Weight(String inWeight) throws Exception {
+        String sections[] = inWeight.trim().split(" ");
+        if (sections.length != 2) {
+            throw new Exception("String for the weight doesn't match \"<number> <unit>\"");
+        }
+
+        double size = Double.parseDouble(sections[0]);
+        String unit = sections[1];
+        quantity = new Quantity();
+        quantity.setUnits(unit);
+        quantity.setAmount(size);
+
+        // For now, set the ounces as the default value.
+        ounces = quantity.getValueAs(Quantity.OUNCES);
+    }
 }
