@@ -105,8 +105,10 @@ public class BrewStorage extends SQLiteOpenHelper {
                     int id = cursor.getInt(cursor.getColumnIndex(ID_COLUMN));
                     String data = cursor.getString(cursor.getColumnIndex(DATA_COLUMN));
                     Recipe recipe = gson.fromJson(data, Recipe.class);
-                    recipe.setId(id);
-                    recipes.add(recipe);
+                    if (recipe != null) {
+                        recipe.setId(id);
+                        recipes.add(recipe);
+                    }
                 } while (cursor.moveToNext());
             }
             cursor.close();
