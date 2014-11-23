@@ -7,7 +7,6 @@ import java.util.IllegalFormatException;
 
 public class Weight implements Parcelable {
     private double ounces;
-    private Quantity quantity;
 
     public Weight() {
         ounces = 0;
@@ -80,7 +79,7 @@ public class Weight implements Parcelable {
 
         double size = Double.parseDouble(sections[0]);
         String unit = sections[1];
-        quantity = new Quantity();
+        Quantity quantity = new Quantity();
         quantity.setUnits(unit);
         quantity.setAmount(size);
 
