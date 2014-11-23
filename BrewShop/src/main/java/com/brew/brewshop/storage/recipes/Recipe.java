@@ -227,4 +227,16 @@ public class Recipe implements Parcelable, Storeable {
             return new Recipe[size];
         }
     };
+
+    public void addHop(HopAddition hopAddition) {
+        this.hops.add(hopAddition);
+    }
+
+    public void addFermentable(MaltAddition maltAddition) {
+        this.malts.add(maltAddition);
+    }
+
+    public void addYeast(Yeast yeast) {
+        this.yeast.add(yeast);
+    }
 }

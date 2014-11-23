@@ -4,7 +4,8 @@ public enum HopUsage {
     FIRST_WORT("First Wort"),
     BOIL("Boil"),
     WHIRLPOOL("Whirlpool"),
-    DRY_HOP("Dry Hop");
+    DRY_HOP("Dry Hop"),
+    MASH("Mash");
 
     private String mText;
 
