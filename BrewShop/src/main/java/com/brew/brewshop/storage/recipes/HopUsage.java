@@ -5,7 +5,7 @@ public enum HopUsage {
     BOIL("Boil"),
     WHIRLPOOL("Whirlpool"),
     DRY_HOP("Dry Hop"),
-    SECONDARY("Secondary");
+    MASH("Mash");
 
     private String mText;
 

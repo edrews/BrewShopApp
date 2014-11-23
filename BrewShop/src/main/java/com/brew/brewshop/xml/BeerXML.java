@@ -209,15 +209,15 @@ public class BeerXML {
             } else if (use.equalsIgnoreCase("dry hop")) {
                 hopAddition.setUsage(HopUsage.DRY_HOP);
                 hopAddition.setDryHopDays(time);
+            } else if (use.equalsIgnoreCase("mash")) {
+                hopAddition.setUsage(HopUsage.MASH);
+                hopAddition.setBoilTime(time);
             } else if (use.equalsIgnoreCase("first wort")) {
                 hopAddition.setUsage(HopUsage.FIRST_WORT);
                 hopAddition.setBoilTime(time);
-            } else if (use.equalsIgnoreCase("whirlpool")) {
+            } else if (use.equalsIgnoreCase("aroma")) {
                 hopAddition.setUsage(HopUsage.WHIRLPOOL);
-                hopAddition.setDryHopDays(time);
-            } else if (use.equalsIgnoreCase("secondary")) {
-                hopAddition.setUsage(HopUsage.SECONDARY);
-                hopAddition.setDryHopDays(time);
+                hopAddition.setBoilTime(time);
             }
 
             // Everything is OK here, so add it in.
