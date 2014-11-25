@@ -6,7 +6,6 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.brew.brewshop.R;
 import com.brew.brewshop.settings.Settings;
 import com.brew.brewshop.storage.Nameable;
 import com.brew.brewshop.storage.NameableAdapter;
@@ -46,7 +45,7 @@ public class IngredientSpinner<T> implements AdapterView.OnItemSelectedListener 
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-        //Who cares?
+        //Do nothing
     }
 
     public void setSelection(int idx) {
@@ -62,11 +61,11 @@ public class IngredientSpinner<T> implements AdapterView.OnItemSelectedListener 
         return (Nameable) mSpinner.getSelectedItem();
     }
 
-    public void showOptions(InventoryList inventory, Nameable nameable, List<T> nameables) {
+    public void showOptions(InventoryList inventory, Nameable nameable, List<T> nameables, int customResource) {
         if (isInventoryShowable(inventory, nameable)) {
             showInventoryOnly(inventory);
         } else {
-            showAllIngredientOptions(nameables);
+            showAllIngredientOptions(nameables, customResource);
         }
     }
 
@@ -81,9 +80,9 @@ public class IngredientSpinner<T> implements AdapterView.OnItemSelectedListener 
         mSpinner.setAdapter(adapter);
     }
 
-    public void showAllIngredientOptions(List<T> nameables) {
+    public void showAllIngredientOptions(List<T> nameables, int customResource) {
         mInventoryLabel.setVisibility(View.GONE);
-        String customName = mContext.getResources().getString(R.string.custom_malt);
+        String customName = mContext.getResources().getString(customResource);
         NameableAdapter<T> adapter = new NameableAdapter<T>(mContext, nameables, customName);
         mSpinner.setAdapter(adapter);
     }

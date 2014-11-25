@@ -7,11 +7,29 @@
         android:id="@+id/root_view"
         android:orientation="vertical">
 
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
         <TextView style="@style/RecipeHeader"
             android:id="@+id/hop_addition_title"
             android:text="Hop Addition"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="5dp"/>
+
+        <TextView
+            android:id="@+id/showing_inventory_only"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Inventory Only"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:textColor="@color/text_dark_secondary"
+            android:textSize="14sp"
+            android:padding="2dp"
+            android:layout_marginRight="8dp"/>
+
+        </RelativeLayout>
 
         <android.support.v7.widget.CardView
             style="@style/Card">
@@ -35,7 +53,7 @@
 
             </LinearLayout>
 
-            <LinearLayout android:id="@+id/custom_malt_layout"
+            <LinearLayout android:id="@+id/custom_hop_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">

@@ -45,6 +45,7 @@ public class MaltFragment extends Fragment implements IngredientSelectionHandler
     private BrewStorage mStorage;
     private int mMaltIndex;
     private IngredientSpinner<MaltInfo> mIngredientSpinner;
+    private Settings mSettings;
 
     private TextView mDescription;
     private EditText mWeightLbEdit;
@@ -55,7 +56,6 @@ public class MaltFragment extends Fragment implements IngredientSelectionHandler
     private View mCustomMaltView;
     private View mDescriptionView;
     private CheckBox mMashedEdit;
-    private Settings mSettings;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
@@ -111,6 +111,23 @@ public class MaltFragment extends Fragment implements IngredientSelectionHandler
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mStorage.close();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+        if (state == null) {
+            state = new Bundle();
+        }
+        state.putParcelable(RECIPE, mRecipe);
+        state.putParcelable(INVENTORY_ITEM, mInventoryItem);
+        state.putInt(MALT_INDEX, mMaltIndex);
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.edit_ingredient_menu, menu);
@@ -136,7 +153,7 @@ public class MaltFragment extends Fragment implements IngredientSelectionHandler
             case R.id.action_show_all:
                 mSettings.setShowInventoryInIngredientEdit(false);
                 getActivity().supportInvalidateOptionsMenu();
-                mIngredientSpinner.showAllIngredientOptions(mMaltInfoList);
+                mIngredientSpinner.showAllIngredientOptions(mMaltInfoList, R.string.custom_malt);
                 setMaltInfo(1);
                 return true;
             case R.id.action_show_inventory:
@@ -147,54 +164,6 @@ public class MaltFragment extends Fragment implements IngredientSelectionHandler
                 return true;
         }
         return super.onOptionsItemSelected(menuItem);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mStorage.close();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle state) {
-        super.onSaveInstanceState(state);
-        if (state == null) {
-            state = new Bundle();
-        }
-        state.putParcelable(RECIPE, mRecipe);
-        state.putParcelable(INVENTORY_ITEM, mInventoryItem);
-        state.putInt(MALT_INDEX, mMaltIndex);
-    }
-
-    @Override
-    public void onInventoryItemSelected(InventoryItem item) {
-        if (!item.getName().equals(getMalt().getName())) {
-            getMalt().setName(item.getName());
-            mMashedEdit.setChecked(item.getMalt().isMashed());
-            mColorEdit.setText(Util.fromDouble(item.getMalt().getColor(), 1));
-            mGravityEdit.setText(Util.fromDouble(item.getMalt().getGravity(), 3, false));
-            setWeight(item.getWeight());
-        }
-        mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_secondary));
-        mDescription.setText(getActivity().getResources().getString(R.string.no_description));
-    }
-
-    @Override
-    public void onDefinedTypeSelected(Nameable nameable) {
-        MaltInfo info = (MaltInfo) nameable;
-        if (!info.getName().equals(getMalt().getName())) {
-            getMalt().setName(info.getName());
-            mMashedEdit.setChecked(info.isMashed());
-            mColorEdit.setText(Util.fromDouble(info.getSrm(), 1));
-            mGravityEdit.setText(Util.fromDouble(info.getGravity(), 3, false));
-        }
-        if (info.getDescription().length() == 0) {
-            mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_secondary));
-            mDescription.setText(getActivity().getResources().getString(R.string.no_description));
-        } else {
-            mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_primary));
-            mDescription.setText(Util.separateSentences(info.getDescription()));
-        }
     }
 
     @Override
@@ -218,22 +187,47 @@ public class MaltFragment extends Fragment implements IngredientSelectionHandler
         return handled;
     }
 
-    private void populateItemData(View view) {
-        TextView title = (TextView) view.findViewById(R.id.malt_addition_title);
-        title.setText(getResources().getString(R.string.inventory_malt));
-        mIngredientSpinner.showAllIngredientOptions(mMaltInfoList);
-        setMaltInfo(1);
-        setWeight(mInventoryItem.getWeight());
+    @Override
+    public void onDefinedTypeSelected(Nameable nameable) {
+        MaltInfo info = (MaltInfo) nameable;
+        if (!info.getName().equals(getMalt().getName())) {
+            getMalt().setName(info.getName());
+            mMashedEdit.setChecked(info.isMashed());
+            mColorEdit.setText(Util.fromDouble(info.getSrm(), 1));
+            mGravityEdit.setText(Util.fromDouble(info.getGravity(), 3, false));
+        }
+        if (info.getDescription().length() == 0) {
+            mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_secondary));
+            mDescription.setText(getActivity().getResources().getString(R.string.no_description));
+        } else {
+            mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_primary));
+            mDescription.setText(Util.separateSentences(info.getDescription()));
+        }
     }
 
-    private void populateRecipeMaltData() {
-        mIngredientSpinner.showOptions(getInventory(), getMalt(), mMaltInfoList);
-        if (mIngredientSpinner.isInventoryShowable(getInventory(), getMalt())) {
-            setInventoryMaltInfo(0);
-        } else {
-            setMaltInfo(1);
+    @Override
+    public void onInventoryItemSelected(InventoryItem item) {
+        if (!item.getName().equals(getMalt().getName())) {
+            getMalt().setName(item.getName());
+            mMashedEdit.setChecked(item.getMalt().isMashed());
+            mColorEdit.setText(Util.fromDouble(item.getMalt().getColor(), 1));
+            mGravityEdit.setText(Util.fromDouble(item.getMalt().getGravity(), 3, false));
+            setWeight(item.getWeight());
         }
-        setWeight(getMaltAddition().getWeight());
+        mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_secondary));
+        mDescription.setText(getActivity().getResources().getString(R.string.no_description));
+    }
+
+    public void setRecipe(Recipe recipe) {
+        mRecipe = recipe;
+    }
+
+    public void setInventoryItem(InventoryItem item) {
+        mInventoryItem = item;
+    }
+
+    public void setMaltIndex(int index) {
+        mMaltIndex = index;
     }
 
     private InventoryList getInventory() {
@@ -251,8 +245,22 @@ public class MaltFragment extends Fragment implements IngredientSelectionHandler
         }
     }
 
-    private Weight getWeightData() {
-        return new Weight(Util.toDouble(mWeightLbEdit.getText()), Util.toDouble(mWeightOzEdit.getText()));
+    private void populateItemData(View view) {
+        TextView title = (TextView) view.findViewById(R.id.malt_addition_title);
+        title.setText(getResources().getString(R.string.inventory_malt));
+        mIngredientSpinner.showAllIngredientOptions(mMaltInfoList, R.string.custom_malt);
+        setMaltInfo(1);
+        setWeight(mInventoryItem.getWeight());
+    }
+
+    private void populateRecipeMaltData() {
+        mIngredientSpinner.showOptions(getInventory(), getMalt(), mMaltInfoList, R.string.custom_malt);
+        if (mIngredientSpinner.isInventoryShowable(getInventory(), getMalt())) {
+            setInventoryMaltInfo(0);
+        } else {
+            setMaltInfo(1);
+        }
+        setWeight(getMaltAddition().getWeight());
     }
 
     private Malt getMaltData() {
@@ -300,13 +308,13 @@ public class MaltFragment extends Fragment implements IngredientSelectionHandler
         mGravityEdit.setText(Util.fromDouble(malt.getGravity(), 3, false));
     }
 
+    private Weight getWeightData() {
+        return new Weight(Util.toDouble(mWeightLbEdit.getText()), Util.toDouble(mWeightOzEdit.getText()));
+    }
+
     private void setWeight(Weight weight) {
         mWeightLbEdit.setText(String.valueOf(weight.getPoundsPortion()));
         mWeightOzEdit.setText(Util.fromDouble(weight.getOuncesPortion(), 2));
-    }
-
-    private MaltAddition getMaltAddition() {
-        return mRecipe.getMalts().get(mMaltIndex);
     }
 
     private Malt getMalt() {
@@ -319,15 +327,7 @@ public class MaltFragment extends Fragment implements IngredientSelectionHandler
         return malt;
     }
 
-    public void setRecipe(Recipe recipe) {
-        mRecipe = recipe;
-    }
-
-    public void setInventoryItem(InventoryItem item) {
-        mInventoryItem = item;
-    }
-
-    public void setMaltIndex(int index) {
-        mMaltIndex = index;
+    private MaltAddition getMaltAddition() {
+        return mRecipe.getMalts().get(mMaltIndex);
     }
 }
