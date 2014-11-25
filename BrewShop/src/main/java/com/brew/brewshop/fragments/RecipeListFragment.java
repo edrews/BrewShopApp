@@ -159,20 +159,28 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.action_new_recipe && canCreateRecipe()) {
-            mSelectNewRecipe = new Dialog(getActivity());
-            mSelectNewRecipe.setContentView(R.layout.select_ingredient);
-
-            NewRecipeAdapter newRecipeAdapter = new NewRecipeAdapter(getActivity(), getNewRecipeTypes());
-
-            ListView listView = (ListView) mSelectNewRecipe.findViewById(R.id.recipe_list);
-            listView.setAdapter(newRecipeAdapter);
-            listView.setOnItemClickListener(this);
-            mSelectNewRecipe.setCancelable(true);
-            mSelectNewRecipe.setTitle(findString(R.string.new_recipe));
-            mSelectNewRecipe.show();
+            if (getResources().getBoolean(R.bool.show_open_recipe)) {
+                showSelectNewRecipeDialog();
+            } else {
+                createAndShowNewRecipe();
+            }
             return true;
         }
         return false;
+    }
+
+    private void showSelectNewRecipeDialog() {
+        mSelectNewRecipe = new Dialog(getActivity());
+        mSelectNewRecipe.setContentView(R.layout.select_ingredient);
+
+        NewRecipeAdapter newRecipeAdapter = new NewRecipeAdapter(getActivity(), getNewRecipeTypes());
+
+        ListView listView = (ListView) mSelectNewRecipe.findViewById(R.id.recipe_list);
+        listView.setAdapter(newRecipeAdapter);
+        listView.setOnItemClickListener(this);
+        mSelectNewRecipe.setCancelable(true);
+        mSelectNewRecipe.setTitle(findString(R.string.new_recipe));
+        mSelectNewRecipe.show();
     }
 
     private List<String> getNewRecipeTypes() {
@@ -332,10 +340,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         mSelectNewRecipe.dismiss();
         String type = getNewRecipeTypes().get(position);
         if (findString(R.string.new_recipe).equals(type)) {
-            Recipe recipe = new Recipe();
-            mStorage.createRecipe(recipe);
-            mRecipeView.drawRecipeList();
-            showRecipe(recipe);
+            createAndShowNewRecipe();
         } else if (findString(R.string.open).equals(type)) {
             // Use the system file chooser only showing XML files we can open
             Intent fileIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -344,6 +349,13 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
             fileIntent.setType("text/xml");
             startActivityForResult(fileIntent, READ_REQUEST_CODE);
         }
+    }
+
+    private void createAndShowNewRecipe() {
+        Recipe recipe = new Recipe();
+        mStorage.createRecipe(recipe);
+        mRecipeView.drawRecipeList();
+        showRecipe(recipe);
     }
 
     @Override
