@@ -3,5 +3,4 @@
 .gradle
 .DS_Store
 build
-*.iml
 

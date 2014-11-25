@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -24,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.brew.brewshop.FragmentHandler;
+import com.brew.brewshop.settings.Settings;
 import com.brew.brewshop.storage.recipes.IngredientListView;
 import com.brew.brewshop.R;
 import com.brew.brewshop.ViewClickListener;
@@ -52,8 +52,6 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
     private static final String UNIT_MINUTES = " min";
     private static final String UNIT_PERCENT = "%";
 
-    private static final String SHOW_INVENTORY_PREF = "ShowInventory";
-
     private Recipe mRecipe;
     private BrewStorage mStorage;
     private FragmentHandler mFragmentHandler;
@@ -62,6 +60,7 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
     private IngredientListView mIngredientView;
     private View mRootView;
     private ImageView mShowInventory;
+    private Settings mSettings;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
@@ -168,8 +167,8 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
             textView.setText(abv + UNIT_PERCENT);
         }
 
-        SharedPreferences prefs = getActivity().getSharedPreferences("prefs", 0);
-        boolean showInventory = prefs.getBoolean(SHOW_INVENTORY_PREF, true);
+        mSettings = new Settings(getActivity());
+        boolean showInventory = mSettings.getShowInventoryInRecipe();
 
         mIngredientView = new IngredientListView(getActivity(), root, mRecipe, this);
         mIngredientView.getAdapter().showInventory(showInventory);
@@ -360,12 +359,8 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
     }
 
     private void showHideInventory() {
-        SharedPreferences prefs = getActivity().getSharedPreferences("prefs", 0);
-        boolean showInventory = !prefs.getBoolean(SHOW_INVENTORY_PREF, false);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(SHOW_INVENTORY_PREF, showInventory);
-        editor.commit();
-
+        boolean showInventory = !mSettings.getShowInventoryInRecipe();
+        mSettings.setShowInventoryInRecipe(showInventory);
         mIngredientView.getAdapter().showInventory(showInventory);
         mIngredientView.drawList();
     }

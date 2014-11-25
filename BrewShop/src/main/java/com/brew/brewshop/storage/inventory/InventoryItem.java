@@ -3,6 +3,7 @@ package com.brew.brewshop.storage.inventory;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.brew.brewshop.storage.Nameable;
 import com.brew.brewshop.storage.Storeable;
 import com.brew.brewshop.storage.recipes.Hop;
 import com.brew.brewshop.storage.recipes.Ingredient;
@@ -10,7 +11,7 @@ import com.brew.brewshop.storage.recipes.Malt;
 import com.brew.brewshop.storage.recipes.Weight;
 import com.brew.brewshop.storage.recipes.Yeast;
 
-public class InventoryItem implements Storeable {
+public class InventoryItem implements Storeable, Nameable {
     private int id;
     private Malt malt;
     private Hop hop;
@@ -64,6 +65,21 @@ public class InventoryItem implements Storeable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    @Override
+    public String getName() {
+        return getIngredient().getName();
+    }
+
+    @Override
+    public void setName(String name) {
+        getIngredient().setName(name);
+    }
+
+    @Override
+    public String toString() {
+        return getName();
     }
 
     public void setIngredient(Ingredient item) {

@@ -60,6 +60,9 @@
     <string name="inventory_hop">Inventory Hops</string>
     <string name="inventory_yeast">Inventory Yeast</string>
     <string name="show_hide_inventory">Show/Hide Inventory</string>
+    <string name="inventory_only">Inventory Only</string>
+    <string name="show_all">Show All Types</string>
+    <string name="malt_type">Malt Type</string>
 
     <!-- Navigation -->
     <string name="homebrew_tools">Homebrew Tools</string>

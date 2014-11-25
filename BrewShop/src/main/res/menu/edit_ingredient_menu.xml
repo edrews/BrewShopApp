@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_show_inventory"
+        android:title="@string/inventory_only"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_show_all"
+        android:title="@string/show_all"
+        android:orderInCategory="101"
+        app:showAsAction="never" />
+</menu>
