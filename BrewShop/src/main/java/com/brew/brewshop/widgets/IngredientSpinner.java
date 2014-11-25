@@ -71,7 +71,7 @@ public class IngredientSpinner<T> implements AdapterView.OnItemSelectedListener 
 
     public boolean isInventoryShowable(InventoryList inventory, Nameable nameable) {
         boolean showInventory = mSettings.getShowInventoryInIngredientEdit();
-        return showInventory && (inventory.contains(nameable) || nameable.getName().length() == 0);
+        return showInventory && !inventory.isEmpty() && (inventory.contains(nameable) || nameable.getName().length() == 0);
     }
 
     public void showInventoryOnly(InventoryList inventory) {
