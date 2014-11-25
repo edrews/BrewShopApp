@@ -221,13 +221,7 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
             mAlphaEdit.setText(Util.fromDouble(hopsInfo.getAlphaAcid(), 3));
             getHop().setName(hopsInfo.getName());
         }
-        if (hopsInfo.getDescription().length() == 0) {
-            mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_secondary));
-            mDescription.setText(getActivity().getResources().getString(R.string.no_description));
-        } else {
-            mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_primary));
-            mDescription.setText(Util.separateSentences(hopsInfo.getDescription()));
-        }
+        setDescription(hopsInfo);
     }
 
     @Override
@@ -237,8 +231,8 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
             mAlphaEdit.setText(Util.fromDouble(item.getHop().getPercentAlpha(), 3));
             setWeight(item.getWeight());
         }
-        mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_secondary));
-        mDescription.setText(getActivity().getResources().getString(R.string.no_description));
+        HopsInfo hopsInfo = mHopInfoList.findByName(item.getName());
+        setDescription(hopsInfo);
     }
 
     public void setRecipe(Recipe recipe) {
@@ -251,6 +245,16 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
 
     public void setHopIndex(int index) {
         mHopIndex = index;
+    }
+
+    private void setDescription(HopsInfo hopsInfo) {
+        if (hopsInfo != null && hopsInfo.getDescription().length() > 0) {
+            mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_primary));
+            mDescription.setText(Util.separateSentences(hopsInfo.getDescription()));
+        } else {
+            mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_secondary));
+            mDescription.setText(getActivity().getResources().getString(R.string.no_description));
+        }
     }
 
     private InventoryList getInventory() {
