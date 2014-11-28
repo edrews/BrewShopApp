@@ -180,7 +180,10 @@ public class BeerXML {
             temp = (String) xp.evaluate("ALPHA", hop, XPathConstants.STRING);
             double alpha = Double.parseDouble(temp);
             temp = (String) xp.evaluate("BETA", hop, XPathConstants.STRING);
-            double beta = Double.parseDouble(temp);
+            if (!temp.equals("")) {
+                double beta = Double.parseDouble(temp);
+            }
+
             temp = (String) xp.evaluate("TIME", hop, XPathConstants.STRING);
             int time = (int)Math.round(Double.parseDouble(temp));
             String use = (String) xp.evaluate("USE", hop, XPathConstants.STRING);
