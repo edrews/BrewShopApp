@@ -102,4 +102,7 @@
         <item>@string/whirlpool</item>
         <item>@string/dry_hop</item>
     </string-array>
+
+    <string name="no_recipe_type">No Recipe Type Detected</string>
+    <string name="opened_recipes">Opened %d Recipes</string>
 </resources>

@@ -7,6 +7,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -371,6 +372,11 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
                     }
 
                     if (type == null) {
+                        AlertDialog.Builder alertDialog =
+                                new AlertDialog.Builder(this.getActivity());
+                        alertDialog.setMessage(R.string.no_recipe_type)
+                                .setTitle(R.string.open);
+                        alertDialog.create().show();
                         return;
                     }
                     recipeStream =
@@ -387,6 +393,14 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
                         mStorage.createRecipe(recipe);
                     }
                     mRecipeView.drawRecipeList();
+
+                    AlertDialog.Builder alertDialog =
+                            new AlertDialog.Builder(this.getActivity());
+                    alertDialog.setMessage(String.format(
+                            getActivity().getResources().getString(
+                                    R.string.opened_recipes), recipes.length))
+                            .setTitle(R.string.open);
+                    alertDialog.create().show();
 
                     if (recipes.length == 1) {
                         showRecipe(recipes[0]);
