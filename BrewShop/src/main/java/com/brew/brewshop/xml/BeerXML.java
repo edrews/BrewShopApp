@@ -126,13 +126,15 @@ public class BeerXML {
                 recipeList.add(readSingleRecipe(recipeData.item(i)));
             } catch (XPathException xpe) {
                 Log.e("BeerXML", "Couldn't read the recipe at index " + i, xpe);
+            } catch (NumberFormatException nfe) {
+                Log.e("BeerXML", "Couldn't read the recipe at index " + i + " due to a bad number", nfe);
             }
         }
 
         return recipeList.toArray(new Recipe[recipeList.size()]);
     }
 
-    public static Recipe readSingleRecipe(Node recipeNode) throws XPathException {
+    public static Recipe readSingleRecipe(Node recipeNode) throws XPathException, NumberFormatException {
         XPath xp = XPathFactory.newInstance().newXPath();
         Recipe recipe = new Recipe();
 
@@ -162,7 +164,7 @@ public class BeerXML {
         return recipe;
     }
 
-    private static void parseHops(Recipe recipe, NodeList hops) throws XPathException {
+    private static void parseHops(Recipe recipe, NodeList hops) throws XPathException, NumberFormatException {
         if (hops == null || hops.getLength() == 0) {
             return;
         }
@@ -180,7 +182,10 @@ public class BeerXML {
             temp = (String) xp.evaluate("ALPHA", hop, XPathConstants.STRING);
             double alpha = Double.parseDouble(temp);
             temp = (String) xp.evaluate("BETA", hop, XPathConstants.STRING);
-            double beta = Double.parseDouble(temp);
+            if (!temp.equals("")) {
+                double beta = Double.parseDouble(temp);
+            }
+
             temp = (String) xp.evaluate("TIME", hop, XPathConstants.STRING);
             int time = (int)Math.round(Double.parseDouble(temp));
             String use = (String) xp.evaluate("USE", hop, XPathConstants.STRING);
@@ -225,7 +230,7 @@ public class BeerXML {
         }
     }
 
-    private static void parseMalts(Recipe recipe, NodeList malts) throws XPathException {
+    private static void parseMalts(Recipe recipe, NodeList malts) throws XPathException, NumberFormatException {
         if (malts == null || malts.getLength() == 0) {
             return;
         }
@@ -268,7 +273,7 @@ public class BeerXML {
         }
     }
 
-    private static void parseYeasts(Recipe recipe, NodeList yeasts) throws XPathException {
+    private static void parseYeasts(Recipe recipe, NodeList yeasts) throws XPathException, NumberFormatException {
         if (yeasts == null || yeasts.getLength() == 0) {
             return;
         }
