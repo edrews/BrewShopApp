@@ -340,8 +340,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
             // Use the system file chooser only showing XML files we can open
             Intent fileIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             fileIntent.addCategory(Intent.CATEGORY_OPENABLE);
-            fileIntent.setType("application/xml");
-            fileIntent.setType("text/xml");
+            fileIntent.setType("*/*");
             startActivityForResult(fileIntent, READ_REQUEST_CODE);
         }
     }
