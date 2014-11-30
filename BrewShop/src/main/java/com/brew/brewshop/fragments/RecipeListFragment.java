@@ -343,10 +343,19 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         if (findString(R.string.new_recipe).equals(type)) {
             createAndShowNewRecipe();
         } else if (findString(R.string.open).equals(type)) {
-            // Use the system file chooser only showing XML files we can open
-            Intent fileIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-            fileIntent.addCategory(Intent.CATEGORY_OPENABLE);
-            fileIntent.setType("*/*");
+            int currentAPIVersion = Build.VERSION.SDK_INT;
+            Intent fileIntent;
+            if (currentAPIVersion >= Build.VERSION_CODES.KITKAT) {
+                // Use the system file chooser only showing XML files we can open
+                fileIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                fileIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                fileIntent.setType("*/*");
+            } else {
+                Intent chooseFile;
+                chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
+                chooseFile.setType("*/*");
+                fileIntent = Intent.createChooser(chooseFile, "Choose a file");
+            }
             startActivityForResult(fileIntent, READ_REQUEST_CODE);
         }
     }
