@@ -155,19 +155,18 @@ public class BeerXML {
         // otherwise get the details from the recipe
         String recipeName = (String) xp.evaluate("NAME/text()", recipeNode, XPathConstants.STRING);
         String brewerName = (String) xp.evaluate("BREWER/text()", recipeNode, XPathConstants.STRING);
-        String temp = (String) xp.evaluate("BATCH_SIZE/text()", recipeNode, XPathConstants.STRING);
-        double batchSize = Double.parseDouble(temp);
-        temp = (String) xp.evaluate("BOIL_SIZE/text()", recipeNode, XPathConstants.STRING);
-        double boilSize = Double.parseDouble(temp);
-        temp = (String) xp.evaluate("BOIL_TIME/text()", recipeNode, XPathConstants.STRING);
-        double boilTime = Double.parseDouble(temp);
+
+        double efficiency = getDouble(recipeNode, "EFFICIENCY", xp);
+        double batchSize = getDouble(recipeNode, "BATCH_SIZE", xp);
+        double boilSize = getDouble(recipeNode, "BOIL_SIZE", xp);
+        double boilTime = getDouble(recipeNode, "BOIL_TIME", xp);
 
         recipe.setName(recipeName);
         recipe.setBrewerName(brewerName);
-        recipe.setBatchVolume(batchSize);
-        recipe.setBoilVolume(boilSize);
+        recipe.setBatchVolume(Quantity.convertUnit("litres", "gallons", batchSize));
+        recipe.setBoilVolume(Quantity.convertUnit("litres", "gallons", boilSize));
         recipe.setBoilTime(boilTime);
-        //recipe.setBrewerName();
+        recipe.setEfficiency(efficiency);
 
         NodeList hopsList = (NodeList) xp.evaluate("HOPS", recipeNode, XPathConstants.NODESET);
         parseHops(recipe, hopsList);
@@ -281,6 +280,7 @@ public class BeerXML {
                 malt.setName(name);
                 malt.setGravity(Double.parseDouble(potential));
                 malt.setColor(Double.parseDouble(color));
+                malt.setMashed(true);
 
                 MaltAddition maltAddition = new MaltAddition();
                 maltAddition.setWeight(new Weight(amount));
@@ -305,7 +305,7 @@ public class BeerXML {
         }
 
         XPath xp = XPathFactory.newInstance().newXPath();
-        NodeList yeastList = (NodeList) xp.evaluate("YEASTS", yeasts.item(0), XPathConstants.NODESET);
+        NodeList yeastList = (NodeList) xp.evaluate("YEAST", yeasts.item(0), XPathConstants.NODESET);
 
         for (int i = 0; i < yeastList.getLength(); i++) {
             try {
@@ -320,6 +320,7 @@ public class BeerXML {
                 Yeast yeast = new Yeast();
                 yeast.setName(name);
                 yeast.setAttenuation(Double.parseDouble(attenuation));
+                recipe.addYeast(yeast);
             } catch (NumberFormatException nfe) {
                 Log.e("BrewShop", "Couldn't parse a number", nfe);
             } catch (Exception e) {
