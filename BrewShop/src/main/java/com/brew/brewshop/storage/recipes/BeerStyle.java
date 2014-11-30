@@ -8,6 +8,9 @@ public class BeerStyle implements Parcelable {
     private String style;
     private String substyle;
     private String description;
+    private String category, subCategory;
+    private String categoryNumber, type;
+    private String styleLetter, styleGuide;
     private double ogMin, ogMax;
     private double fgMin, fgMax;
     private double ibuMin, ibuMax;
@@ -34,6 +37,12 @@ public class BeerStyle implements Parcelable {
         srmMax = parcel.readDouble();
         abvMin = parcel.readDouble();
         abvMax = parcel.readDouble();
+        category = parcel.readString();
+        subCategory = parcel.readString();
+        categoryNumber = parcel.readString();
+        styleLetter = parcel.readString();
+        styleGuide = parcel.readString();
+        type = parcel.readString();
     }
 
     public String getDisplayName() {
@@ -122,6 +131,30 @@ public class BeerStyle implements Parcelable {
 
     public void setFgMax(double value) { fgMax = value; }
 
+    public String getCategory() { return category; }
+
+    public void setCategory(String value) { category = value; }
+
+    public String getSubCategory() { return subCategory; }
+
+    public void setSubCategory(String value) { subCategory = value; }
+
+    public String getCategoryNumber() { return categoryNumber; }
+
+    public void setCategoryNumber(String value) { categoryNumber = value; }
+
+    public String getStyleLetter() { return styleLetter; }
+
+    public void setStyleLetter(String value) { styleLetter = value; }
+
+    public String getStyleGuide() { return styleGuide; }
+
+    public void setStyleGuide(String value) { styleGuide = value; }
+
+    public String getType() { return type; }
+
+    public void setType(String value) { type = value; }
+
     @Override
     public int describeContents() {
         return 0;
@@ -142,6 +175,12 @@ public class BeerStyle implements Parcelable {
         parcel.writeDouble(srmMax);
         parcel.writeDouble(abvMin);
         parcel.writeDouble(abvMax);
+        parcel.writeString(category);
+        parcel.writeString(subCategory);
+        parcel.writeString(categoryNumber);
+        parcel.writeString(styleLetter);
+        parcel.writeString(styleGuide);
+        parcel.writeString(type);
     }
 
     public static final Parcelable.Creator<BeerStyle> CREATOR = new Parcelable.Creator<BeerStyle>() {
