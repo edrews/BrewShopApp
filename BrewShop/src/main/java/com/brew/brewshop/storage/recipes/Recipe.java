@@ -26,6 +26,7 @@ public class Recipe implements Parcelable, Storeable {
     private List<HopAddition> hops;
     private List<Yeast> yeast;
     private String notes;
+    private String brewerName;
 
     public Recipe() {
         name = "New Recipe";
@@ -40,6 +41,7 @@ public class Recipe implements Parcelable, Storeable {
         yeast = new ArrayList<Yeast>();
 
         notes = "";
+        brewerName = "";
     }
 
     public Recipe(Parcel parcel) {
@@ -62,6 +64,7 @@ public class Recipe implements Parcelable, Storeable {
         parcel.readTypedList(yeast, Yeast.CREATOR);
 
         notes = parcel.readString();
+        brewerName = parcel.readString();
     }
 
     @Override
@@ -78,6 +81,7 @@ public class Recipe implements Parcelable, Storeable {
         parcel.writeTypedList(hops);
         parcel.writeTypedList(yeast);
         parcel.writeString(notes);
+        parcel.writeString(brewerName);
     }
 
     @Override
@@ -93,6 +97,9 @@ public class Recipe implements Parcelable, Storeable {
 
     public String getName() { return name; }
     public void setName(String value) { name = value; }
+
+    public String getBrewerName() { return brewerName; }
+    public void setBrewerName(String value) { brewerName = value; }
 
     public BeerStyle getStyle() { return style; }
     public void setStyle(BeerStyle value) { style = value; }
