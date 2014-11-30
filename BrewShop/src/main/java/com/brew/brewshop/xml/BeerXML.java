@@ -342,6 +342,10 @@ public class BeerXML {
         String name = (String) xp.evaluate("NAME", style, XPathConstants.STRING);
         String category = (String) xp.evaluate("CATEGORY", style, XPathConstants.STRING);
         String notes = (String) xp.evaluate("NOTES", style, XPathConstants.STRING);
+        String categoryNumber = (String) xp.evaluate("CATEGORY_NUMBER", style, XPathConstants.STRING);
+        String styleLetter = (String) xp.evaluate("STYLE_LETTER", style, XPathConstants.STRING);
+        String styleGuide = (String) xp.evaluate("STYLE_GUIDE", style, XPathConstants.STRING);
+        String type = (String) xp.evaluate("TYPE", style, XPathConstants.STRING);
 
         double ogMin = getDouble(style, "OG_MIN", xp);
         double ogMax = getDouble(style, "OG_MAX", xp);
@@ -358,6 +362,10 @@ public class BeerXML {
         beerStyle.setStyleName(name);
         beerStyle.setSubstyleName(category);
         beerStyle.setDescription(notes);
+        beerStyle.setCategoryNumber(categoryNumber);
+        beerStyle.setStyleLetter(styleLetter);
+        beerStyle.setStyleGuide(styleGuide);
+        beerStyle.setType(type);
         beerStyle.setAbvMax(abvMax);
         beerStyle.setAbvMin(abvMin);
         beerStyle.setFgMax(fgMax);
