@@ -70,9 +70,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         View rootView = inflater.inflate(R.layout.fragment_recipes, container, false);
         setHasOptionsMenu(true);
 
-        checkResumeActionMode(bundle);
         mViewSwitcher.setTitle(getTitle());
-
         mStorage = new BrewStorage(getActivity());
         mRecipeView = new RecipeListView(getActivity(), rootView, mStorage, this);
         mRecipeView.drawRecipeList();
@@ -80,6 +78,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
             int id = bundle.getInt(SHOWING_ID, -1);
             mRecipeView.setShowing(id);
         }
+        checkResumeActionMode(bundle);
 
         return rootView;
     }
