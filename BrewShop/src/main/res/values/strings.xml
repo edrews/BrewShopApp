@@ -9,6 +9,7 @@
     <string name="edit_recipe">Edit Recipe</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_delete">Delete</string>
+    <string name="action_save">Save</string>
     <string name="action_select_all">Select All</string>
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
@@ -108,4 +109,7 @@
 
     <string name="no_recipe_type">No Recipe Type Detected</string>
     <string name="opened_recipes">Opened %d Recipes</string>
+    <string name="saved_recipes">Saved %d Recipes</string>
+    <string name="saved_recipe">Saved Recipe</string>
+    <string name="cannot_write_file">Failed to write to file %s</string>
 </resources>

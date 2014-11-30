@@ -12,4 +12,9 @@
         android:title="@string/action_delete"
         android:orderInCategory="200"
         app:showAsAction="ifRoom" />
+    <item android:id="@+id/action_save"
+        android:icon="@drawable/ic_action_save"
+        android:title="@string/action_save"
+        android:orderInCategory="300"
+        app:showAsAction="ifRoom" />
 </menu>
