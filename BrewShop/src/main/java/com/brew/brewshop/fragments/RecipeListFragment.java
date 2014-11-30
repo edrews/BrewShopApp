@@ -211,11 +211,13 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         mActionMode.setSubtitle(checked + " " + getResources().getString(R.string.selected));
 
         MenuInflater inflater = actionMode.getMenuInflater();
-        inflater.inflate(R.menu.context_menu, menu);
+        inflater.inflate(R.menu.recipes_context_menu, menu);
 
         boolean itemsChecked = (mRecipeView.getSelectedCount() > 0);
         mActionMode.getMenu().findItem(R.id.action_delete).setVisible(itemsChecked);
-        mActionMode.getMenu().findItem(R.id.action_save).setVisible(itemsChecked);
+        if (getResources().getBoolean(R.bool.show_save_recipe)) {
+            mActionMode.getMenu().findItem(R.id.action_save).setVisible(itemsChecked);
+        }
         mActionMode.getMenu().findItem(R.id.action_select_all).setVisible(!mRecipeView.areAllSelected());
         return true;
     }

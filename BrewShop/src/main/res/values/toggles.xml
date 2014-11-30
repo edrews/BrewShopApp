@@ -3,4 +3,5 @@
     <bool name="show_store_drawer_items">false</bool>
     <bool name="show_inventory">true</bool>
     <bool name="show_open_recipe">false</bool>
+    <bool name="show_save_recipe">false</bool>
 </resources>
