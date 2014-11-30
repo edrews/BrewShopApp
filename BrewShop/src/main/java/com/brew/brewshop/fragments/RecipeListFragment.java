@@ -3,20 +3,16 @@ package com.brew.brewshop.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.database.Cursor;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.support.v7.view.ActionMode;
@@ -27,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -39,11 +36,12 @@ import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.xml.BeerXML;
 import com.brew.brewshop.xml.ParseXML;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -59,6 +57,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
     private static final String SELECTED_INDEXES = "Selected";
     private static final String SHOWING_ID = "ShowingId";
     private static final int READ_REQUEST_CODE = 1;
+    private static final int WRITE_REQUEST_CODE = 2;
 
     private BrewStorage mStorage;
     private FragmentHandler mViewSwitcher;
@@ -208,6 +207,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
 
         boolean itemsChecked = (mRecipeView.getSelectedCount() > 0);
         mActionMode.getMenu().findItem(R.id.action_delete).setVisible(itemsChecked);
+        mActionMode.getMenu().findItem(R.id.action_save).setVisible(itemsChecked);
         mActionMode.getMenu().findItem(R.id.action_select_all).setVisible(!mRecipeView.areAllSelected());
         return true;
     }
@@ -233,6 +233,9 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
                         .setPositiveButton(R.string.yes, this)
                         .setNegativeButton(R.string.no, null)
                         .show();
+                return true;
+            case R.id.action_save:
+                saveRecipes();
                 return true;
             default:
                 return false;
@@ -292,6 +295,20 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         return selectedIds.length;
     }
 
+    private int saveRecipes() {
+        Intent fileIntent;
+        fileIntent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        fileIntent.addCategory(Intent.CATEGORY_OPENABLE);
+        fileIntent.setType("*/*");
+
+        if (isAvailable(getActivity().getBaseContext(), fileIntent)) {
+            startActivityForResult(fileIntent, WRITE_REQUEST_CODE);
+        } else {
+            manualSaveRecipes();
+        }
+        return 1;
+    }
+
     private void updateActionBar() {
         if (mActionMode != null) {
             mActionMode.invalidate();
@@ -305,6 +322,17 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
             message = String.format(context.getResources().getString(R.string.deleted_recipes), deleted);
         } else {
             message = context.getResources().getString(R.string.deleted_recipe);
+        }
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void toastSaved(int saved) {
+        Context context = getActivity();
+        String message;
+        if (saved > 1) {
+            message = String.format(context.getResources().getString(R.string.saved_recipes), saved);
+        } else {
+            message = context.getResources().getString(R.string.saved_recipe);
         }
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
@@ -417,5 +445,101 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
                 }
             }
         }
+
+        if (requestCode == WRITE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            int[] selectedIds = mRecipeView.getSelectedIds();
+            ArrayList<Recipe> toSave = new ArrayList<Recipe>();
+
+            for (int i = 0; i < selectedIds.length; i++) {
+                int id = selectedIds[i];
+                toSave.add(mStorage.retrieveRecipes().findById(id));
+            }
+
+            final Recipe[] recipeArray = toSave.toArray(new Recipe[toSave.size()]);
+
+            if (resultData == null) {
+                return;
+            }
+
+            OutputStream recipeOutputStream;
+            try {
+                Uri recipeUri = resultData.getData();
+                recipeOutputStream = getActivity().getContentResolver().openOutputStream(recipeUri);
+            } catch (FileNotFoundException e) {
+                Log.e("Saving recipes", "File not found.", e);
+                return;
+            }
+
+            try {
+                BeerXML.writeRecipes(recipeArray, recipeOutputStream);
+            } catch (IOException ioe) {
+                AlertDialog.Builder alertDialog =
+                        new AlertDialog.Builder(getActivity());
+                alertDialog.setMessage(String.format(
+                        getActivity().getResources().getString(
+                                R.string.saved_recipes), recipeArray.length))
+                        .setTitle(R.string.open);
+                alertDialog.create().show();
+            }
+
+            mActionMode.finish();
+            toastSaved(recipeArray.length);
+        }
+    }
+
+    private void manualSaveRecipes() {
+        int[] selectedIds = mRecipeView.getSelectedIds();
+        ArrayList<Recipe> toSave = new ArrayList<Recipe>();
+
+        for (int i = 0; i < selectedIds.length; i++) {
+            int id = selectedIds[i];
+            toSave.add(mStorage.retrieveRecipes().findById(id));
+        }
+
+        final Recipe[] recipeArray = toSave.toArray(new Recipe[toSave.size()]);
+        final EditText input = new EditText(this.getActivity());
+
+        new AlertDialog.Builder(this.getActivity())
+                .setTitle("File name?")
+                .setMessage("What would you like to save the file as")
+                .setView(input)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String filename = input.getText().toString();
+
+                        if (filename.equals("")) {
+                            return;
+                        }
+
+                        if (!filename.endsWith(".xml")) {
+                            filename += ".xml";
+                        }
+                        File outputFile = new File(Environment.getExternalStorageDirectory() + "/" + filename);
+
+                        try {
+                            BeerXML.writeRecipes(recipeArray, outputFile);
+                        } catch (IOException ioe) {
+                            AlertDialog.Builder alertDialog =
+                                    new AlertDialog.Builder(getActivity());
+                            alertDialog.setMessage(String.format(
+                                    getActivity().getResources().getString(
+                                            R.string.cannot_write_file), outputFile.getAbsolutePath()))
+                                    .setTitle(R.string.open);
+                            alertDialog.create().show();
+                        }
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Do nothing.
+            }
+        }).show();
+    }
+
+    public static boolean isAvailable(Context ctx, Intent intent) {
+        final PackageManager mgr = ctx.getPackageManager();
+        List<ResolveInfo> list =
+                mgr.queryIntentActivities(intent,
+                        PackageManager.MATCH_DEFAULT_ONLY);
+        return list.size() > 0;
     }
 }
