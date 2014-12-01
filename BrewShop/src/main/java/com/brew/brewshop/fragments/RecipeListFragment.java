@@ -3,6 +3,7 @@ package com.brew.brewshop.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -384,6 +385,8 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
 
             if (resultData != null) {
                 recipeUri = resultData.getData();
+                String message = String.format(getActivity().getResources().getString(R.string.opening_file), recipeUri.getLastPathSegment());
+                ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", message, true);
                 Recipe[] recipes = null;
                 try {
                     InputStream recipeStream =
@@ -412,11 +415,16 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
 
                     recipeStream =
                             getActivity().getContentResolver().openInputStream(recipeUri);
-                    recipes = ParseXML.readRecipe(recipeStream, type);
+                    if (type.equalsIgnoreCase("beerxml")) {
+                        BeerXML beerXML = new BeerXML(this.getActivity());
+                        recipes = beerXML.readInputStream(recipeStream);
+                    }
                 } catch (FileNotFoundException fnfe) {
                     // Shouldn't happen
                     Log.e("BrewShop", "Couldn't find file: " + fnfe.getMessage(), fnfe);
                     return;
+                } finally {
+                    progressDialog.dismiss();
                 }
 
                 if (recipes != null && recipes.length > 0) {
@@ -431,6 +439,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
                         showRecipe(recipes[0]);
                     }
                 }
+
             }
         }
 

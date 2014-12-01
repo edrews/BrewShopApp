@@ -2,6 +2,7 @@ package com.brew.brewshop.xml;
 
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.Log;
 
@@ -21,26 +22,14 @@ import java.io.InputStream;
  * Created by Doug Edey on 21/11/14.
  */
 public class ParseXML {
-    public static Recipe[] readRecipe(String filename) {
-        File recipeFile = new File(filename);
-
-        String type = checkFileType(recipeFile);
-        if (type.equals("beerxml")) {
-             return BeerXML.readFile(recipeFile);
-        }
-
-        return null;
-    }
-
-    public static Recipe[] readRecipe(InputStream inputStream, String type) {
-        String recipeData = "";
-
-        if (type.equals("beerxml")) {
-            return BeerXML.readInputStream(inputStream);
-        }
-
-        return null;
-    }
+//    public static Recipe[] readBeerXMLRecipe(String filename) {
+//        File recipeFile = new File(filename);
+//        return BeerXML.readFile(recipeFile);
+//    }
+//
+//    public Recipe[] readBeerXMLRecipe(InputStream inputStream) {
+//        return BeerXML.readInputStream(inputStream);
+//    }
 
     public static String checkRecipeType(String buffer) {
         if (buffer.indexOf("BeerXML Format") > -1 || buffer.indexOf("<RECIPES>") > -1 )
@@ -83,6 +72,5 @@ public class ParseXML {
         }
         return "";
     }
-
 
 }

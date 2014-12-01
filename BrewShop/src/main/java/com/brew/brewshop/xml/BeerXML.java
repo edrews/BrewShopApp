@@ -1,7 +1,13 @@
 package com.brew.brewshop.xml;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.util.Log;
 
+import com.brew.brewshop.HomeActivity;
+import com.brew.brewshop.R;
+import com.brew.brewshop.fragments.RecipeListFragment;
 import com.brew.brewshop.storage.malt.MaltInfo;
 import com.brew.brewshop.storage.recipes.BeerStyle;
 import com.brew.brewshop.storage.recipes.Hop;
@@ -48,9 +54,32 @@ import javax.xml.xpath.XPathFactory;
 /**
  * Created by doug on 21/11/14.
  */
-public class BeerXML {
+public class BeerXML extends AsyncTask<InputStream, Integer, Recipe[]>  {
 
-    public static Recipe[] readInputStream(InputStream inputStream) {
+    ProgressDialog dialog;
+    Activity activity;
+
+    public BeerXML(Activity activity) {
+        this.activity = activity;
+        dialog = new ProgressDialog(activity);
+    }
+
+    @Override
+    protected void onPreExecute() {
+        //set message of the dialog
+        dialog.setMessage(activity.getString(R.string.opening_file));
+        //show dialog
+        dialog.show();
+    }
+
+    @Override
+    protected void onPostExecute(final Recipe[] recipes) {
+        if (dialog.isShowing()) {
+            dialog.dismiss();
+        }
+    }
+
+    public Recipe[] readInputStream(InputStream inputStream) {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = null;
         try {
@@ -73,7 +102,7 @@ public class BeerXML {
         return readDocument(recipeDocument);
     }
 
-    public static Recipe[] readFile(File beerXMLFile) {
+    public Recipe[] readFile(File beerXMLFile) {
 
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = null;
@@ -98,7 +127,7 @@ public class BeerXML {
         return readDocument(recipeDocument);
     }
 
-    private static Recipe[] readDocument(Document recipeDocument) {
+    private Recipe[] readDocument(Document recipeDocument) {
         XPath xp = null;
         try {
             xp = XPathFactory.newInstance().newXPath();
@@ -109,9 +138,6 @@ public class BeerXML {
                 Log.i("BrewShop", "No Recipes found in file");
                 return null;
             }
-            if (recipeList.getLength() > 1) {
-                // TODO: Handle multiple recipes
-            }
 
             return readRecipe(recipeDocument, null);
         } catch (XPathException xpe) {
@@ -120,8 +146,7 @@ public class BeerXML {
         }
     }
 
-    public static Recipe[] readRecipe(Document beerDocument, String name) throws XPathException {
-        Recipe recipe = new Recipe();
+    public Recipe[] readRecipe(Document beerDocument, String name) throws XPathException {
         String recipeSelector = "";
 
         if (name != null) {
@@ -136,6 +161,7 @@ public class BeerXML {
         ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
 
         for (int i = 0; i < recipeData.getLength(); i++) {
+            publishProgress(i, recipeData.getLength());
             try {
                 recipeList.add(readSingleRecipe(recipeData.item(i)));
             } catch (XPathException xpe) {
@@ -148,7 +174,7 @@ public class BeerXML {
         return recipeList.toArray(new Recipe[recipeList.size()]);
     }
 
-    public static Recipe readSingleRecipe(Node recipeNode) throws XPathException, NumberFormatException {
+    public Recipe readSingleRecipe(Node recipeNode) throws XPathException, NumberFormatException {
         XPath xp = XPathFactory.newInstance().newXPath();
         Recipe recipe = new Recipe();
 
@@ -180,7 +206,7 @@ public class BeerXML {
         return recipe;
     }
 
-    private static void parseHops(Recipe recipe, NodeList hops) throws XPathException, NumberFormatException {
+    private void parseHops(Recipe recipe, NodeList hops) throws XPathException, NumberFormatException {
         if (hops == null || hops.getLength() == 0) {
             return;
         }
@@ -254,7 +280,7 @@ public class BeerXML {
         }
     }
 
-    private static void parseMalts(Recipe recipe, NodeList malts) throws XPathException, NumberFormatException {
+    private void parseMalts(Recipe recipe, NodeList malts) throws XPathException, NumberFormatException {
         if (malts == null || malts.getLength() == 0) {
             return;
         }
@@ -299,7 +325,7 @@ public class BeerXML {
         }
     }
 
-    private static void parseYeasts(Recipe recipe, NodeList yeasts) throws XPathException, NumberFormatException {
+    private void parseYeasts(Recipe recipe, NodeList yeasts) throws XPathException, NumberFormatException {
         if (yeasts == null || yeasts.getLength() == 0) {
             return;
         }
@@ -333,7 +359,7 @@ public class BeerXML {
         }
     }
 
-    private static void parseStyle(Recipe recipe, Node style) throws XPathExpressionException {
+    private void parseStyle(Recipe recipe, Node style) throws XPathExpressionException {
         if (style == null) {
             return;
         }
@@ -381,7 +407,7 @@ public class BeerXML {
         recipe.setStyle(beerStyle);
     }
 
-    private static double getDouble(NodeList element, String name, XPath xp) {
+    private double getDouble(NodeList element, String name, XPath xp) {
         try {
             String temp = (String) xp.evaluate(name.toUpperCase(),
                     element, XPathConstants.STRING);
@@ -395,7 +421,7 @@ public class BeerXML {
         }
     }
 
-    private static double getDouble(Node element, String name, XPath xp) {
+    private double getDouble(Node element, String name, XPath xp) {
         try {
             String temp = (String) xp.evaluate(name.toUpperCase(),
                     element, XPathConstants.STRING);
@@ -727,5 +753,16 @@ public class BeerXML {
         styleElement.appendChild(tElement);
 
         return styleElement;
+    }
+
+    @Override
+    protected Recipe[] doInBackground(InputStream... inputStreams) {
+        return readInputStream(inputStreams[0]);
+    }
+
+    @Override
+    protected void onProgressUpdate(Integer... progress) {
+        dialog.setMessage(String.format(
+                activity.getString(R.string.open_progress), progress[0], progress[1]));
     }
 }
