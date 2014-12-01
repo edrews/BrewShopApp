@@ -47,7 +47,6 @@ import java.util.List;
 
 public class RecipeListFragment extends Fragment implements ViewClickListener,
         DialogInterface.OnClickListener,
-        AdapterView.OnItemClickListener,
         RecipeChangeHandler,
         ActionMode.Callback {
 
@@ -159,17 +158,26 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.action_new_recipe && canCreateRecipe()) {
-            mSelectNewRecipe = new Dialog(getActivity());
-            mSelectNewRecipe.setContentView(R.layout.select_ingredient);
-
-            NewRecipeAdapter newRecipeAdapter = new NewRecipeAdapter(getActivity(), getNewRecipeTypes());
-
-            ListView listView = (ListView) mSelectNewRecipe.findViewById(R.id.recipe_list);
-            listView.setAdapter(newRecipeAdapter);
-            listView.setOnItemClickListener(this);
-            mSelectNewRecipe.setCancelable(true);
-            mSelectNewRecipe.setTitle(findString(R.string.new_recipe));
-            mSelectNewRecipe.show();
+            Recipe recipe = new Recipe();
+            mStorage.createRecipe(recipe);
+            mRecipeView.drawRecipeList();
+            showRecipe(recipe);
+            return true;
+        } else if (menuItem.getItemId() == R.id.action_open_recipe && canCreateRecipe()) {
+            int currentAPIVersion = Build.VERSION.SDK_INT;
+            Intent fileIntent;
+            if (currentAPIVersion >= Build.VERSION_CODES.KITKAT) {
+                // Use the system file chooser only showing XML files we can open
+                fileIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                fileIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                fileIntent.setType("*/*");
+            } else {
+                Intent chooseFile;
+                chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
+                chooseFile.setType("*/*");
+                fileIntent = Intent.createChooser(chooseFile, "Choose a file");
+            }
+            startActivityForResult(fileIntent, READ_REQUEST_CODE);
             return true;
         }
         return false;
@@ -337,6 +345,17 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
+    private void toastOpened(int saved) {
+        Context context = getActivity();
+        String message;
+        if (saved > 1) {
+            message = String.format(context.getResources().getString(R.string.opened_recipes), saved);
+        } else {
+            message = context.getResources().getString(R.string.opened_recipe);
+        }
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public void onRecipeClosed(int recipeId) {
         if (mRecipeView != null) {
@@ -354,33 +373,6 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
 
     private String findString(int id) {
         return getActivity().getResources().getString(id);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        mSelectNewRecipe.dismiss();
-        String type = getNewRecipeTypes().get(position);
-        if (findString(R.string.new_recipe).equals(type)) {
-            Recipe recipe = new Recipe();
-            mStorage.createRecipe(recipe);
-            mRecipeView.drawRecipeList();
-            showRecipe(recipe);
-        } else if (findString(R.string.open).equals(type)) {
-            int currentAPIVersion = Build.VERSION.SDK_INT;
-            Intent fileIntent;
-            if (currentAPIVersion >= Build.VERSION_CODES.KITKAT) {
-                // Use the system file chooser only showing XML files we can open
-                fileIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                fileIntent.addCategory(Intent.CATEGORY_OPENABLE);
-                fileIntent.setType("*/*");
-            } else {
-                Intent chooseFile;
-                chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
-                chooseFile.setType("*/*");
-                fileIntent = Intent.createChooser(chooseFile, "Choose a file");
-            }
-            startActivityForResult(fileIntent, READ_REQUEST_CODE);
-        }
     }
 
     @Override
