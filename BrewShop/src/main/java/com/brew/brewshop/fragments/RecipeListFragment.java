@@ -23,18 +23,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.brew.brewshop.FragmentHandler;
 import com.brew.brewshop.R;
 import com.brew.brewshop.ViewClickListener;
-import com.brew.brewshop.fragments.com.brew.brewshop.fragments.NewRecipeAdapter;
 import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.recipes.Recipe;
-import com.brew.brewshop.xml.BeerXML;
+import com.brew.brewshop.xml.BeerXMLReader;
+import com.brew.brewshop.xml.BeerXMLWriter;
 import com.brew.brewshop.xml.ParseXML;
 
 import java.io.File;
@@ -217,7 +215,6 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         boolean itemsChecked = (mRecipeView.getSelectedCount() > 0);
         mActionMode.getMenu().findItem(R.id.action_delete).setVisible(itemsChecked);
         mActionMode.getMenu().findItem(R.id.action_save).setVisible(itemsChecked);
-        mActionMode.getMenu().findItem(R.id.action_open_recipe).setVisible(!itemsChecked);
         mActionMode.getMenu().findItem(R.id.action_select_all).setVisible(!mRecipeView.areAllSelected());
         return true;
     }
@@ -416,8 +413,8 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
                     recipeStream =
                             getActivity().getContentResolver().openInputStream(recipeUri);
                     if (type.equalsIgnoreCase("beerxml")) {
-                        BeerXML beerXML = new BeerXML(this.getActivity());
-                        recipes = beerXML.readInputStream(recipeStream);
+                        BeerXMLReader beerXMLReader = new BeerXMLReader(this.getActivity());
+                        recipes = beerXMLReader.readInputStream(recipeStream);
                     }
                 } catch (FileNotFoundException fnfe) {
                     // Shouldn't happen
@@ -468,13 +465,14 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
             }
 
             try {
-                BeerXML.writeRecipes(recipeArray, recipeOutputStream);
+                BeerXMLWriter beerXMLWriter = new BeerXMLWriter(this.getActivity(), recipeArray);
+                beerXMLWriter.writeRecipes(recipeOutputStream);
             } catch (IOException ioe) {
                 AlertDialog.Builder alertDialog =
                         new AlertDialog.Builder(getActivity());
                 alertDialog.setMessage(String.format(
                         getActivity().getResources().getString(
-                                R.string.saved_recipes), recipeArray.length))
+                                R.string.cannot_write_file), resultData.getData()))
                         .setTitle(R.string.open);
                 alertDialog.create().show();
             }
@@ -495,6 +493,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
 
         final Recipe[] recipeArray = toSave.toArray(new Recipe[toSave.size()]);
         final EditText input = new EditText(this.getActivity());
+        final BeerXMLWriter beerXMLWriter = new BeerXMLWriter(this.getActivity(), recipeArray);
 
         new AlertDialog.Builder(this.getActivity())
                 .setTitle("File name?")
@@ -514,7 +513,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
                         File outputFile = new File(Environment.getExternalStorageDirectory() + "/" + filename);
 
                         try {
-                            BeerXML.writeRecipes(recipeArray, outputFile);
+                            beerXMLWriter.writeRecipes(outputFile);
                         } catch (IOException ioe) {
                             AlertDialog.Builder alertDialog =
                                     new AlertDialog.Builder(getActivity());

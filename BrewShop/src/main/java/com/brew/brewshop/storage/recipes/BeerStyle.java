@@ -9,7 +9,7 @@ public class BeerStyle implements Parcelable {
     private String substyle;
     private String description;
     private String category, subCategory;
-    private String categoryNumber, type;
+    private String type;
     private String styleLetter, styleGuide;
     private double ogMin, ogMax;
     private double fgMin, fgMax;
@@ -39,7 +39,6 @@ public class BeerStyle implements Parcelable {
         abvMax = parcel.readDouble();
         category = parcel.readString();
         subCategory = parcel.readString();
-        categoryNumber = parcel.readString();
         styleLetter = parcel.readString();
         styleGuide = parcel.readString();
         type = parcel.readString();
@@ -131,22 +130,6 @@ public class BeerStyle implements Parcelable {
 
     public void setFgMax(double value) { fgMax = value; }
 
-    public String getCategory() { return category; }
-
-    public void setCategory(String value) { category = value; }
-
-    public String getSubCategory() { return subCategory; }
-
-    public void setSubCategory(String value) { subCategory = value; }
-
-    public String getCategoryNumber() { return categoryNumber; }
-
-    public void setCategoryNumber(String value) { categoryNumber = value; }
-
-    public String getStyleLetter() { return styleLetter; }
-
-    public void setStyleLetter(String value) { styleLetter = value; }
-
     public String getStyleGuide() { return styleGuide; }
 
     public void setStyleGuide(String value) { styleGuide = value; }
@@ -177,7 +160,6 @@ public class BeerStyle implements Parcelable {
         parcel.writeDouble(abvMax);
         parcel.writeString(category);
         parcel.writeString(subCategory);
-        parcel.writeString(categoryNumber);
         parcel.writeString(styleLetter);
         parcel.writeString(styleGuide);
         parcel.writeString(type);

@@ -11,4 +11,13 @@ public class BjcpCategoryList extends NameableList<BjcpCategory> {
         }
         return null;
     }
+
+    public BjcpCategory findByNumber(int number) {
+        for (BjcpCategory category : this) {
+            if (category.getId() == number) {
+                return category;
+            }
+        }
+        return null;
+    }
 }
