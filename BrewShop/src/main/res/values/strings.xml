@@ -105,6 +105,8 @@
     </string-array>
 
     <string name="no_recipe_type">No Recipe Type Detected</string>
+    <string name="open_recipe">Open Recipes</string>
+    <string name="opened_recipe">Opened %d Recipe</string>
     <string name="opened_recipes">Opened %d Recipes</string>
     <string name="saved_recipes">Saved %d Recipes</string>
     <string name="saved_recipe">Saved Recipe</string>
