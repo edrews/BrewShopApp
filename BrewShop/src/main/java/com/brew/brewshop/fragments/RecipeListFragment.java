@@ -409,6 +409,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
                         alertDialog.create().show();
                         return;
                     }
+
                     recipeStream =
                             getActivity().getContentResolver().openInputStream(recipeUri);
                     recipes = ParseXML.readRecipe(recipeStream, type);
@@ -424,13 +425,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
                     }
                     mRecipeView.drawRecipeList();
 
-                    AlertDialog.Builder alertDialog =
-                            new AlertDialog.Builder(this.getActivity());
-                    alertDialog.setMessage(String.format(
-                            getActivity().getResources().getString(
-                                    R.string.opened_recipes), recipes.length))
-                            .setTitle(R.string.open);
-                    alertDialog.create().show();
+                    toastOpened(recipes.length);
 
                     if (recipes.length == 1) {
                         showRecipe(recipes[0]);
