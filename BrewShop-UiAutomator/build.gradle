@@ -4,6 +4,15 @@ version = '1.0'
 
 project.ext {
     dexDir = new File(buildDir, 'dex')
+    def rootDir = project.rootDir
+    def localProperties = new File(rootDir, "local.properties")
+    if (localProperties.exists()) {
+        Properties properties = new Properties()
+        localProperties.withInputStream { instr ->
+            properties.load(instr)
+        }
+        androidSdkHome = properties.getProperty('sdk.dir')
+    }
 }
 
 repositories {
@@ -11,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(dir: androidSdkHome + '/platforms/' + androidSdkTarget, include: '*.jar')
+    compile fileTree(dir: androidSdkHome + '/platforms/android-' + rootProject.ext.compileSdkVersion, include: '*.jar')
     compile group: 'junit', name: 'junit', version: '4.11'
 }
 
@@ -24,7 +33,7 @@ jar {
 task dex(dependsOn: jar, type:Exec) {
     println 'Building dex...'
     project.dexDir.mkdirs()
-    commandLine androidSdkHome + '/' + androidSdkBuildToolsDir + '/' + 'dx', '--dex', '--no-strict', '--output=' + buildDir +'/dex/' + project.name + '.jar', jar.archivePath
+    commandLine androidSdkHome + '/build-tools/' + rootProject.ext.buildToolsVersion + '/' + 'dx', '--dex', '--no-strict', '--output=' + buildDir +'/dex/' + project.name + '.jar', jar.archivePath
 }
 
 
