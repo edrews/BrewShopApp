@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -39,6 +40,7 @@ import com.brew.brewshop.xml.ParseXML;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -384,7 +386,6 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
 
             if (resultData != null) {
                 recipeUri = resultData.getData();
-                Recipe[] recipes = null;
                 try {
                     InputStream recipeStream =
                             getActivity().getContentResolver().openInputStream(recipeUri);
@@ -413,26 +414,12 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
                     recipeStream =
                             getActivity().getContentResolver().openInputStream(recipeUri);
                     if (type.equalsIgnoreCase("beerxml")) {
-                        BeerXMLReader beerXMLReader = new BeerXMLReader(this.getActivity());
-                        recipes = beerXMLReader.readInputStream(recipeStream);
+                        new BeerXMLReader(this).execute(recipeStream);
                     }
                 } catch (FileNotFoundException fnfe) {
                     // Shouldn't happen
                     Log.e("BrewShop", "Couldn't find file: " + fnfe.getMessage(), fnfe);
                     return;
-                }
-
-                if (recipes != null && recipes.length > 0) {
-                    for (Recipe recipe: recipes) {
-                        mStorage.createRecipe(recipe);
-                    }
-                    mRecipeView.drawRecipeList();
-
-                    toastOpened(recipes.length);
-
-                    if (recipes.length == 1) {
-                        showRecipe(recipes[0]);
-                    }
                 }
             }
         }
@@ -461,21 +448,8 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
                 return;
             }
 
-            try {
-                BeerXMLWriter beerXMLWriter = new BeerXMLWriter(this.getActivity(), recipeArray);
-                beerXMLWriter.writeRecipes(recipeOutputStream);
-            } catch (IOException ioe) {
-                AlertDialog.Builder alertDialog =
-                        new AlertDialog.Builder(getActivity());
-                alertDialog.setMessage(String.format(
-                        getActivity().getResources().getString(
-                                R.string.cannot_write_file), resultData.getData()))
-                        .setTitle(R.string.open);
-                alertDialog.create().show();
-            }
-
-            mActionMode.finish();
-            toastSaved(recipeArray.length);
+            BeerXMLWriter beerXMLWriter = new BeerXMLWriter(this, recipeArray);
+            beerXMLWriter.execute(recipeOutputStream);
         }
     }
 
@@ -490,7 +464,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
 
         final Recipe[] recipeArray = toSave.toArray(new Recipe[toSave.size()]);
         final EditText input = new EditText(this.getActivity());
-        final BeerXMLWriter beerXMLWriter = new BeerXMLWriter(this.getActivity(), recipeArray);
+        final BeerXMLWriter beerXMLWriter = new BeerXMLWriter(this, recipeArray);
 
         new AlertDialog.Builder(this.getActivity())
                 .setTitle("File name?")
@@ -510,7 +484,8 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
                         File outputFile = new File(Environment.getExternalStorageDirectory() + "/" + filename);
 
                         try {
-                            beerXMLWriter.writeRecipes(outputFile);
+                            FileOutputStream fileOutputStream = new FileOutputStream(outputFile);
+                            beerXMLWriter.execute(fileOutputStream);
                         } catch (IOException ioe) {
                             AlertDialog.Builder alertDialog =
                                     new AlertDialog.Builder(getActivity());
@@ -534,5 +509,25 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
                 mgr.queryIntentActivities(intent,
                         PackageManager.MATCH_DEFAULT_ONLY);
         return list.size() > 0;
+    }
+
+    public void addRecipes(Recipe[] recipes) {
+        if (recipes != null && recipes.length > 0) {
+            for (Recipe recipe: recipes) {
+                mStorage.createRecipe(recipe);
+            }
+            mRecipeView.drawRecipeList();
+
+            toastOpened(recipes.length);
+
+            if (recipes.length == 1) {
+                showRecipe(recipes[0]);
+            }
+        }
+    }
+
+    public void savedRecipes(int length) {
+        mActionMode.finish();
+        toastSaved(length);
     }
 }

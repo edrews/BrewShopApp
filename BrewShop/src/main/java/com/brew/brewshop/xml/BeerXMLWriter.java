@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.brew.brewshop.R;
+import com.brew.brewshop.fragments.RecipeListFragment;
 import com.brew.brewshop.storage.recipes.BeerStyle;
 import com.brew.brewshop.storage.recipes.HopAddition;
 import com.brew.brewshop.storage.recipes.HopUsage;
@@ -47,48 +48,49 @@ import javax.xml.xpath.XPathFactory;
 /**
  * Created by doug on 30/11/14.
  */
-public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Boolean> {
+public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
 
     Recipe[] recipes;
-    Activity activity;
+    RecipeListFragment parentFragment = null;
     ProgressDialog progressDialog;
     BjcpCategoryList mBjcpCategoryList;
 
-    public BeerXMLWriter(Activity activity, Recipe[] recipes) {
-        this.activity = activity;
-        progressDialog = new ProgressDialog(activity);
-        mBjcpCategoryList = new BjcpCategoryStorage(activity).getStyles();
+    public BeerXMLWriter(RecipeListFragment parentFragment, Recipe[] recipes) {
+        this.parentFragment = parentFragment;
+        progressDialog = new ProgressDialog(parentFragment.getActivity());
+        mBjcpCategoryList = new BjcpCategoryStorage(parentFragment.getActivity()).getStyles();
         this.recipes = recipes;
     }
 
     @Override
     protected void onPreExecute() {
         //set message of the dialog
-        progressDialog.setMessage(activity.getString(R.string.opening_file));
+        progressDialog.setMessage(parentFragment.getActivity().getString(R.string.opening_file));
         //show dialog
         progressDialog.show();
     }
 
     @Override
-    protected void onPostExecute(Boolean success) {
+    protected void onPostExecute(Integer success) {
         if (progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
+        parentFragment.savedRecipes(success);
     }
 
-    public boolean writeRecipes(File outputFile) throws IOException {
+    public int writeRecipes(File outputFile) throws IOException {
         FileOutputStream outputStream = new FileOutputStream(outputFile);
         return writeRecipes(outputStream);
     }
 
-    public boolean writeRecipes(OutputStream recipeOutputStream) throws IOException {
+    public int writeRecipes(OutputStream recipeOutputStream) throws IOException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = null;
         try {
             dBuilder = dbFactory.newDocumentBuilder();
         } catch (ParserConfigurationException e1) {
             Log.e("BrewShop", "Couldn't create DocumentBuilderFactory", e1);
-            return false;
+            return -1;
         }
 
         Document recipeDocument = null;
@@ -97,6 +99,7 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Boolean> {
         recipeDocument = dBuilder.newDocument();
         Element recipesElement = recipeDocument.createElement("RECIPES");
 
+        int success = 0;
         for (int i = 0; i < recipes.length; i++) {
             publishProgress(i, recipes.length);
 
@@ -106,12 +109,13 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Boolean> {
                 if (recipeElement != null) {
                     recipesElement.appendChild(recipeElement);
                 }
+                success++;
             } catch (IOException ioe) {
                 Log.e("BeerXMLReader", "Couldn't add recipe", ioe);
             }
         }
-        recipeDocument.appendChild(recipesElement);
 
+        recipeDocument.appendChild(recipesElement);
         try {
             TransformerFactory transformerFactory = TransformerFactory
                     .newInstance();
@@ -133,8 +137,6 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Boolean> {
 
             StreamResult configResult = new StreamResult(recipeOutputStream);
             transformer.transform(source, configResult);
-
-
         } catch (TransformerConfigurationException e) {
             Log.e("BeerXMLReader Writer", "Could not transform config file", e);
         } catch (TransformerException e) {
@@ -142,7 +144,7 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Boolean> {
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
-        return true;
+        return success;
     }
 
     public Element writeRecipe(Recipe recipe, Document recipeDocument) throws IOException {
@@ -323,10 +325,14 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Boolean> {
     }
 
     private Element createStyleElement(BeerStyle style, Document recipeDocument) {
-        BjcpCategory bjcpCategory = mBjcpCategoryList.findByName(style.getStyleName());
-        BjcpSubcategory bjcpSubcategory = bjcpCategory.findSubcategoryByName(style.getSubstyleName());
-
         Element styleElement = recipeDocument.createElement("STYLE");
+
+        BjcpCategory bjcpCategory = mBjcpCategoryList.findByName(style.getStyleName());
+        if (bjcpCategory == null) {
+            return styleElement;
+        }
+
+        BjcpSubcategory bjcpSubcategory = bjcpCategory.findSubcategoryByName(style.getSubstyleName());
 
         Element tElement = recipeDocument.createElement("VERSION");
         tElement.setTextContent("1");
@@ -344,9 +350,11 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Boolean> {
         tElement.setTextContent("" + bjcpCategory.getId());
         styleElement.appendChild(tElement);
 
-        tElement = recipeDocument.createElement("STYLE_LETTER");
-        tElement.setTextContent(bjcpSubcategory.getLetter());
-        styleElement.appendChild(tElement);
+        if (bjcpSubcategory != null) {
+            tElement = recipeDocument.createElement("STYLE_LETTER");
+            tElement.setTextContent(bjcpSubcategory.getLetter());
+            styleElement.appendChild(tElement);
+        }
 
         tElement = recipeDocument.createElement("STYLE_GUIDE");
         tElement.setTextContent(style.getStyleGuide());
@@ -392,17 +400,17 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Boolean> {
     }
 
     @Override
-    protected Boolean doInBackground(OutputStream... outputStreams) {
+    protected Integer doInBackground(OutputStream... outputStreams) {
         try {
             return writeRecipes(outputStreams[0]);
         } catch (IOException ioe) {
-            return false;
+            return -1;
         }
     }
 
     @Override
     protected void onProgressUpdate(Integer... progress) {
         progressDialog.setMessage(String.format(
-                activity.getString(R.string.save_progress), progress[0], progress[1]));
+                parentFragment.getActivity().getString(R.string.save_progress), progress[0], progress[1]));
     }
 }

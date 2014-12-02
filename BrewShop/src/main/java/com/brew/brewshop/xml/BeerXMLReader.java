@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.brew.brewshop.R;
+import com.brew.brewshop.fragments.RecipeListFragment;
 import com.brew.brewshop.storage.recipes.BeerStyle;
 import com.brew.brewshop.storage.recipes.Hop;
 import com.brew.brewshop.storage.recipes.HopAddition;
@@ -22,27 +23,16 @@ import com.brew.brewshop.storage.style.BjcpCategoryStorage;
 import com.brew.brewshop.storage.style.BjcpSubcategory;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
@@ -55,25 +45,26 @@ import javax.xml.xpath.XPathFactory;
 public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
 
     ProgressDialog dialog;
-    Activity activity;
+    RecipeListFragment parentFragment = null;
     BjcpCategoryList mBjcpCategoryList;
 
-    public BeerXMLReader(Activity activity) {
-        this.activity = activity;
-        dialog = new ProgressDialog(activity);
-        mBjcpCategoryList = new BjcpCategoryStorage(activity).getStyles();
+    public BeerXMLReader(RecipeListFragment parentFragment) {
+        this.parentFragment = parentFragment;
+        dialog = new ProgressDialog(parentFragment.getActivity());
+        mBjcpCategoryList = new BjcpCategoryStorage(parentFragment.getActivity()).getStyles();
     }
 
     @Override
     protected void onPreExecute() {
         //set message of the dialog
-        dialog.setMessage(activity.getString(R.string.opening_file));
+        dialog.setMessage(parentFragment.getActivity().getString(R.string.opening_file));
         //show dialog
         dialog.show();
     }
 
     @Override
     protected void onPostExecute(final Recipe[] recipes) {
+        parentFragment.addRecipes(recipes);
         if (dialog.isShowing()) {
             dialog.dismiss();
         }
@@ -456,6 +447,7 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
     @Override
     protected void onProgressUpdate(Integer... progress) {
         dialog.setMessage(String.format(
-                activity.getString(R.string.open_progress), progress[0], progress[1]));
+                parentFragment.getActivity().getString(R.string.open_progress),
+                progress[0], progress[1]));
     }
 }
