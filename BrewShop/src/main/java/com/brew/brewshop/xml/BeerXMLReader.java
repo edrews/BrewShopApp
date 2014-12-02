@@ -270,7 +270,7 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
             } else if (use.equalsIgnoreCase("first wort")) {
                 hopAddition.setUsage(HopUsage.FIRST_WORT);
                 hopAddition.setBoilTime(time);
-            } else if (use.equalsIgnoreCase("aroma")) {
+            } else if (use.equalsIgnoreCase("aroma") || use.equalsIgnoreCase("whirlpool")) {
                 hopAddition.setUsage(HopUsage.WHIRLPOOL);
                 hopAddition.setBoilTime(time);
             }
