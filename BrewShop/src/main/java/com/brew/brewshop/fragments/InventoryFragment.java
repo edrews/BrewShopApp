@@ -116,7 +116,7 @@ public class InventoryFragment extends Fragment implements DialogInterface.OnCli
     }
 
     public String getTitle() {
-        return getActivity().getResources().getString(R.string.inventory);
+        return getActivity().getResources().getString(R.string.my_inventory);
     }
 
     @Override

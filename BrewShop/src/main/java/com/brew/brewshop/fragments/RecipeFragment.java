@@ -24,6 +24,8 @@ import android.widget.Toast;
 
 import com.brew.brewshop.FragmentHandler;
 import com.brew.brewshop.settings.Settings;
+import com.brew.brewshop.storage.inventory.InventoryItem;
+import com.brew.brewshop.storage.inventory.InventoryList;
 import com.brew.brewshop.storage.recipes.IngredientListView;
 import com.brew.brewshop.R;
 import com.brew.brewshop.ViewClickListener;
@@ -39,7 +41,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class RecipeFragment extends Fragment implements ViewClickListener,
-        DialogInterface.OnClickListener,
         AdapterView.OnItemClickListener,
         ActionMode.Callback {
 
@@ -59,7 +60,6 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
     private ActionMode mActionMode;
     private IngredientListView mIngredientView;
     private View mRootView;
-    private ImageView mShowInventory;
     private Settings mSettings;
 
     @Override
@@ -174,9 +174,6 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
         mIngredientView.getAdapter().showInventory(showInventory);
         mIngredientView.drawList();
 
-        mShowInventory = (ImageView) root.findViewById(R.id.show_inventory);
-        mShowInventory.setOnClickListener(this);
-
         textView = (TextView) root.findViewById(R.id.recipe_notes);
         textView.setText(mRecipe.getNotes());
         checkResumeActionMode(state);
@@ -218,20 +215,88 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if (mRecipe.getIngredients().isEmpty()) {
+            menu.findItem(R.id.action_show_inventory).setVisible(false);
+            menu.findItem(R.id.action_hide_inventory).setVisible(false);
+            menu.findItem(R.id.action_remove_from_inventory).setVisible(false);
+        } else {
+            boolean showing = mSettings.getShowInventoryInRecipe();
+            menu.findItem(R.id.action_show_inventory).setVisible(!showing);
+            menu.findItem(R.id.action_hide_inventory).setVisible(showing);
+            menu.findItem(R.id.action_remove_from_inventory).setVisible(showing);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.action_show_inventory:
+                mSettings.setShowInventoryInRecipe(true);
+                getActivity().supportInvalidateOptionsMenu();
+                showInventory(true);
+                return true;
+            case R.id.action_hide_inventory:
+                mSettings.setShowInventoryInRecipe(false);
+                getActivity().supportInvalidateOptionsMenu();
+                showInventory(false);
+                return true;
+            case R.id.action_remove_from_inventory:
+                new AlertDialog.Builder(getActivity())
+                        .setMessage(R.string.confirm_remove_from_inventory)
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                removeFromInventory();
+                            }
+                        })
+                        .setNegativeButton(R.string.no, null)
+                        .show();
+                return true;
+        }
+        return super.onOptionsItemSelected(menuItem);
+    }
+
+    private void showInventory(boolean show) {
+        mIngredientView.getAdapter().showInventory(show);
+        mIngredientView.drawList();
+    }
+
+    private void removeFromInventory() {
+        /*
+        removeMaltsFromInventory();
+        removeHopsFromInventory();
+        removeYeastFromInventory();
+        */
+        mIngredientView.drawList();
+        Toast.makeText(getActivity(), R.string.ingredients_removed_from_inventory, Toast.LENGTH_SHORT).show();
+    }
+
+    /*
+    private void removeMaltsFromInventory() {
+        InventoryList inventory = mStorage.retrieveInventory();
+        InventoryList malts = inventory.getMalts();
+        for (MaltAddition addition : mRecipe.getMalts()) {
+            InventoryItem item = malts.find(addition.getMalt());
+            if (item != null) {
+                malts.
+            }
+        }
+    }
+*/
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.recipe_stats_layout:
                 mFragmentHandler.showRecipeStatsEditor(mRecipe);
-                break;
+                return;
             case R.id.recipe_notes_layout:
                 mFragmentHandler.showRecipeNotesEditor(mRecipe);
-                break;
+                return;
             case R.id.new_ingredient_view:
                 addNewIngredient();
-                break;
-            case R.id.show_inventory:
-                showHideInventory();
-                break;
+                return;
         }
 
         Object ingredient = view.getTag(R.string.ingredients);
@@ -334,7 +399,12 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
                 }
                 new AlertDialog.Builder(getActivity())
                         .setMessage(message)
-                        .setPositiveButton(R.string.yes, this)
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                deleteIngredients();
+                            }
+                         })
                         .setNegativeButton(R.string.no, null)
                         .show();
                 return true;
@@ -349,20 +419,12 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
         mActionMode = null;
     }
 
-    @Override
-    public void onClick(DialogInterface dialogInterface, int i) {
+    private void deleteIngredients() {
         int deleted = deleteSelected();
         mIngredientView.drawList();
         mActionMode.finish();
         updateStats();
         toastDeleted(deleted);
-    }
-
-    private void showHideInventory() {
-        boolean showInventory = !mSettings.getShowInventoryInRecipe();
-        mSettings.setShowInventoryInRecipe(showInventory);
-        mIngredientView.getAdapter().showInventory(showInventory);
-        mIngredientView.drawList();
     }
 
     private void checkResumeActionMode(Bundle bundle) {

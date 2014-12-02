@@ -220,7 +220,7 @@ public class YeastFragment extends Fragment implements IngredientSelectionHandle
     }
 
     private InventoryList getInventory() {
-        return mStorage.retrieveInventory().getType(Yeast.class);
+        return mStorage.retrieveInventory().getYeasts();
     }
 
     private void retrieveUserInputData() {

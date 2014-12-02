@@ -296,42 +296,15 @@
                         android:gravity="center_vertical"
                         android:text="@string/ingredients" />
 
-                    <ImageView
-                        android:id="@+id/show_inventory"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:padding="6dp"
-                        android:layout_alignParentRight="true"
-                        android:background="@drawable/touchable"
-                        android:src="@drawable/checklist"/>
-
-                    <View
-                        android:id="@+id/button_separator"
-                        android:layout_width="0.5dp"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginBottom="2dp"
-                        android:layout_toLeftOf="@id/show_inventory"
-                        android:background="@color/color_gray"/>
-
                     <TextView
                         android:id="@+id/new_ingredient_view"
                         android:layout_width="48dp"
-                        android:layout_toLeftOf="@id/button_separator"
+                        android:layout_alignParentRight="true"
                         android:layout_height="48dp"
                         android:gravity="center"
                         android:background="@drawable/touchable"
                         android:textColor="@color/text_dark_primary"
                         android:text="ADD" />
-
-                    <View
-                        android:id="@+id/button_separator2"
-                        android:layout_width="0.5dp"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginBottom="2dp"
-                        android:layout_toLeftOf="@id/new_ingredient_view"
-                        android:background="@color/color_gray"/>
 
                 </RelativeLayout>
 

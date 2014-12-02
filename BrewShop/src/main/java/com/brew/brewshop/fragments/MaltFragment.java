@@ -231,7 +231,7 @@ public class MaltFragment extends Fragment implements IngredientSelectionHandler
     }
 
     private InventoryList getInventory() {
-        return mStorage.retrieveInventory().getType(Malt.class);
+        return mStorage.retrieveInventory().getMalts();
     }
 
     private void retrieveUserInputData() {

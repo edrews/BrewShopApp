@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -93,11 +92,11 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
         NavItemFactory factory = new NavItemFactory(this);
         List<NavDrawerItem> menu = new ArrayList<NavDrawerItem>();
         menu.add(factory.newSection(R.string.homebrew_tools));
-        menu.add(factory.newEntry(101, R.string.homebrew_recipes, R.drawable.folder));
+        menu.add(factory.newEntry(101, R.string.my_recipes, R.drawable.folder));
 
         boolean showInventory = getResources().getBoolean(R.bool.show_inventory);
         if (showInventory) {
-            menu.add(factory.newEntry(102, R.string.inventory, R.drawable.folder));
+            menu.add(factory.newEntry(102, R.string.my_inventory, R.drawable.folder));
         }
 
         boolean showStore = getResources().getBoolean(R.bool.show_store_drawer_items);

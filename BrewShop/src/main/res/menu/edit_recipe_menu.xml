@@ -1,4 +1,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    <item android:id="@+id/action_show_inventory"
+        android:title="@string/show_inventory"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_hide_inventory"
+        android:title="@string/hide_inventory"
+        android:orderInCategory="101"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_remove_from_inventory"
+        android:title="@string/remove_from_inventory"
+        android:orderInCategory="102"
+        app:showAsAction="never" />
 </menu>

@@ -1,12 +1,27 @@
 package com.brew.brewshop.storage.inventory;
 
 import com.brew.brewshop.storage.Nameable;
+import com.brew.brewshop.storage.recipes.Hop;
+import com.brew.brewshop.storage.recipes.Malt;
 import com.brew.brewshop.storage.recipes.Weight;
+import com.brew.brewshop.storage.recipes.Yeast;
 
 import java.util.ArrayList;
 
 public class InventoryList extends ArrayList<InventoryItem> {
     private static final String TAG = InventoryList.class.getName();
+
+    public InventoryList getMalts() {
+        return getType(Malt.class);
+    }
+
+    public InventoryList getHops() {
+        return getType(Hop.class);
+    }
+
+    public InventoryList getYeasts() {
+        return getType(Yeast.class);
+    }
 
     public InventoryList getType(Class clazz) {
         InventoryList list = new InventoryList();
@@ -51,12 +66,16 @@ public class InventoryList extends ArrayList<InventoryItem> {
         return index;
     }
 
-    public boolean contains(Nameable nameable) {
+    public InventoryItem find(Nameable nameable) {
         for (InventoryItem item : this) {
             if (item.getName().equals(nameable.getName())) {
-                return true;
+                return item;
             }
         }
-        return false;
+        return null;
+    }
+
+    public boolean contains(Nameable nameable) {
+        return find(nameable) != null;
     }
 }

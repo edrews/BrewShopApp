@@ -258,7 +258,7 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
     }
 
     private InventoryList getInventory() {
-        return mStorage.retrieveInventory().getType(Hop.class);
+        return mStorage.retrieveInventory().getHops();
     }
 
     private void retrieveUserInputData() {

@@ -5,12 +5,15 @@ import android.os.Parcelable;
 
 @SuppressWarnings("unused")
 public class BeerStyle implements Parcelable {
+    public static final String BJCP_STYLE = "BJCP";
+
     private String style;
     private String substyle;
     private String description;
-    private String category, subCategory;
     private String type;
-    private String styleLetter, styleGuide;
+    private String styleNumber;
+    private String styleLetter;
+    private String styleGuide;
     private double ogMin, ogMax;
     private double fgMin, fgMax;
     private double ibuMin, ibuMax;
@@ -21,6 +24,10 @@ public class BeerStyle implements Parcelable {
         style = "";
         substyle = "";
         description = "";
+        type = "";
+        styleNumber = "";
+        styleLetter = "";
+        styleGuide = BJCP_STYLE;
     }
 
     public BeerStyle(Parcel parcel) {
@@ -37,8 +44,7 @@ public class BeerStyle implements Parcelable {
         srmMax = parcel.readDouble();
         abvMin = parcel.readDouble();
         abvMax = parcel.readDouble();
-        category = parcel.readString();
-        subCategory = parcel.readString();
+        styleNumber = parcel.readString();
         styleLetter = parcel.readString();
         styleGuide = parcel.readString();
         type = parcel.readString();
@@ -158,8 +164,7 @@ public class BeerStyle implements Parcelable {
         parcel.writeDouble(srmMax);
         parcel.writeDouble(abvMin);
         parcel.writeDouble(abvMax);
-        parcel.writeString(category);
-        parcel.writeString(subCategory);
+        parcel.writeString(styleNumber);
         parcel.writeString(styleLetter);
         parcel.writeString(styleGuide);
         parcel.writeString(type);

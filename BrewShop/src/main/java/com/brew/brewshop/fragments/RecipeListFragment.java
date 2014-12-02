@@ -70,7 +70,6 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         View rootView = inflater.inflate(R.layout.fragment_recipes, container, false);
         setHasOptionsMenu(true);
 
-        checkResumeActionMode(bundle);
         mViewSwitcher.setTitle(getTitle());
 
         mStorage = new BrewStorage(getActivity());
@@ -80,12 +79,13 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
             int id = bundle.getInt(SHOWING_ID, -1);
             mRecipeView.setShowing(id);
         }
+        checkResumeActionMode(bundle);
 
         return rootView;
     }
 
     public String getTitle() {
-        return getActivity().getResources().getString(R.string.homebrew_recipes);
+        return getActivity().getResources().getString(R.string.my_recipes);
     }
 
     @Override
@@ -212,7 +212,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         mActionMode.setSubtitle(checked + " " + getResources().getString(R.string.selected));
 
         MenuInflater inflater = actionMode.getMenuInflater();
-        inflater.inflate(R.menu.context_menu, menu);
+        inflater.inflate(R.menu.recipes_context_menu, menu);
 
         boolean itemsChecked = (mRecipeView.getSelectedCount() > 0);
         mActionMode.getMenu().findItem(R.id.action_delete).setVisible(itemsChecked);
