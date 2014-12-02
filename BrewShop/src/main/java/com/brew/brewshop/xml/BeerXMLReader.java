@@ -375,11 +375,19 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
         double abvMin = getDouble(style, "ABV_MIN", xp);
         double abvMax = getDouble(style, "ABV_MAX", xp);
 
-        BjcpCategory bjcpCategory = mBjcpCategoryList.findByNumber(categoryNumber);
-        BjcpSubcategory bjcpSubcategory = bjcpCategory.findSubcategoryByName(name);
+        BjcpCategory bjcpCategory = mBjcpCategoryList.findByName(name);
+
+        if (bjcpCategory == null && name.contains("&amp")) {
+            bjcpCategory = mBjcpCategoryList.findByName(name.replace("&amp", "and"));
+        }
+
+        if (bjcpCategory == null) {
+            return;
+        }
+
+        BjcpSubcategory bjcpSubcategory = bjcpCategory.findSubcategoryByLetter(styleLetter);
         BeerStyle beerStyle = new BeerStyle();
         beerStyle.setStyleName(bjcpCategory.getName());
-        beerStyle.setSubstyleName(name);
         beerStyle.setDescription(notes);
         beerStyle.setStyleGuide(styleGuide);
         beerStyle.setType(type);
@@ -393,7 +401,7 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
         beerStyle.setSrmMin(colorMin);
         beerStyle.setIbuMax(ibuMax);
         beerStyle.setIbuMin(ibuMin);
-
+        beerStyle.setSubstyleName(bjcpSubcategory.getName());
         recipe.setStyle(beerStyle);
     }
 
