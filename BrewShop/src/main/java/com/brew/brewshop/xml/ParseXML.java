@@ -1,49 +1,26 @@
 package com.brew.brewshop.xml;
 
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Log;
 
-import com.brew.brewshop.storage.recipes.Recipe;
-import com.brew.brewshop.xml.BeerXML;
-
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Created by Doug Edey on 21/11/14.
  */
 public class ParseXML {
-    public static Recipe[] readRecipe(String filename) {
-        File recipeFile = new File(filename);
-
-        String type = checkFileType(recipeFile);
-        if (type.equals("beerxml")) {
-             return BeerXML.readFile(recipeFile);
-        }
-
-        return null;
-    }
-
-    public static Recipe[] readRecipe(InputStream inputStream, String type) {
-        String recipeData = "";
-
-        if (type.equals("beerxml")) {
-            return BeerXML.readInputStream(inputStream);
-        }
-
-        return null;
-    }
+//    public static Recipe[] readBeerXMLRecipe(String filename) {
+//        File recipeFile = new File(filename);
+//        return BeerXMLReader.readFile(recipeFile);
+//    }
+//
+//    public Recipe[] readBeerXMLRecipe(InputStream inputStream) {
+//        return BeerXMLReader.readInputStream(inputStream);
+//    }
 
     public static String checkRecipeType(String buffer) {
-        if (buffer.indexOf("BeerXML Format") > -1 || buffer.indexOf("<RECIPES>") > -1 )
+        if (buffer.indexOf("BeerXMLReader Format") > -1 || buffer.indexOf("<RECIPES>") > -1 )
             return "beerxml";
         if (buffer.indexOf("STRANGEBREWRECIPE") > -1)
             return "sb";
@@ -69,7 +46,7 @@ public class ParseXML {
                 int i = 0;
                 while ((c = inb.readLine()) != null && i < 10) {
                     // check for an opening tag of Recipes too
-                    if (c.indexOf("BeerXML Format") > -1 || c.indexOf("<RECIPES>") > -1 )
+                    if (c.indexOf("BeerXMLReader Format") > -1 || c.indexOf("<RECIPES>") > -1 )
                         return "beerxml";
                     if (c.indexOf("STRANGEBREWRECIPE") > -1)
                         return "sb";
@@ -83,6 +60,5 @@ public class ParseXML {
         }
         return "";
     }
-
 
 }

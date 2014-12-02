@@ -33,7 +33,8 @@ import com.brew.brewshop.ViewClickListener;
 import com.brew.brewshop.fragments.com.brew.brewshop.fragments.NewRecipeAdapter;
 import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.recipes.Recipe;
-import com.brew.brewshop.xml.BeerXML;
+import com.brew.brewshop.xml.BeerXMLReader;
+import com.brew.brewshop.xml.BeerXMLWriter;
 import com.brew.brewshop.xml.ParseXML;
 
 import java.io.File;
@@ -47,7 +48,6 @@ import java.util.List;
 
 public class RecipeListFragment extends Fragment implements ViewClickListener,
         DialogInterface.OnClickListener,
-        AdapterView.OnItemClickListener,
         RecipeChangeHandler,
         ActionMode.Callback {
 
@@ -70,7 +70,9 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         View rootView = inflater.inflate(R.layout.fragment_recipes, container, false);
         setHasOptionsMenu(true);
 
+        checkResumeActionMode(bundle);
         mViewSwitcher.setTitle(getTitle());
+
         mStorage = new BrewStorage(getActivity());
         mRecipeView = new RecipeListView(getActivity(), rootView, mStorage, this);
         mRecipeView.drawRecipeList();
@@ -78,7 +80,6 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
             int id = bundle.getInt(SHOWING_ID, -1);
             mRecipeView.setShowing(id);
         }
-        checkResumeActionMode(bundle);
 
         return rootView;
     }
@@ -158,28 +159,29 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.action_new_recipe && canCreateRecipe()) {
-            if (getResources().getBoolean(R.bool.show_open_recipe)) {
-                showSelectNewRecipeDialog();
+            Recipe recipe = new Recipe();
+            mStorage.createRecipe(recipe);
+            mRecipeView.drawRecipeList();
+            showRecipe(recipe);
+            return true;
+        } else if (menuItem.getItemId() == R.id.action_open_recipe && canCreateRecipe()) {
+            int currentAPIVersion = Build.VERSION.SDK_INT;
+            Intent fileIntent;
+            if (currentAPIVersion >= Build.VERSION_CODES.KITKAT) {
+                // Use the system file chooser only showing XML files we can open
+                fileIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                fileIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                fileIntent.setType("*/*");
             } else {
-                createAndShowNewRecipe();
+                Intent chooseFile;
+                chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
+                chooseFile.setType("*/*");
+                fileIntent = Intent.createChooser(chooseFile, "Choose a file");
             }
+            startActivityForResult(fileIntent, READ_REQUEST_CODE);
             return true;
         }
         return false;
-    }
-
-    private void showSelectNewRecipeDialog() {
-        mSelectNewRecipe = new Dialog(getActivity());
-        mSelectNewRecipe.setContentView(R.layout.select_ingredient);
-
-        NewRecipeAdapter newRecipeAdapter = new NewRecipeAdapter(getActivity(), getNewRecipeTypes());
-
-        ListView listView = (ListView) mSelectNewRecipe.findViewById(R.id.recipe_list);
-        listView.setAdapter(newRecipeAdapter);
-        listView.setOnItemClickListener(this);
-        mSelectNewRecipe.setCancelable(true);
-        mSelectNewRecipe.setTitle(findString(R.string.new_recipe));
-        mSelectNewRecipe.show();
     }
 
     private List<String> getNewRecipeTypes() {
@@ -210,13 +212,11 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         mActionMode.setSubtitle(checked + " " + getResources().getString(R.string.selected));
 
         MenuInflater inflater = actionMode.getMenuInflater();
-        inflater.inflate(R.menu.recipes_context_menu, menu);
+        inflater.inflate(R.menu.context_menu, menu);
 
         boolean itemsChecked = (mRecipeView.getSelectedCount() > 0);
         mActionMode.getMenu().findItem(R.id.action_delete).setVisible(itemsChecked);
-        if (getResources().getBoolean(R.bool.show_save_recipe)) {
-            mActionMode.getMenu().findItem(R.id.action_save).setVisible(itemsChecked);
-        }
+        mActionMode.getMenu().findItem(R.id.action_save).setVisible(itemsChecked);
         mActionMode.getMenu().findItem(R.id.action_select_all).setVisible(!mRecipeView.areAllSelected());
         return true;
     }
@@ -346,6 +346,17 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
+    private void toastOpened(int saved) {
+        Context context = getActivity();
+        String message;
+        if (saved > 1) {
+            message = String.format(context.getResources().getString(R.string.opened_recipes), saved);
+        } else {
+            message = context.getResources().getString(R.string.opened_recipe);
+        }
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public void onRecipeClosed(int recipeId) {
         if (mRecipeView != null) {
@@ -363,37 +374,6 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
 
     private String findString(int id) {
         return getActivity().getResources().getString(id);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        mSelectNewRecipe.dismiss();
-        String type = getNewRecipeTypes().get(position);
-        if (findString(R.string.new_recipe).equals(type)) {
-            createAndShowNewRecipe();
-        } else if (findString(R.string.open).equals(type)) {
-            int currentAPIVersion = Build.VERSION.SDK_INT;
-            Intent fileIntent;
-            if (currentAPIVersion >= Build.VERSION_CODES.KITKAT) {
-                // Use the system file chooser only showing XML files we can open
-                fileIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                fileIntent.addCategory(Intent.CATEGORY_OPENABLE);
-                fileIntent.setType("*/*");
-            } else {
-                Intent chooseFile;
-                chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
-                chooseFile.setType("*/*");
-                fileIntent = Intent.createChooser(chooseFile, "Choose a file");
-            }
-            startActivityForResult(fileIntent, READ_REQUEST_CODE);
-        }
-    }
-
-    private void createAndShowNewRecipe() {
-        Recipe recipe = new Recipe();
-        mStorage.createRecipe(recipe);
-        mRecipeView.drawRecipeList();
-        showRecipe(recipe);
     }
 
     @Override
@@ -429,9 +409,13 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
                         alertDialog.create().show();
                         return;
                     }
+                    
                     recipeStream =
                             getActivity().getContentResolver().openInputStream(recipeUri);
-                    recipes = ParseXML.readRecipe(recipeStream, type);
+                    if (type.equalsIgnoreCase("beerxml")) {
+                        BeerXMLReader beerXMLReader = new BeerXMLReader(this.getActivity());
+                        recipes = beerXMLReader.readInputStream(recipeStream);
+                    }
                 } catch (FileNotFoundException fnfe) {
                     // Shouldn't happen
                     Log.e("BrewShop", "Couldn't find file: " + fnfe.getMessage(), fnfe);
@@ -444,13 +428,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
                     }
                     mRecipeView.drawRecipeList();
 
-                    AlertDialog.Builder alertDialog =
-                            new AlertDialog.Builder(this.getActivity());
-                    alertDialog.setMessage(String.format(
-                            getActivity().getResources().getString(
-                                    R.string.opened_recipes), recipes.length))
-                            .setTitle(R.string.open);
-                    alertDialog.create().show();
+                    toastOpened(recipes.length);
 
                     if (recipes.length == 1) {
                         showRecipe(recipes[0]);
@@ -484,13 +462,14 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
             }
 
             try {
-                BeerXML.writeRecipes(recipeArray, recipeOutputStream);
+                BeerXMLWriter beerXMLWriter = new BeerXMLWriter(this.getActivity(), recipeArray);
+                beerXMLWriter.writeRecipes(recipeOutputStream);
             } catch (IOException ioe) {
                 AlertDialog.Builder alertDialog =
                         new AlertDialog.Builder(getActivity());
                 alertDialog.setMessage(String.format(
                         getActivity().getResources().getString(
-                                R.string.saved_recipes), recipeArray.length))
+                                R.string.cannot_write_file), resultData.getData()))
                         .setTitle(R.string.open);
                 alertDialog.create().show();
             }
@@ -511,6 +490,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
 
         final Recipe[] recipeArray = toSave.toArray(new Recipe[toSave.size()]);
         final EditText input = new EditText(this.getActivity());
+        final BeerXMLWriter beerXMLWriter = new BeerXMLWriter(this.getActivity(), recipeArray);
 
         new AlertDialog.Builder(this.getActivity())
                 .setTitle("File name?")
@@ -530,7 +510,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
                         File outputFile = new File(Environment.getExternalStorageDirectory() + "/" + filename);
 
                         try {
-                            BeerXML.writeRecipes(recipeArray, outputFile);
+                            beerXMLWriter.writeRecipes(outputFile);
                         } catch (IOException ioe) {
                             AlertDialog.Builder alertDialog =
                                     new AlertDialog.Builder(getActivity());

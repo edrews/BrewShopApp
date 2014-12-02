@@ -7,4 +7,9 @@
         android:title="@string/new_recipe"
         android:orderInCategory="100"
         app:showAsAction="ifRoom" />
+    <item android:id="@+id/action_open_recipe"
+        android:icon="@drawable/ic_menu_archive"
+        android:title="@string/open_recipe"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom" />
 </menu>

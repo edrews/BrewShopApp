@@ -108,8 +108,13 @@
     </string-array>
 
     <string name="no_recipe_type">No Recipe Type Detected</string>
+    <string name="open_recipe">Open Recipes</string>
+    <string name="opened_recipe">Opened Recipe</string>
     <string name="opened_recipes">Opened %d Recipes</string>
     <string name="saved_recipes">Saved %d Recipes</string>
     <string name="saved_recipe">Saved Recipe</string>
     <string name="cannot_write_file">Failed to write to file %s</string>
+    <string name="opening_file">Opening File %s</string>
+    <string name="open_progress">Opened recipe %1$s of %2$s</string>
+    <string name="save_progress">Saved recipe %1$s of %2$s</string>
 </resources>

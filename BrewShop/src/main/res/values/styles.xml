@@ -187,4 +187,5 @@
         <item name="android:textColor">@color/text_dark_secondary</item>
         <item name="android:textSize">14sp</item>
     </style>
+
 </resources>
