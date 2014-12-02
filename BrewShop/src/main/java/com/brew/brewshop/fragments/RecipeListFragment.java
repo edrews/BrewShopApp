@@ -3,7 +3,6 @@ package com.brew.brewshop.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,12 +22,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.brew.brewshop.FragmentHandler;
 import com.brew.brewshop.R;
 import com.brew.brewshop.ViewClickListener;
+import com.brew.brewshop.fragments.com.brew.brewshop.fragments.NewRecipeAdapter;
 import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.xml.BeerXMLReader;
@@ -382,8 +384,6 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
 
             if (resultData != null) {
                 recipeUri = resultData.getData();
-                String message = String.format(getActivity().getResources().getString(R.string.opening_file), recipeUri.getLastPathSegment());
-                ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", message, true);
                 Recipe[] recipes = null;
                 try {
                     InputStream recipeStream =
@@ -409,7 +409,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
                         alertDialog.create().show();
                         return;
                     }
-
+                    
                     recipeStream =
                             getActivity().getContentResolver().openInputStream(recipeUri);
                     if (type.equalsIgnoreCase("beerxml")) {
@@ -420,8 +420,6 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
                     // Shouldn't happen
                     Log.e("BrewShop", "Couldn't find file: " + fnfe.getMessage(), fnfe);
                     return;
-                } finally {
-                    progressDialog.dismiss();
                 }
 
                 if (recipes != null && recipes.length > 0) {
@@ -436,7 +434,6 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
                         showRecipe(recipes[0]);
                     }
                 }
-
             }
         }
 
