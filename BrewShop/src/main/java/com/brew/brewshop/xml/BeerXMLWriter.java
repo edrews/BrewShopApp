@@ -1,6 +1,5 @@
 package com.brew.brewshop.xml;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -27,7 +26,6 @@ import org.w3c.dom.NodeList;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -65,7 +63,7 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
     @Override
     protected void onPreExecute() {
         //set message of the dialog
-        progressDialog.setMessage(parentFragment.getActivity().getString(R.string.opening_file));
+        progressDialog.setMessage(parentFragment.getActivity().getString(R.string.save_recipe_progress));
         //show dialog
         progressDialog.show();
     }
@@ -411,6 +409,6 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
     @Override
     protected void onProgressUpdate(Integer... progress) {
         progressDialog.setMessage(String.format(
-                parentFragment.getActivity().getString(R.string.save_progress), progress[0], progress[1]));
+                parentFragment.getActivity().getString(R.string.save_recipes_progress), progress[0], progress[1]));
     }
 }
