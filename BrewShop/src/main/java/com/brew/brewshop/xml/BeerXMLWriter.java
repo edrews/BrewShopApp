@@ -164,12 +164,16 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
         tElement.setTextContent(recipe.getBrewerName());
         recipeElement.appendChild(tElement);
 
+        tElement = recipeDocument.createElement("EFFICIENCY");
+        tElement.setTextContent("" + recipe.getEfficiency());
+        recipeElement.appendChild(tElement);
+
         tElement = recipeDocument.createElement("BATCH_SIZE");
-        tElement.setTextContent("" + Quantity.convertUnit("gallons", "litres", recipe.getBatchVolume()));
+        tElement.setTextContent("" + Quantity.convertUnit("gallons US", "litres", recipe.getBatchVolume()));
         recipeElement.appendChild(tElement);
 
         tElement = recipeDocument.createElement("BOIL_SIZE");
-        tElement.setTextContent("" + Quantity.convertUnit("gallons", "litres", recipe.getBoilVolume()));
+        tElement.setTextContent("" + Quantity.convertUnit("gallons US", "litres", recipe.getBoilVolume()));
         recipeElement.appendChild(tElement);
 
         tElement = recipeDocument.createElement("BOIL_TIME");
