@@ -66,4 +66,13 @@ public class BjcpCategory implements Nameable {
         }
         return null;
     }
+
+    public BjcpSubcategory findSubcategoryByLetter(String letter) {
+        for (BjcpSubcategory category : subcategories) {
+            if (category.getLetter().equalsIgnoreCase(letter)) {
+                return category;
+            }
+        }
+        return null;
+    }
 }
