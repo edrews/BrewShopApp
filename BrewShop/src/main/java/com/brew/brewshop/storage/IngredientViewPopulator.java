@@ -19,11 +19,11 @@ import com.brew.brewshop.util.Util;
 public class IngredientViewPopulator {
     private static final double MIN_MALT_WEIGHT = 0.0001; //ounces
 
-    private InventoryList mInventory;
     private boolean mShowInventory;
+    private BrewStorage mStorage;
 
     public IngredientViewPopulator(Context context) {
-        mInventory = new BrewStorage(context).retrieveInventory();
+        mStorage = new BrewStorage(context);
         mShowInventory = true;
     }
 
@@ -49,7 +49,7 @@ public class IngredientViewPopulator {
         TextView view = (TextView) parent.findViewById(R.id.quantity);
         view.setText(formatWeight(addition.getWeight(), 2));
 
-        Weight inventoryWeight = mInventory.getItemWeight(Malt.class, addition.getMalt().getName());
+        Weight inventoryWeight = mStorage.retrieveInventory().getItemWeight(Malt.class, addition.getMalt().getName());
         Weight recipeWeight = addition.getWeight();
         Weight adjusted = new Weight(inventoryWeight).subtract(accountedFor);
         setInventoryView(parent, adjusted, recipeWeight);
@@ -76,7 +76,7 @@ public class IngredientViewPopulator {
         TextView view = (TextView) parent.findViewById(R.id.quantity);
         view.setText(formatWeight(addition.getWeight(), 3));
 
-        Weight inventoryWeight = mInventory.getItemWeight(Hop.class, addition.getHop().getName());
+        Weight inventoryWeight = mStorage.retrieveInventory().getItemWeight(Hop.class, addition.getHop().getName());
         Weight recipeWeight = addition.getWeight();
         Weight adjusted = new Weight(inventoryWeight).subtract(accountedFor);
         setInventoryView(parent, adjusted, recipeWeight);
@@ -140,7 +140,7 @@ public class IngredientViewPopulator {
         ImageView check = (ImageView) parent.findViewById(R.id.check);
         check.setVisibility(View.GONE);
 
-        double inInventory = mInventory.getItemCount(Yeast.class, yeast.getName());
+        double inInventory = mStorage.retrieveInventory().getItemCount(Yeast.class, yeast.getName());
         inInventory -= packsAccountedFor;
         if (inInventory < 0) inInventory = 0;
         if (inInventory < 1) {

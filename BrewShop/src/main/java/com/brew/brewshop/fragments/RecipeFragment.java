@@ -34,6 +34,7 @@ import com.brew.brewshop.storage.recipes.BeerStyle;
 import com.brew.brewshop.storage.recipes.HopAddition;
 import com.brew.brewshop.storage.recipes.MaltAddition;
 import com.brew.brewshop.storage.recipes.Recipe;
+import com.brew.brewshop.storage.recipes.Weight;
 import com.brew.brewshop.storage.recipes.Yeast;
 import com.brew.brewshop.util.Util;
 
@@ -264,27 +265,62 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
     }
 
     private void removeFromInventory() {
-        /*
         removeMaltsFromInventory();
         removeHopsFromInventory();
         removeYeastFromInventory();
-        */
         mIngredientView.drawList();
         Toast.makeText(getActivity(), R.string.ingredients_removed_from_inventory, Toast.LENGTH_SHORT).show();
     }
 
-    /*
     private void removeMaltsFromInventory() {
-        InventoryList inventory = mStorage.retrieveInventory();
-        InventoryList malts = inventory.getMalts();
         for (MaltAddition addition : mRecipe.getMalts()) {
-            InventoryItem item = malts.find(addition.getMalt());
-            if (item != null) {
-                malts.
+            Weight weight = new Weight(addition.getWeight());
+            InventoryList maltsWithSameName = mStorage.retrieveInventory().findAll(addition.getMalt());
+            removeWeightFromInventory(weight, maltsWithSameName);
+        }
+    }
+
+    private void removeHopsFromInventory() {
+        for (HopAddition addition : mRecipe.getHops()) {
+            Weight weight = new Weight(addition.getWeight());
+            InventoryList hopsWithSameName = mStorage.retrieveInventory().findAll(addition.getHop());
+            removeWeightFromInventory(weight, hopsWithSameName);
+        }
+    }
+
+    private void removeYeastFromInventory() {
+        for (Yeast yeast : mRecipe.getYeast()) {
+            InventoryList yeastWithSameName = mStorage.retrieveInventory().findAll(yeast);
+            removeQuantityFromInventory(1, yeastWithSameName);
+        }
+    }
+
+    private void removeWeightFromInventory(Weight weight, InventoryList inventory) {
+        for (InventoryItem item : inventory) {
+            if (weight.greaterThanOrEqual(item.getWeight())) {
+                weight.subtract(item.getWeight());
+                mStorage.deleteInventoryItem(item);
+            } else {
+                item.getWeight().subtract(weight);
+                mStorage.updateInventoryItem(item);
+                break;
             }
         }
     }
-*/
+
+    private void removeQuantityFromInventory(int quantity, InventoryList inventory) {
+        for (InventoryItem item : inventory) {
+            if (quantity >= item.getCount()) {
+                quantity -= item.getCount();
+                mStorage.deleteInventoryItem(item);
+            } else {
+                item.setCount(item.getCount() - quantity);
+                mStorage.updateInventoryItem(item);
+                break;
+            }
+        }
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {

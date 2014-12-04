@@ -66,7 +66,7 @@ public class InventoryList extends ArrayList<InventoryItem> {
         return index;
     }
 
-    public InventoryItem find(Nameable nameable) {
+    public InventoryItem findFirst(Nameable nameable) {
         for (InventoryItem item : this) {
             if (item.getName().equals(nameable.getName())) {
                 return item;
@@ -75,7 +75,17 @@ public class InventoryList extends ArrayList<InventoryItem> {
         return null;
     }
 
+    public InventoryList findAll(Nameable nameable) {
+        InventoryList list = new InventoryList();
+        for (InventoryItem item : getType(nameable.getClass())) {
+            if (item.getName().equals(nameable.getName())) {
+                list.add(item);
+            }
+        }
+        return list;
+    }
+
     public boolean contains(Nameable nameable) {
-        return find(nameable) != null;
+        return findFirst(nameable) != null;
     }
 }
