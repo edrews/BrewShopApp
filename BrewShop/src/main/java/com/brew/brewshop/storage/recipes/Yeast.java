@@ -52,4 +52,8 @@ public class Yeast implements Ingredient {
         parcel.writeString(name);
         parcel.writeDouble(avgAttenuation);
     }
+
+    public boolean equals(Yeast other) {
+        return name.equals(other.getName()) && avgAttenuation == other.getAttenuation();
+    }
 }
