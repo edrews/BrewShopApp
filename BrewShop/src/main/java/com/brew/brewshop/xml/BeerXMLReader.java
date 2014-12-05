@@ -2,6 +2,7 @@ package com.brew.brewshop.xml;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -52,6 +53,11 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
         this.parentFragment = parentFragment;
         dialog = new ProgressDialog(parentFragment.getActivity());
         mBjcpCategoryList = new BjcpCategoryStorage(parentFragment.getActivity()).getStyles();
+    }
+
+    public BeerXMLReader(Context context) {
+        this.parentFragment = null;
+        mBjcpCategoryList = new BjcpCategoryStorage(context).getStyles();
     }
 
     @Override
@@ -454,8 +460,13 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
 
     @Override
     protected void onProgressUpdate(Integer... progress) {
-        dialog.setMessage(String.format(
-                parentFragment.getActivity().getString(R.string.open_progress),
-                progress[0], progress[1]));
+        if (dialog == null) {
+            Log.i("BeerXMLReader", "Read recipe " + progress[0] + " of " + progress[1]);
+            return;
+        } else {
+            dialog.setMessage(String.format(
+                    parentFragment.getActivity().getString(R.string.open_progress),
+                    progress[0], progress[1]));
+        }
     }
 }
