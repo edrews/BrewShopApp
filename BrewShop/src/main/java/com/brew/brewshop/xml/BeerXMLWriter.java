@@ -1,7 +1,7 @@
 package com.brew.brewshop.xml;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -27,7 +27,6 @@ import org.w3c.dom.NodeList;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -59,6 +58,11 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
         this.parentFragment = parentFragment;
         progressDialog = new ProgressDialog(parentFragment.getActivity());
         mBjcpCategoryList = new BjcpCategoryStorage(parentFragment.getActivity()).getStyles();
+        this.recipes = recipes;
+    }
+
+    public BeerXMLWriter(Context context, Recipe[] recipes) {
+        mBjcpCategoryList = new BjcpCategoryStorage(context).getStyles();
         this.recipes = recipes;
     }
 
@@ -144,6 +148,7 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
+        recipeOutputStream.flush();
         return success;
     }
 
@@ -204,7 +209,7 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
             Element yeastElement = createYeastElement(yeast, recipeDocument);
             yeastsElement.appendChild(yeastElement);
         }
-
+        recipeElement.appendChild(yeastsElement);
         recipeElement.appendChild(createStyleElement(recipe.getStyle(), recipeDocument));
 
         return recipeElement;
@@ -235,7 +240,7 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
         hopElement.appendChild(tElement);
 
         tElement = recipeDocument.createElement("USE");
-        tElement.setTextContent(hopAddition.getUsage().toString());
+        tElement.setTextContent(hopAddition.getUsage().toString().replace("_", " "));
         hopElement.appendChild(tElement);
 
         tElement = recipeDocument.createElement("TIME");
@@ -291,7 +296,7 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
         tElement.setTextContent(maltAddition.getWeight().getPounds() + " lbs");
         fermentableElement.appendChild(tElement);
 
-        tElement = recipeDocument.createElement("YIELD");
+        tElement = recipeDocument.createElement("POTENTIAL");
         tElement.setTextContent("" + maltAddition.getMalt().getGravity());
         fermentableElement.appendChild(tElement);
 
@@ -400,6 +405,14 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
         tElement.setTextContent("" + style.getSrmMax());
         styleElement.appendChild(tElement);
 
+        tElement = recipeDocument.createElement("ABV_MIN");
+        tElement.setTextContent("" + style.getAbvMin());
+        styleElement.appendChild(tElement);
+
+        tElement = recipeDocument.createElement("ABV_MAX");
+        tElement.setTextContent("" + style.getAbvMax());
+        styleElement.appendChild(tElement);
+
         return styleElement;
     }
 
@@ -414,7 +427,12 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
 
     @Override
     protected void onProgressUpdate(Integer... progress) {
-        progressDialog.setMessage(String.format(
-                parentFragment.getActivity().getString(R.string.save_progress), progress[0], progress[1]));
+        if (progressDialog == null) {
+            Log.i("BeerXMLReader", "Read recipe " + progress[0] + " of " + progress[1]);
+            return;
+        } else {
+            progressDialog.setMessage(String.format(
+                    parentFragment.getActivity().getString(R.string.save_progress), progress[0], progress[1]));
+        }
     }
 }
