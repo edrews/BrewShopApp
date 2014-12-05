@@ -51,4 +51,8 @@ public class Hop implements Ingredient {
             return new Hop[size];
         }
     };
+
+    public boolean equals(Hop other) {
+        return name.equals(other.getName()) && percentAlpha == other.getPercentAlpha();
+    }
 }
