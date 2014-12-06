@@ -69,7 +69,7 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
     @Override
     protected void onPreExecute() {
         //set message of the dialog
-        progressDialog.setMessage(parentFragment.getActivity().getString(R.string.opening_file));
+        progressDialog.setMessage(parentFragment.getActivity().getString(R.string.save_recipe_progress));
         //show dialog
         progressDialog.show();
     }
@@ -148,7 +148,6 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
-        recipeOutputStream.flush();
         return success;
     }
 
@@ -169,16 +168,12 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
         tElement.setTextContent(recipe.getBrewerName());
         recipeElement.appendChild(tElement);
 
-        tElement = recipeDocument.createElement("EFFICIENCY");
-        tElement.setTextContent("" + recipe.getEfficiency());
-        recipeElement.appendChild(tElement);
-
         tElement = recipeDocument.createElement("BATCH_SIZE");
-        tElement.setTextContent("" + Quantity.convertUnit("gallons US", "litres", recipe.getBatchVolume()));
+        tElement.setTextContent("" + Quantity.convertUnit("gallons", "litres", recipe.getBatchVolume()));
         recipeElement.appendChild(tElement);
 
         tElement = recipeDocument.createElement("BOIL_SIZE");
-        tElement.setTextContent("" + Quantity.convertUnit("gallons US", "litres", recipe.getBoilVolume()));
+        tElement.setTextContent("" + Quantity.convertUnit("gallons", "litres", recipe.getBoilVolume()));
         recipeElement.appendChild(tElement);
 
         tElement = recipeDocument.createElement("BOIL_TIME");
@@ -209,7 +204,7 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
             Element yeastElement = createYeastElement(yeast, recipeDocument);
             yeastsElement.appendChild(yeastElement);
         }
-        recipeElement.appendChild(yeastsElement);
+
         recipeElement.appendChild(createStyleElement(recipe.getStyle(), recipeDocument));
 
         return recipeElement;
@@ -240,7 +235,7 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
         hopElement.appendChild(tElement);
 
         tElement = recipeDocument.createElement("USE");
-        tElement.setTextContent(hopAddition.getUsage().toString().replace("_", " "));
+        tElement.setTextContent(hopAddition.getUsage().toString());
         hopElement.appendChild(tElement);
 
         tElement = recipeDocument.createElement("TIME");
@@ -296,7 +291,7 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
         tElement.setTextContent(maltAddition.getWeight().getPounds() + " lbs");
         fermentableElement.appendChild(tElement);
 
-        tElement = recipeDocument.createElement("POTENTIAL");
+        tElement = recipeDocument.createElement("YIELD");
         tElement.setTextContent("" + maltAddition.getMalt().getGravity());
         fermentableElement.appendChild(tElement);
 

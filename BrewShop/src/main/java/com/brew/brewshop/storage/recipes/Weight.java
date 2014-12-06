@@ -25,6 +25,7 @@ public class Weight implements Parcelable {
     }
 
     public double getOunces() { return ounces; }
+
     public void setOunces(double value) { ounces = value; }
 
     public int getPoundsPortion() {
@@ -36,6 +37,7 @@ public class Weight implements Parcelable {
     }
 
     public double getPounds() { return ounces / 16;}
+
     public void setPounds(double value) { ounces = value * 16; }
 
     public Weight add(Weight weight) {
@@ -50,6 +52,10 @@ public class Weight implements Parcelable {
 
     public boolean greaterThan(Weight weight) {
         return ounces > weight.getOunces();
+    }
+
+    public boolean greaterThanOrEqual(Weight weight) {
+        return ounces >= weight.getOunces();
     }
 
     @Override

@@ -62,7 +62,7 @@
     <string name="inventory_yeast">Inventory Yeast</string>
     <string name="show_inventory">Show Inventory</string>
     <string name="hide_inventory">Hide Inventory</string>
-    <string name="remove_from_inventory">Remove From Inventory...</string>
+    <string name="remove_from_inventory">Remove From Inventory&#8230;</string>
     <string name="confirm_remove_from_inventory">Remove these ingredients your from inventory?</string>
     <string name="ingredients_removed_from_inventory">Ingredients removed from inventory</string>
     <string name="inventory_only">Inventory Only</string>
@@ -111,14 +111,15 @@
         <item>@string/dry_hop</item>
     </string-array>
 
-    <string name="no_recipe_type">No Recipe Type Detected</string>
+    <string name="no_recipe_type">Not a valid recipe file.</string>
     <string name="open_recipe">Open Recipes</string>
-    <string name="opened_recipe">Opened Recipe</string>
-    <string name="opened_recipes">Opened %d Recipes</string>
-    <string name="saved_recipes">Saved %d Recipes</string>
-    <string name="saved_recipe">Saved Recipe</string>
+    <string name="opened_recipe">Opened recipe</string>
+    <string name="opened_recipes">Opened %d recipes</string>
+    <string name="saved_recipes">Saved %d recipes</string>
+    <string name="saved_recipe">Saved recipe</string>
     <string name="cannot_write_file">Failed to write to file %s</string>
-    <string name="opening_file">Opening File %s</string>
-    <string name="open_progress">Opened recipe %1$s of %2$s</string>
-    <string name="save_progress">Saved recipe %1$s of %2$s</string>
+    <string name="open_recipe_progress">Opening recipe&#8230;</string>
+    <string name="save_recipe_progress">Saving recipe&#8230;</string>
+    <string name="open_recipes_progress">Opening recipe %1$s of %2$s&#8230;</string>
+    <string name="save_recipes_progress">Saving recipe %1$s of %2$s&#8230;</string>
 </resources>

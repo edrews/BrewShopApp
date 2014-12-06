@@ -9,29 +9,25 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.support.v7.view.ActionMode;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.brew.brewshop.FragmentHandler;
 import com.brew.brewshop.R;
 import com.brew.brewshop.ViewClickListener;
-import com.brew.brewshop.fragments.com.brew.brewshop.fragments.NewRecipeAdapter;
 import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.xml.BeerXMLReader;
@@ -376,10 +372,6 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         }
     }
 
-    private String findString(int id) {
-        return getActivity().getResources().getString(id);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
@@ -389,38 +381,35 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
             if (resultData != null) {
                 recipeUri = resultData.getData();
                 try {
-                    InputStream recipeStream =
-                            getActivity().getContentResolver().openInputStream(recipeUri);
-
+                    InputStream recipeStream = getActivity().getContentResolver().openInputStream(recipeUri);
                     byte[] buffer = new byte[100];
                     String type = null;
-
                     try {
                         recipeStream.read(buffer);
                         type = ParseXML.checkRecipeType(new String(buffer));
-                        recipeStream.close();
                     } catch (IOException ioe) {
-                        Log.e("BrewShop", "Couldn't check file type");
+                        Log.e(TAG, "Couldn't check file type");
                         return;
+                    } finally {
+                        try {
+                            recipeStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     if (type == null) {
-                        AlertDialog.Builder alertDialog =
-                                new AlertDialog.Builder(this.getActivity());
-                        alertDialog.setMessage(R.string.no_recipe_type)
-                                .setTitle(R.string.open);
-                        alertDialog.create().show();
+                        Toast.makeText(getActivity(), R.string.no_recipe_type, Toast.LENGTH_SHORT).show();
                         return;
                     }
                     
-                    recipeStream =
-                            getActivity().getContentResolver().openInputStream(recipeUri);
+                    recipeStream = getActivity().getContentResolver().openInputStream(recipeUri);
                     if (type.equalsIgnoreCase("beerxml")) {
                         new BeerXMLReader(this).execute(recipeStream);
                     }
                 } catch (FileNotFoundException fnfe) {
                     // Shouldn't happen
-                    Log.e("BrewShop", "Couldn't find file: " + fnfe.getMessage(), fnfe);
+                    Log.e(TAG, "Couldn't find file: " + fnfe.getMessage(), fnfe);
                     return;
                 }
             }

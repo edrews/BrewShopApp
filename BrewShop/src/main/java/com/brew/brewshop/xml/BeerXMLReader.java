@@ -40,11 +40,8 @@ import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-/**
- * Created by doug on 21/11/14.
- */
 public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
-
+    private static final String TAG = BeerXMLReader.class.getName();
     ProgressDialog dialog;
     RecipeListFragment parentFragment = null;
     BjcpCategoryList mBjcpCategoryList;
@@ -62,10 +59,26 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
 
     @Override
     protected void onPreExecute() {
-        //set message of the dialog
-        dialog.setMessage(parentFragment.getActivity().getString(R.string.opening_file));
-        //show dialog
+        dialog.setMessage(parentFragment.getActivity().getString(R.string.open_recipe_progress));
         dialog.show();
+    }
+
+    @Override
+    protected Recipe[] doInBackground(InputStream... inputStreams) {
+        return readInputStream(inputStreams[0]);
+    }
+
+    @Override
+    protected void onProgressUpdate(Integer... progress) {
+        int current = progress[0] + 1;
+        int total = progress[1];
+        if (total > 1) {
+            dialog.setMessage(String.format(
+                    parentFragment.getActivity().getString(R.string.open_recipes_progress),
+                    current, total));
+        } else {
+            dialog.setMessage(parentFragment.getActivity().getString(R.string.open_recipe_progress));
+        }
     }
 
     @Override
@@ -76,13 +89,13 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
         }
     }
 
-    public Recipe[] readInputStream(InputStream inputStream) {
+    private Recipe[] readInputStream(InputStream inputStream) {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = null;
         try {
             dBuilder = dbFactory.newDocumentBuilder();
         } catch (ParserConfigurationException e1) {
-            Log.e("BrewShop", "Couldn't create DocumentBuilderFactory", e1);
+            Log.e(TAG, "Couldn't create DocumentBuilderFactory", e1);
             return null;
 
         }
@@ -92,32 +105,29 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
         try {
             recipeDocument = dBuilder.parse(inputStream);
         } catch (Exception e) {
-            Log.e("BrewShop", "Couldn't read XML File", e);
+            Log.e(TAG, "Couldn't read XML File", e);
             return null;
         }
 
         return readDocument(recipeDocument);
     }
 
-    public Recipe[] readFile(File beerXMLFile) {
+    private Recipe[] readFile(File beerXMLFile) {
 
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = null;
         try {
             dBuilder = dbFactory.newDocumentBuilder();
         } catch (ParserConfigurationException e1) {
-            Log.e("BrewShop", "Couldn't create DocumentBuilderFactory", e1);
+            Log.e(TAG, "Couldn't create DocumentBuilderFactory", e1);
             return null;
-
         }
 
         Document recipeDocument = null;
         try {
             recipeDocument = dBuilder.parse(beerXMLFile);
-
         } catch (Exception e) {
-            Log.e("BrewShop", beerXMLFile
-                    + " isn't an XML File");
+            Log.e(TAG, beerXMLFile + " isn't an XML File");
             return null;
         }
 
@@ -138,12 +148,12 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
 
             return readRecipe(recipeDocument, null);
         } catch (XPathException xpe) {
-            Log.e("BrewShop", "Couldn't run XPATH", xpe);
+            Log.e(TAG, "Couldn't run XPATH", xpe);
             return null;
         }
     }
 
-    public Recipe[] readRecipe(Document beerDocument, String name) throws XPathException {
+    private Recipe[] readRecipe(Document beerDocument, String name) throws XPathException {
         String recipeSelector = "";
 
         if (name != null) {
@@ -162,16 +172,16 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
             try {
                 recipeList.add(readSingleRecipe(recipeData.item(i)));
             } catch (XPathException xpe) {
-                Log.e("BeerXMLReader", "Couldn't read the recipe at index " + i, xpe);
+                Log.e(TAG, "Couldn't read the recipe at index " + i, xpe);
             } catch (NumberFormatException nfe) {
-                Log.e("BeerXMLReader", "Couldn't read the recipe at index " + i + " due to a bad number", nfe);
+                Log.e(TAG, "Couldn't read the recipe at index " + i + " due to a bad number", nfe);
             }
         }
 
         return recipeList.toArray(new Recipe[recipeList.size()]);
     }
 
-    public Recipe readSingleRecipe(Node recipeNode) throws XPathException, NumberFormatException {
+    private Recipe readSingleRecipe(Node recipeNode) throws XPathException, NumberFormatException {
         XPath xp = XPathFactory.newInstance().newXPath();
         Recipe recipe = new Recipe();
 
@@ -247,7 +257,7 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
                     weight = new Weight(amount + " kg");
                 }
             } catch (Exception e) {
-                Log.e("BrewShop", "Couldn't parse hop weight", e);
+                Log.e(TAG, "Couldn't parse hop weight", e);
                 return;
             }
 
@@ -311,12 +321,12 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
 
                 recipe.addFermentable(maltAddition);
             } catch (NumberFormatException nfe) {
-                Log.e("BrewShop", "Couldn't parse a number", nfe);
+                Log.e(TAG, "Couldn't parse a number", nfe);
             } catch (Exception e) {
                 if (e instanceof XPathException) {
                     throw (XPathException) e;
                 } else {
-                    Log.e("BrewShop", "Couldn't read the weight for a malt", e);
+                    Log.e(TAG, "Couldn't read the weight for a malt", e);
                 }
             }
         }
@@ -345,7 +355,7 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
                 yeast.setAttenuation(Double.parseDouble(attenuation));
                 recipe.addYeast(yeast);
             } catch (NumberFormatException nfe) {
-                Log.e("BrewShop", "Couldn't parse a number", nfe);
+                Log.e(TAG, "Couldn't parse a number", nfe);
             } catch (Exception e) {
                 if (e instanceof XPathException) {
                     throw (XPathException) e;
@@ -413,60 +423,40 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
 
     private double getDouble(NodeList element, String name, XPath xp) {
         try {
-            String temp = (String) xp.evaluate(name.toUpperCase(),
-                    element, XPathConstants.STRING);
+            String temp = (String) xp.evaluate(name.toUpperCase(), element, XPathConstants.STRING);
             return Double.parseDouble(temp);
         } catch (XPathException xpe) {
-            Log.e("BeerXMLReader", "Failed to run XPATH", xpe);
+            Log.e(TAG, "Failed to run XPATH", xpe);
             return 0.0;
         } catch (NumberFormatException nfe) {
-            Log.e("BeerXMLReader", "Failed to parse string", nfe);
+            Log.e(TAG, "Failed to parse string", nfe);
             return 0.0;
         }
     }
 
     private double getDouble(Node element, String name, XPath xp) {
         try {
-            String temp = (String) xp.evaluate(name.toUpperCase(),
-                    element, XPathConstants.STRING);
+            String temp = (String) xp.evaluate(name.toUpperCase(), element, XPathConstants.STRING);
             return Double.parseDouble(temp);
         } catch (XPathException xpe) {
-            Log.e("BeerXMLReader", "Failed to run XPATH", xpe);
+            Log.e(TAG, "Failed to run XPATH", xpe);
             return 0.0;
         } catch (NumberFormatException nfe) {
-            Log.e("BeerXMLReader", "Failed to parse string", nfe);
+            Log.e(TAG, "Failed to parse string", nfe);
             return 0.0;
         }
     }
 
     private int getInteger(Node element, String name, XPath xp) {
         try {
-            String temp = (String) xp.evaluate(name.toUpperCase(),
-                    element, XPathConstants.STRING);
+            String temp = (String) xp.evaluate(name.toUpperCase(), element, XPathConstants.STRING);
             return Integer.parseInt(temp);
         } catch (XPathException xpe) {
-            Log.e("BeerXMLReader", "Failed to run XPATH", xpe);
+            Log.e(TAG, "Failed to run XPATH", xpe);
             return 0;
         } catch (NumberFormatException nfe) {
-            Log.e("BeerXMLReader", "Failed to parse string", nfe);
+            Log.e(TAG, "Failed to parse string", nfe);
             return 0;
-        }
-    }
-
-    @Override
-    protected Recipe[] doInBackground(InputStream... inputStreams) {
-        return readInputStream(inputStreams[0]);
-    }
-
-    @Override
-    protected void onProgressUpdate(Integer... progress) {
-        if (dialog == null) {
-            Log.i("BeerXMLReader", "Read recipe " + progress[0] + " of " + progress[1]);
-            return;
-        } else {
-            dialog.setMessage(String.format(
-                    parentFragment.getActivity().getString(R.string.open_progress),
-                    progress[0], progress[1]));
         }
     }
 }
