@@ -173,15 +173,19 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
         recipeElement.appendChild(tElement);
 
         tElement = recipeDocument.createElement("BATCH_SIZE");
-        tElement.setTextContent("" + Quantity.convertUnit("gallons", "litres", recipe.getBatchVolume()));
+        tElement.setTextContent("" + Quantity.convertUnit("gallons US", "litres", recipe.getBatchVolume()));
         recipeElement.appendChild(tElement);
 
         tElement = recipeDocument.createElement("BOIL_SIZE");
-        tElement.setTextContent("" + Quantity.convertUnit("gallons", "litres", recipe.getBoilVolume()));
+        tElement.setTextContent("" + Quantity.convertUnit("gallons US", "litres", recipe.getBoilVolume()));
         recipeElement.appendChild(tElement);
 
         tElement = recipeDocument.createElement("BOIL_TIME");
         tElement.setTextContent("" + recipe.getBoilTime());
+        recipeElement.appendChild(tElement);
+
+        tElement = recipeDocument.createElement("EFFICIENCY");
+        tElement.setTextContent("" + recipe.getEfficiency());
         recipeElement.appendChild(tElement);
 
         Element hopsElement = recipeDocument.createElement("HOPS");
@@ -208,7 +212,7 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
             Element yeastElement = createYeastElement(yeast, recipeDocument);
             yeastsElement.appendChild(yeastElement);
         }
-
+        recipeElement.appendChild(yeastsElement);
         recipeElement.appendChild(createStyleElement(recipe.getStyle(), recipeDocument));
 
         return recipeElement;
@@ -239,7 +243,7 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
         hopElement.appendChild(tElement);
 
         tElement = recipeDocument.createElement("USE");
-        tElement.setTextContent(hopAddition.getUsage().toString());
+        tElement.setTextContent(hopAddition.getUsage().toString().replaceAll("_", " "));
         hopElement.appendChild(tElement);
 
         tElement = recipeDocument.createElement("TIME");
