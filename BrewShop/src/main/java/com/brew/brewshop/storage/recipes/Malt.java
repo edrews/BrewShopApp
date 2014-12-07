@@ -69,4 +69,9 @@ public class Malt implements Ingredient {
             return new Malt[size];
         }
     };
+
+    public boolean equals(Malt other) {
+        return name.equals(other.getName()) && gravity == other.getGravity()
+                && color == other.getColor() && mashed == other.isMashed();
+    }
 }

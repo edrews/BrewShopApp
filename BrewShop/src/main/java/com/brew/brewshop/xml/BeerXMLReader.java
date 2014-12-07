@@ -1,6 +1,7 @@
 package com.brew.brewshop.xml;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -41,18 +42,25 @@ import javax.xml.xpath.XPathFactory;
 public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
     private static final String TAG = BeerXMLReader.class.getName();
     ProgressDialog dialog;
-    RecipeListFragment parentFragment = null;
+    Context mContext = null;
+    RecipeListFragment parentFragment;
     BjcpCategoryList mBjcpCategoryList;
 
     public BeerXMLReader(RecipeListFragment parentFragment) {
         this.parentFragment = parentFragment;
-        dialog = new ProgressDialog(parentFragment.getActivity());
-        mBjcpCategoryList = new BjcpCategoryStorage(parentFragment.getActivity()).getStyles();
+        mContext = parentFragment.getActivity();
+        dialog = new ProgressDialog(mContext);
+        mBjcpCategoryList = new BjcpCategoryStorage(mContext).getStyles();
+    }
+
+    public BeerXMLReader(Context context) {
+        this.mContext = context;
+        mBjcpCategoryList = new BjcpCategoryStorage(context).getStyles();
     }
 
     @Override
     protected void onPreExecute() {
-        dialog.setMessage(parentFragment.getActivity().getString(R.string.open_recipe_progress));
+        dialog.setMessage(mContext.getString(R.string.open_recipe_progress));
         dialog.show();
     }
 
@@ -65,13 +73,21 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
     protected void onProgressUpdate(Integer... progress) {
         int current = progress[0] + 1;
         int total = progress[1];
+        String message;
+
         if (total > 1) {
-            dialog.setMessage(String.format(
-                    parentFragment.getActivity().getString(R.string.open_recipes_progress),
-                    current, total));
+            message = String.format(
+                    mContext.getString(R.string.open_recipes_progress),
+                    current, total);
         } else {
-            dialog.setMessage(parentFragment.getActivity().getString(R.string.open_recipe_progress));
+            message = mContext.getString(R.string.open_recipe_progress);
         }
+        if (dialog != null) {
+            dialog.setMessage(message);
+        } else {
+            Log.i(TAG, message);
+        }
+
     }
 
     @Override
@@ -105,7 +121,7 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
         return readDocument(recipeDocument);
     }
 
-    private Recipe[] readFile(File beerXMLFile) {
+    public Recipe[] readFile(File beerXMLFile) {
 
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = null;
@@ -353,7 +369,7 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
                 if (e instanceof XPathException) {
                     throw (XPathException) e;
                 } else {
-                    Log.e(TAG, "Couldn't read the weight for a malt", e);
+                    Log.e("BrewShop", "Couldn't read the weight for a malt", e);
                 }
             }
         }

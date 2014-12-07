@@ -1,6 +1,7 @@
 package com.brew.brewshop.xml;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -50,20 +51,29 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
 
     Recipe[] recipes;
     RecipeListFragment parentFragment = null;
+    Context mContext = null;
     ProgressDialog progressDialog;
     BjcpCategoryList mBjcpCategoryList;
+    String TAG = BeerXMLWriter.class.getName();
 
     public BeerXMLWriter(RecipeListFragment parentFragment, Recipe[] recipes) {
         this.parentFragment = parentFragment;
-        progressDialog = new ProgressDialog(parentFragment.getActivity());
-        mBjcpCategoryList = new BjcpCategoryStorage(parentFragment.getActivity()).getStyles();
+        this.mContext = parentFragment.getActivity();
+        this.progressDialog = new ProgressDialog(mContext);
+        this.mBjcpCategoryList = new BjcpCategoryStorage(mContext).getStyles();
+        this.recipes = recipes;
+    }
+
+    public BeerXMLWriter(Context context, Recipe[] recipes) {
+        this.mContext = context;
+        this.mBjcpCategoryList = new BjcpCategoryStorage(mContext).getStyles();
         this.recipes = recipes;
     }
 
     @Override
     protected void onPreExecute() {
         //set message of the dialog
-        progressDialog.setMessage(parentFragment.getActivity().getString(R.string.save_recipe_progress));
+        progressDialog.setMessage(mContext.getString(R.string.save_recipe_progress));
         //show dialog
         progressDialog.show();
     }
@@ -87,7 +97,7 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
         try {
             dBuilder = dbFactory.newDocumentBuilder();
         } catch (ParserConfigurationException e1) {
-            Log.e("BrewShop", "Couldn't create DocumentBuilderFactory", e1);
+            Log.e(TAG, "Couldn't create DocumentBuilderFactory", e1);
             return -1;
         }
 
@@ -109,7 +119,7 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
                 }
                 success++;
             } catch (IOException ioe) {
-                Log.e("BeerXMLReader", "Couldn't add recipe", ioe);
+                Log.e(TAG, "Couldn't add recipe", ioe);
             }
         }
 
@@ -136,9 +146,9 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
             StreamResult configResult = new StreamResult(recipeOutputStream);
             transformer.transform(source, configResult);
         } catch (TransformerConfigurationException e) {
-            Log.e("BeerXMLReader Writer", "Could not transform config file", e);
+            Log.e(TAG, "Could not transform config file", e);
         } catch (TransformerException e) {
-            Log.e("BeerXMLReader Writer", "Could not transformer file", e);
+            Log.e(TAG, "Could not transformer file", e);
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
@@ -394,6 +404,14 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
         tElement.setTextContent("" + style.getSrmMax());
         styleElement.appendChild(tElement);
 
+        tElement = recipeDocument.createElement("ABV_MIN");
+        tElement.setTextContent("" + style.getAbvMin());
+        styleElement.appendChild(tElement);
+
+        tElement = recipeDocument.createElement("ABV_MAX");
+        tElement.setTextContent("" + style.getAbvMax());
+        styleElement.appendChild(tElement);
+
         return styleElement;
     }
 
@@ -408,7 +426,21 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
 
     @Override
     protected void onProgressUpdate(Integer... progress) {
-        progressDialog.setMessage(String.format(
-                parentFragment.getActivity().getString(R.string.save_recipes_progress), progress[0], progress[1]));
+        int current = progress[0];
+        int total = progress[1];
+        String message;
+
+        if (total > 1) {
+            message = String.format(this.mContext.getString(R.string.save_recipes_progress, current));
+        } else {
+            message = String.format(
+                    mContext.getString(R.string.save_recipe_progress), progress[0], progress[1]);
+        }
+        if (progressDialog == null) {
+            Log.i(TAG, message);
+            return;
+        } else {
+            progressDialog.setMessage(message);
+        }
     }
 }

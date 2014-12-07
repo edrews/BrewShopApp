@@ -178,4 +178,14 @@ public class BeerStyle implements Parcelable {
             return new BeerStyle[size];
         }
     };
+
+    public boolean equals(BeerStyle other) {
+        return style.equals(other.getStyleName()) && substyle.equals(other.getSubstyleName())
+                && description.equals(other.getDescription())
+                && ogMin == other.getOgMin() && ogMax == other.getOgMax()
+                && fgMin == other.getFgMin() && fgMax == other.getFgMax()
+                && ibuMin == other.getIbuMin() && ibuMax == other.getIbuMax()
+                && srmMin == other.getSrmMin() && srmMax == other.getSrmMax()
+                && abvMin == other.getAbvMin() && abvMax == other.getAbvMax();
+    }
 }

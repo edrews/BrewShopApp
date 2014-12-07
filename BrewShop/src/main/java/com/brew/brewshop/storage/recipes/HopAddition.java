@@ -49,6 +49,12 @@ public class HopAddition implements Parcelable {
         }
     };
 
+    public boolean equals(HopAddition other) {
+        return hop.equals(other.getHop()) && weight.getOunces() == other.getWeight().getOunces()
+                && minutes == other.getBoilTime() && dryhop_days == other.getDryHopDays()
+                && getUsage() == other.getUsage();
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -61,4 +67,6 @@ public class HopAddition implements Parcelable {
         parcel.writeParcelable(weight, 0);
         parcel.writeString(usage);
     }
+
+
 }

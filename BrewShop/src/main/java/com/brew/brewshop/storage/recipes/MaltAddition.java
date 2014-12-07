@@ -43,4 +43,8 @@ public class MaltAddition implements Parcelable {
             return new MaltAddition[size];
         }
     };
+
+    public boolean equals(MaltAddition other) {
+        return malt.equals(other.getMalt()) && weight.getOunces() == other.getWeight().getOunces();
+    }
 }
