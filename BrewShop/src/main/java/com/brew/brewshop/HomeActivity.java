@@ -1,12 +1,15 @@
 package com.brew.brewshop;
 
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -86,6 +89,21 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
         }
 
         updateMessageView();
+        checkOpenRecipeIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        checkOpenRecipeIntent(intent);
+    }
+
+    private void checkOpenRecipeIntent(Intent intent) {
+        Log.d(TAG, "Intent action: " + intent.getAction());
+        if (intent.getAction().equals(Intent.ACTION_VIEW)) {
+            intent.setAction(Intent.ACTION_MAIN);
+            openRecipe(intent);
+        }
     }
 
     private NavDrawerConfig getNavDrawerConfig() {
@@ -343,6 +361,19 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
     public void showRecipeManager() {
         setMessage(R.string.select_a_recipe);
         Fragment recipeListFragment = new RecipeListFragment();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, recipeListFragment, RECIPE_LIST_FRAGMENT_TAG)
+                .commit();
+    }
+
+    public void openRecipe(Intent intent) {
+        clearBackStack();
+        setMessage(R.string.select_a_recipe);
+        RecipeListFragment recipeListFragment = new RecipeListFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(RecipeListFragment.RECIPE_URI, intent.getData());
+        recipeListFragment.setArguments(args);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_frame, recipeListFragment, RECIPE_LIST_FRAGMENT_TAG)
