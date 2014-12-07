@@ -29,6 +29,7 @@ public class BeerXMLTest extends InstrumentationTestCase {
             recipeList = beerXMLReader.readFile(externalFile);
         } catch (Exception e) {
             e.printStackTrace();
+            fail("Exception when reading file: " + e.getMessage());
             return;
         }
         Recipe recipeOne = recipeList[0];
@@ -37,16 +38,21 @@ public class BeerXMLTest extends InstrumentationTestCase {
             beerXMLWriter.writeRecipes(new File(getInstrumentation().getTargetContext().getExternalCacheDir() + "/test.xml"));
         } catch (IOException ioe) {
             ioe.printStackTrace();
+            fail("Exception when writing file: " + ioe.getMessage());
             return;
         }
 
-        recipeList = beerXMLReader.readFile(new File(getInstrumentation().getTargetContext().getExternalCacheDir() + "/test.xml"));
-        Recipe recipeTwo = recipeList[0];
-        verifyRecipes(recipeOne, recipeTwo);
+        try {
+            recipeList = beerXMLReader.readFile(new File(getInstrumentation().getTargetContext().getExternalCacheDir() + "/test.xml"));
+            Recipe recipeTwo = recipeList[0];
+            verifyRecipes(recipeOne, recipeTwo);
+        } catch (Exception e) {
+            fail("Exception when reading back file: " + e.getMessage());
+        }
     }
 
     public void verifyRecipes(Recipe recipeOne, Recipe recipeTwo) {
-        assertEquals(recipeOne.getBatchVolume(), recipeTwo.getBatchVolume());
+       assertEquals(recipeOne.getBatchVolume(), recipeTwo.getBatchVolume());
         assertEquals(recipeOne.getBoilTime(), recipeTwo.getBoilTime());
         assertEquals(recipeOne.getBoilVolume(), recipeTwo.getBoilVolume());
         assertEquals(recipeOne.getFg(), recipeTwo.getFg());
@@ -74,3 +80,4 @@ public class BeerXMLTest extends InstrumentationTestCase {
     }
 
 }
+

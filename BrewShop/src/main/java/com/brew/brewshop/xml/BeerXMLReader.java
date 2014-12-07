@@ -21,6 +21,7 @@ import com.brew.brewshop.storage.style.BjcpCategory;
 import com.brew.brewshop.storage.style.BjcpCategoryList;
 import com.brew.brewshop.storage.style.BjcpCategoryStorage;
 import com.brew.brewshop.storage.style.BjcpSubcategory;
+import com.brew.brewshop.storage.style.VitalStatistics;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -205,8 +206,8 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
 
         recipe.setName(recipeName);
         recipe.setBrewerName(brewerName);
-        recipe.setBatchVolume(Quantity.convertUnit("litres", "gallons", batchSize));
-        recipe.setBoilVolume(Quantity.convertUnit("litres", "gallons", boilSize));
+        recipe.setBatchVolume(Quantity.convertUnit("litres", "gallons US", batchSize));
+        recipe.setBoilVolume(Quantity.convertUnit("litres", "gallons US", boilSize));
         recipe.setBoilTime(boilTime);
         recipe.setEfficiency(efficiency);
 
@@ -312,16 +313,15 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
                 String name = (String) xp.evaluate("NAME", fermentable, XPathConstants.STRING);
                 String type = (String) xp.evaluate("TYPE", fermentable, XPathConstants.STRING);
                 String amount = (String) xp.evaluate("DISPLAY_AMOUNT", fermentable, XPathConstants.STRING);
-                String color = (String) xp.evaluate("COLOR", fermentable, XPathConstants.STRING);
-                String yield = (String) xp.evaluate("YIELD", fermentable, XPathConstants.STRING);
-                String potential = (String) xp.evaluate("POTENTIAL", fermentable, XPathConstants.STRING);
+                double color = getDouble(fermentable, "COLOR", xp);
+                double yield = getDouble(fermentable, "YIELD", xp);
                 String notes = (String) xp.evaluate("NOTES", fermentable, XPathConstants.STRING);
                 String supplier = (String) xp.evaluate("SUPPLIER", fermentable, XPathConstants.STRING);
 
                 Malt malt = new Malt();
                 malt.setName(name);
-                malt.setGravity(Double.parseDouble(potential));
-                malt.setColor(Double.parseDouble(color));
+                malt.setGravity(yield);
+                malt.setColor(color);
                 malt.setMashed(true);
 
                 MaltAddition maltAddition = new MaltAddition();
@@ -400,6 +400,7 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
         double abvMin = getDouble(style, "ABV_MIN", xp);
         double abvMax = getDouble(style, "ABV_MAX", xp);
 
+        // Check to see if we have this style
         BjcpCategory bjcpCategory = mBjcpCategoryList.findByName(name);
 
         if (bjcpCategory == null && name.contains("&amp")) {
@@ -411,22 +412,52 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
         }
 
         BjcpSubcategory bjcpSubcategory = bjcpCategory.findSubcategoryByLetter(styleLetter);
+
+        VitalStatistics vitalStatistics = null;
+        if (bjcpCategory.getSubcategories() == null || bjcpCategory.getSubcategories().isEmpty()) {
+            vitalStatistics = bjcpCategory.getGuidelines().getVitalStatistics();
+        } else if(bjcpSubcategory != null) {
+            vitalStatistics = bjcpSubcategory.getGuidelines().getVitalStatistics();
+        }
+
         BeerStyle beerStyle = new BeerStyle();
         beerStyle.setStyleName(bjcpCategory.getName());
-        beerStyle.setDescription(notes);
+        if (bjcpSubcategory != null) {
+            beerStyle.setSubstyleName(bjcpSubcategory.getName());
+        }
         beerStyle.setStyleGuide(styleGuide);
+        beerStyle.setDescription(notes);
         beerStyle.setType(type);
-        beerStyle.setAbvMax(abvMax);
-        beerStyle.setAbvMin(abvMin);
-        beerStyle.setFgMax(fgMax);
-        beerStyle.setFgMin(fgMin);
-        beerStyle.setOgMax(ogMax);
-        beerStyle.setOgMin(ogMin);
-        beerStyle.setSrmMax(colorMax);
-        beerStyle.setSrmMin(colorMin);
-        beerStyle.setIbuMax(ibuMax);
-        beerStyle.setIbuMin(ibuMin);
-        beerStyle.setSubstyleName(bjcpSubcategory.getName());
+
+        if (vitalStatistics == null) {
+
+            if (abvMax == abvMin || abvMax == 0.0 || abvMin == 0.0) {
+                abvMax = (76.08*(ogMax - fgMin) / (1.775-ogMax)) * (fgMin/0.794);
+                abvMin = (76.08*(ogMin - fgMax) / (1.775-ogMin)) * (fgMax/0.794);
+            }
+
+            beerStyle.setAbvMax(abvMax);
+            beerStyle.setAbvMin(abvMin);
+            beerStyle.setFgMax(fgMax);
+            beerStyle.setFgMin(fgMin);
+            beerStyle.setOgMax(ogMax);
+            beerStyle.setOgMin(ogMin);
+            beerStyle.setSrmMax(colorMax);
+            beerStyle.setSrmMin(colorMin);
+            beerStyle.setIbuMax(ibuMax);
+            beerStyle.setIbuMin(ibuMin);
+        } else {
+            beerStyle.setOgMin(vitalStatistics.getOgMin());
+            beerStyle.setOgMax(vitalStatistics.getOgMax());
+            beerStyle.setFgMin(vitalStatistics.getFgMin());
+            beerStyle.setFgMax(vitalStatistics.getFgMax());
+            beerStyle.setIbuMin(vitalStatistics.getIbuMin());
+            beerStyle.setIbuMax(vitalStatistics.getIbuMax());
+            beerStyle.setSrmMin(vitalStatistics.getSrmMin());
+            beerStyle.setSrmMax(vitalStatistics.getSrmMax());
+            beerStyle.setAbvMin(vitalStatistics.getAbvMin());
+            beerStyle.setAbvMax(vitalStatistics.getAbvMax());
+        }
         recipe.setStyle(beerStyle);
     }
 
