@@ -269,7 +269,7 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
         removeHopsFromInventory();
         removeYeastFromInventory();
         mIngredientView.drawList();
-        Toast.makeText(getActivity(), R.string.ingredients_removed_from_inventory, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), R.string.inventory_updated, Toast.LENGTH_SHORT).show();
     }
 
     private void removeMaltsFromInventory() {

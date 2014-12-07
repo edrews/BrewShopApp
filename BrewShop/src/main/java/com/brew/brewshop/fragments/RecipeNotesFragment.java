@@ -82,7 +82,7 @@ public class RecipeNotesFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.edit_recipe_menu, menu);
+        inflater.inflate(R.menu.empty_menu, menu);
     }
 
     public void setRecipe(Recipe recipe) {

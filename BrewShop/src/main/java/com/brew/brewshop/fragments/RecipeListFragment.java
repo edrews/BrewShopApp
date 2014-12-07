@@ -57,6 +57,8 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
     private static final int READ_REQUEST_CODE = 1;
     private static final int WRITE_REQUEST_CODE = 2;
 
+    public static final String RECIPE_URI = "RecipeUri";
+
     private BrewStorage mStorage;
     private FragmentHandler mViewSwitcher;
     private ActionMode mActionMode;
@@ -90,6 +92,19 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
     public void onDestroyView() {
         super.onDestroyView();
         mStorage.close();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle args = getArguments();
+        if (args != null) {
+            Uri uri = args.getParcelable(RECIPE_URI);
+            if (uri != null) {
+                args.putParcelable(RECIPE_URI, null);
+                openRecipeFile(uri);
+            }
+        }
     }
 
     @Override
@@ -375,43 +390,8 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            // We got a file. Open it for parsing.
-            Uri recipeUri = null;
-
             if (resultData != null) {
-                recipeUri = resultData.getData();
-                try {
-                    InputStream recipeStream = getActivity().getContentResolver().openInputStream(recipeUri);
-                    byte[] buffer = new byte[100];
-                    String type = null;
-                    try {
-                        recipeStream.read(buffer);
-                        type = ParseXML.checkRecipeType(new String(buffer));
-                    } catch (IOException ioe) {
-                        Log.e(TAG, "Couldn't check file type");
-                        return;
-                    } finally {
-                        try {
-                            recipeStream.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    if (type == null) {
-                        Toast.makeText(getActivity(), R.string.no_recipe_type, Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    
-                    recipeStream = getActivity().getContentResolver().openInputStream(recipeUri);
-                    if (type.equalsIgnoreCase("beerxml")) {
-                        new BeerXMLReader(this).execute(recipeStream);
-                    }
-                } catch (FileNotFoundException fnfe) {
-                    // Shouldn't happen
-                    Log.e(TAG, "Couldn't find file: " + fnfe.getMessage(), fnfe);
-                    return;
-                }
+                openRecipeFile(resultData.getData());
             }
         }
 
@@ -441,6 +421,41 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
 
             BeerXMLWriter beerXMLWriter = new BeerXMLWriter(this, recipeArray);
             beerXMLWriter.execute(recipeOutputStream);
+        }
+    }
+
+    private void openRecipeFile(Uri recipeUri) {
+        try {
+            InputStream recipeStream = getActivity().getContentResolver().openInputStream(recipeUri);
+            byte[] buffer = new byte[100];
+            String type = null;
+            try {
+                recipeStream.read(buffer);
+                type = ParseXML.checkRecipeType(new String(buffer));
+            } catch (IOException ioe) {
+                Log.e(TAG, "Couldn't check file type");
+                return;
+            } finally {
+                try {
+                    recipeStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (type == null) {
+                Toast.makeText(getActivity(), R.string.no_recipe_type, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            recipeStream = getActivity().getContentResolver().openInputStream(recipeUri);
+            if (type.equalsIgnoreCase("beerxml")) {
+                new BeerXMLReader(this).execute(recipeStream);
+            }
+        } catch (FileNotFoundException fnfe) {
+            // Shouldn't happen
+            Log.e(TAG, "Couldn't find file: " + fnfe.getMessage(), fnfe);
+            return;
         }
     }
 

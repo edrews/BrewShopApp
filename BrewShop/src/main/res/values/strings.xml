@@ -6,6 +6,7 @@
     <string name="new_malt">New Malt</string>
     <string name="new_hops">New Hops</string>
     <string name="new_yeast">New Yeast</string>
+    <string name="new_item">New Item</string>
     <string name="edit_recipe">Edit Recipe</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_delete">Delete</string>
@@ -63,8 +64,8 @@
     <string name="show_inventory">Show Inventory</string>
     <string name="hide_inventory">Hide Inventory</string>
     <string name="remove_from_inventory">Remove From Inventory&#8230;</string>
-    <string name="confirm_remove_from_inventory">Remove these ingredients your from inventory?</string>
-    <string name="ingredients_removed_from_inventory">Ingredients removed from inventory</string>
+    <string name="confirm_remove_from_inventory">Remove these ingredients from your inventory?</string>
+    <string name="inventory_updated">Inventory updated</string>
     <string name="inventory_only">Inventory Only</string>
     <string name="show_all">Show All Types</string>
     <string name="malt_type">Malt Type</string>
