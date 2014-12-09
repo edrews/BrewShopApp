@@ -148,6 +148,8 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
             Log.e(TAG, "Could not transformer file", e);
         } catch (XPathExpressionException e) {
             e.printStackTrace();
+        } finally {
+            recipeOutputStream.close();
         }
         return success;
     }
