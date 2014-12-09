@@ -44,9 +44,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-/**
- * Created by doug on 30/11/14.
- */
 public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
 
     Recipe[] recipes;
@@ -188,6 +185,10 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
         tElement.setTextContent("" + recipe.getEfficiency());
         recipeElement.appendChild(tElement);
 
+        tElement = recipeDocument.createElement("NOTES");
+        tElement.setTextContent(recipe.getNotes());
+        recipeElement.appendChild(tElement);
+
         Element hopsElement = recipeDocument.createElement("HOPS");
 
         for (HopAddition hopAddition : recipe.getHops()) {
@@ -299,8 +300,10 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
         tElement.setTextContent(maltAddition.getWeight().getPounds() + " lbs");
         fermentableElement.appendChild(tElement);
 
+        double gravity = maltAddition.getMalt().getGravity();
+        double yield = ((gravity - 1) / (BeerXMLCommon.SUCROSE_GRAVITY - 1)) * 100;
         tElement = recipeDocument.createElement("YIELD");
-        tElement.setTextContent("" + maltAddition.getMalt().getGravity());
+        tElement.setTextContent("" + yield);
         fermentableElement.appendChild(tElement);
 
         tElement = recipeDocument.createElement("COLOR");

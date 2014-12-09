@@ -198,6 +198,7 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
         // otherwise get the details from the recipe
         String recipeName = (String) xp.evaluate("NAME/text()", recipeNode, XPathConstants.STRING);
         String brewerName = (String) xp.evaluate("BREWER/text()", recipeNode, XPathConstants.STRING);
+        String notes = (String) xp.evaluate("NOTES/text()", recipeNode, XPathConstants.STRING);
 
         double efficiency = getDouble(recipeNode, "EFFICIENCY", xp);
         double batchSize = getDouble(recipeNode, "BATCH_SIZE", xp);
@@ -206,6 +207,7 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
 
         recipe.setName(recipeName);
         recipe.setBrewerName(brewerName);
+        recipe.setNotes(notes);
         recipe.setBatchVolume(Quantity.convertUnit("litres", "gallons US", batchSize));
         recipe.setBoilVolume(Quantity.convertUnit("litres", "gallons US", boilSize));
         recipe.setBoilTime(boilTime);
@@ -320,7 +322,7 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
 
                 Malt malt = new Malt();
                 malt.setName(name);
-                malt.setGravity(yield);
+                malt.setGravity(1 + yield * .01 * (BeerXMLCommon.SUCROSE_GRAVITY - 1));
                 malt.setColor(color);
                 malt.setMashed(true);
 
