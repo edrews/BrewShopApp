@@ -438,16 +438,14 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
         String message;
 
         if (total > 1) {
-            message = String.format(this.mContext.getString(R.string.save_recipes_progress, current));
+            message = String.format(mContext.getString(R.string.save_recipes_progress), current, total);
         } else {
-            message = String.format(
-                    mContext.getString(R.string.save_recipe_progress), progress[0], progress[1]);
+            message = mContext.getString(R.string.save_recipe_progress);
         }
-        if (progressDialog == null) {
-            Log.i(TAG, message);
-            return;
-        } else {
+        if (progressDialog != null) {
             progressDialog.setMessage(message);
+        } else {
+            Log.i(TAG, message);
         }
     }
 }
