@@ -236,13 +236,8 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
         tElement.setTextContent("" + hopAddition.getHop().getPercentAlpha());
         hopElement.appendChild(tElement);
 
-        // Amount is in KG
         tElement = recipeDocument.createElement("AMOUNT");
-        tElement.setTextContent("" + Quantity.convertUnit("lbs", "kg", hopAddition.getWeight().getPounds()));
-        hopElement.appendChild(tElement);
-
-        tElement = recipeDocument.createElement("DISPLAY_AMOUNT");
-        tElement.setTextContent(hopAddition.getWeight().getOunces() + " oz");
+        tElement.setTextContent("" + hopAddition.getWeight().getKilograms());
         hopElement.appendChild(tElement);
 
         tElement = recipeDocument.createElement("USE");
@@ -290,7 +285,6 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
         fermentableElement.appendChild(tElement);
 
         tElement = recipeDocument.createElement("TYPE");
-        //tElement.setTextContent(maltAddition.getMalt().getType());
         if (maltAddition.getMalt().isMashed()) {
             tElement.setTextContent("Grain");
         } else {
@@ -299,11 +293,7 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
         fermentableElement.appendChild(tElement);
 
         tElement = recipeDocument.createElement("AMOUNT");
-        tElement.setTextContent("" + Quantity.convertUnit("lbs", "kgs", maltAddition.getWeight().getPounds()));
-        fermentableElement.appendChild(tElement);
-
-        tElement = recipeDocument.createElement("DISPLAY_AMOUNT");
-        tElement.setTextContent(maltAddition.getWeight().getPounds() + " lbs");
+        tElement.setTextContent("" + maltAddition.getWeight().getKilograms());
         fermentableElement.appendChild(tElement);
 
         double gravity = maltAddition.getMalt().getGravity();
@@ -340,6 +330,10 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
 
         tElement = recipeDocument.createElement("FORM");
         tElement.setTextContent("DRY");
+        yeastElement.appendChild(tElement);
+
+        tElement = recipeDocument.createElement("AMOUNT");
+        tElement.setTextContent("1");
         yeastElement.appendChild(tElement);
 
         return yeastElement;

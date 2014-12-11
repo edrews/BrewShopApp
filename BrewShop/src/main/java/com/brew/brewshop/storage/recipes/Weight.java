@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import java.util.IllegalFormatException;
 
 public class Weight implements Parcelable {
+    private static final double OUNCES_PER_KG = 35.2739619;
     private double ounces;
 
     public static Weight fromKg(double kg) {
@@ -31,7 +32,11 @@ public class Weight implements Parcelable {
     }
 
     public void setKilograms(double kg) {
-        ounces = kg * 35.2739619;
+        ounces = kg * OUNCES_PER_KG;
+    }
+
+    public double getKilograms() {
+        return ounces / OUNCES_PER_KG;
     }
 
     public double getOunces() { return ounces; }
