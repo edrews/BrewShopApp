@@ -40,12 +40,13 @@ import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
+public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]> {
     private static final String TAG = BeerXMLReader.class.getName();
-    ProgressDialog dialog;
-    Context mContext = null;
-    RecipeListFragment parentFragment;
-    BjcpCategoryList mBjcpCategoryList;
+
+    private ProgressDialog dialog;
+    private Context mContext = null;
+    private RecipeListFragment parentFragment;
+    private BjcpCategoryList mBjcpCategoryList;
 
     public BeerXMLReader(RecipeListFragment parentFragment) {
         this.parentFragment = parentFragment;
@@ -237,21 +238,14 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
 
             // Get the values
             String name = (String) xp.evaluate("NAME", hop, XPathConstants.STRING);
-            String origin = (String) xp.evaluate("ORIGIN", hop, XPathConstants.STRING);
             String temp = (String) xp.evaluate("AMOUNT", hop, XPathConstants.STRING);
             double amount = Double.parseDouble(temp);
             temp = (String) xp.evaluate("ALPHA", hop, XPathConstants.STRING);
             double alpha = Double.parseDouble(temp);
-            temp = (String) xp.evaluate("BETA", hop, XPathConstants.STRING);
-            if (!temp.equals("")) {
-                double beta = Double.parseDouble(temp);
-            }
 
             temp = (String) xp.evaluate("TIME", hop, XPathConstants.STRING);
             int time = (int) Math.round(Double.parseDouble(temp));
             String use = (String) xp.evaluate("USE", hop, XPathConstants.STRING);
-            String notes = (String) xp.evaluate("NOTES", hop, XPathConstants.STRING);
-            String displayAmount = (String) xp.evaluate("DISPLAY_AMOUNT", hop, XPathConstants.STRING);
 
             Hop hopObject = new Hop();
             hopObject.setName(name);
@@ -260,20 +254,7 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
             HopAddition hopAddition = new HopAddition();
             hopAddition.setHop(hopObject);
 
-            Weight weight = null;
-
-            try {
-                if (displayAmount != null) {
-                    weight = new Weight(displayAmount);
-                } else if (amount >= 0.0) {
-                    weight = new Weight(amount + " kg");
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "Couldn't parse hop weight", e);
-                return;
-            }
-
-            hopAddition.setWeight(weight);
+            hopAddition.setWeight(Weight.fromKg(amount));
 
             // Not all of these are used by beerxml 1.0, but we can change as and when
             if (use.equalsIgnoreCase("boil")) {
@@ -281,7 +262,7 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
                 hopAddition.setBoilTime(time);
             } else if (use.equalsIgnoreCase("dry hop")) {
                 hopAddition.setUsage(HopUsage.DRY_HOP);
-                int days = (time/60)/24;
+                int days = (time / 60) / 24;
                 hopAddition.setDryHopDays(days);
             } else if (use.equalsIgnoreCase("mash")) {
                 hopAddition.setUsage(HopUsage.MASH);
@@ -314,20 +295,22 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
                 // Get the values
                 String name = (String) xp.evaluate("NAME", fermentable, XPathConstants.STRING);
                 String type = (String) xp.evaluate("TYPE", fermentable, XPathConstants.STRING);
-                String amount = (String) xp.evaluate("DISPLAY_AMOUNT", fermentable, XPathConstants.STRING);
+                type = type.toLowerCase();
+                boolean mashed = type.contains("malt") || type.contains("grain");
+
+                double amount = getDouble(fermentable, "AMOUNT", xp);
                 double color = getDouble(fermentable, "COLOR", xp);
                 double yield = getDouble(fermentable, "YIELD", xp);
-                String notes = (String) xp.evaluate("NOTES", fermentable, XPathConstants.STRING);
-                String supplier = (String) xp.evaluate("SUPPLIER", fermentable, XPathConstants.STRING);
+
 
                 Malt malt = new Malt();
                 malt.setName(name);
                 malt.setGravity(1 + yield * .01 * (BeerXMLCommon.SUCROSE_GRAVITY - 1));
                 malt.setColor(color);
-                malt.setMashed(true);
+                malt.setMashed(mashed);
 
                 MaltAddition maltAddition = new MaltAddition();
-                maltAddition.setWeight(new Weight(amount));
+                maltAddition.setWeight(Weight.fromKg(amount));
                 maltAddition.setMalt(malt);
 
                 recipe.addFermentable(maltAddition);
@@ -358,7 +341,6 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
                 String name = (String) xp.evaluate("NAME", yeastItem, XPathConstants.STRING);
                 String type = (String) xp.evaluate("TYPE", yeastItem, XPathConstants.STRING);
                 String form = (String) xp.evaluate("FORM", yeastItem, XPathConstants.STRING);
-                String amount = (String) xp.evaluate("DISPLAY_AMOUNT", yeastItem, XPathConstants.STRING);
                 String attenuation = (String) xp.evaluate("ATTENUATION", yeastItem, XPathConstants.STRING);
 
                 Yeast yeast = new Yeast();
@@ -418,7 +400,7 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
         VitalStatistics vitalStatistics = null;
         if (bjcpCategory.getSubcategories() == null || bjcpCategory.getSubcategories().isEmpty()) {
             vitalStatistics = bjcpCategory.getGuidelines().getVitalStatistics();
-        } else if(bjcpSubcategory != null) {
+        } else if (bjcpSubcategory != null) {
             vitalStatistics = bjcpSubcategory.getGuidelines().getVitalStatistics();
         }
 
@@ -434,8 +416,8 @@ public class BeerXMLReader extends AsyncTask<InputStream, Integer, Recipe[]>  {
         if (vitalStatistics == null) {
 
             if (abvMax == abvMin || abvMax == 0.0 || abvMin == 0.0) {
-                abvMax = (76.08*(ogMax - fgMin) / (1.775-ogMax)) * (fgMin/0.794);
-                abvMin = (76.08*(ogMin - fgMax) / (1.775-ogMin)) * (fgMax/0.794);
+                abvMax = (76.08 * (ogMax - fgMin) / (1.775 - ogMax)) * (fgMin / 0.794);
+                abvMin = (76.08 * (ogMin - fgMax) / (1.775 - ogMin)) * (fgMax / 0.794);
             }
 
             beerStyle.setAbvMax(abvMax);

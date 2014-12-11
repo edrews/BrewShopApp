@@ -8,6 +8,12 @@ import java.util.IllegalFormatException;
 public class Weight implements Parcelable {
     private double ounces;
 
+    public static Weight fromKg(double kg) {
+        Weight weight = new Weight();
+        weight.setKilograms(kg);
+        return weight;
+    }
+
     public Weight() {
         ounces = 0;
     }
@@ -24,12 +30,21 @@ public class Weight implements Parcelable {
         ounces = parcel.readDouble();
     }
 
+    public void setKilograms(double kg) {
+        ounces = kg * 35.2739619;
+    }
+
     public double getOunces() { return ounces; }
 
     public void setOunces(double value) { ounces = value; }
 
     public int getPoundsPortion() {
-        return (int) (ounces/16);
+        double pounds = ounces / 16;
+        int rounded = (int) (pounds);
+        if (pounds - rounded > .999) { //If just under a pound, round up
+            rounded++;
+        }
+        return rounded;
     }
 
     public double getOuncesPortion() {
@@ -37,8 +52,6 @@ public class Weight implements Parcelable {
     }
 
     public double getPounds() { return ounces / 16;}
-
-    public void setPounds(double value) { ounces = value * 16; }
 
     public Weight add(Weight weight) {
         ounces += weight.getOunces();
@@ -76,20 +89,4 @@ public class Weight implements Parcelable {
             return new Weight[size];
         }
     };
-
-    public Weight(String inWeight) throws Exception {
-        String sections[] = inWeight.trim().split(" ");
-        if (sections.length != 2) {
-            throw new Exception("String for the weight doesn't match \"<number> <unit>\"");
-        }
-
-        double size = Double.parseDouble(sections[0]);
-        String unit = sections[1];
-        Quantity quantity = new Quantity();
-        quantity.setUnits(unit);
-        quantity.setAmount(size);
-
-        // For now, set the ounces as the default value.
-        ounces = quantity.getValueAs(Quantity.OUNCES);
-    }
 }

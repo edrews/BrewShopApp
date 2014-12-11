@@ -252,7 +252,7 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
         tElement = recipeDocument.createElement("TIME");
 
         if (hopAddition.getUsage() == HopUsage.DRY_HOP) {
-            double days = hopAddition.getDryHopDays()*24*60;
+            double days = hopAddition.getDryHopDays() * 24 * 60;
             tElement.setTextContent("" + days);
         } else {
             tElement.setTextContent("" + hopAddition.getBoilTime());
@@ -291,7 +291,11 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
 
         tElement = recipeDocument.createElement("TYPE");
         //tElement.setTextContent(maltAddition.getMalt().getType());
-        tElement.setTextContent("Grain");
+        if (maltAddition.getMalt().isMashed()) {
+            tElement.setTextContent("Grain");
+        } else {
+            tElement.setTextContent("Extract");
+        }
         fermentableElement.appendChild(tElement);
 
         tElement = recipeDocument.createElement("AMOUNT");

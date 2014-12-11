@@ -20,7 +20,7 @@ public class ParseXML {
 //    }
 
     public static String checkRecipeType(String buffer) {
-        if (buffer.indexOf("BeerXML Format") > -1 || buffer.indexOf("<RECIPES>") > -1 )
+        if (buffer.indexOf("BeerXML Format") > -1 || buffer.indexOf("<RECIPES>") > -1)
             return "beerxml";
         if (buffer.indexOf("STRANGEBREWRECIPE") > -1)
             return "sb";
@@ -46,7 +46,7 @@ public class ParseXML {
                 int i = 0;
                 while ((c = inb.readLine()) != null && i < 10) {
                     // check for an opening tag of Recipes too
-                    if (c.indexOf("BeerXMLReader Format") > -1 || c.indexOf("<RECIPES>") > -1 )
+                    if (c.indexOf("BeerXMLReader Format") > -1 || c.indexOf("<RECIPES>") > -1)
                         return "beerxml";
                     if (c.indexOf("STRANGEBREWRECIPE") > -1)
                         return "sb";
