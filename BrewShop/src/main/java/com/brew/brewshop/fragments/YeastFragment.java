@@ -210,7 +210,7 @@ public class YeastFragment extends Fragment implements IngredientSelectionHandle
     }
 
     private void setDescription(YeastInfo info) {
-        if (info.getDescription().length() == 0) {
+        if (info == null || info.getDescription().length() == 0) {
             mDescription.setTextColor(getActivity().getResources().getColor(R.color.text_dark_secondary));
             mDescription.setText(getActivity().getResources().getString(R.string.no_description));
         } else {
