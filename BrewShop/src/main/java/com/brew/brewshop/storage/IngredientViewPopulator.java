@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.brew.brewshop.R;
+import com.brew.brewshop.settings.Settings;
 import com.brew.brewshop.storage.inventory.InventoryItem;
 import com.brew.brewshop.storage.inventory.InventoryList;
 import com.brew.brewshop.storage.recipes.Hop;
@@ -14,6 +15,7 @@ import com.brew.brewshop.storage.recipes.Malt;
 import com.brew.brewshop.storage.recipes.MaltAddition;
 import com.brew.brewshop.storage.recipes.Weight;
 import com.brew.brewshop.storage.recipes.Yeast;
+import com.brew.brewshop.util.UnitConverter;
 import com.brew.brewshop.util.Util;
 
 public class IngredientViewPopulator {
@@ -21,10 +23,12 @@ public class IngredientViewPopulator {
 
     private boolean mShowInventory;
     private BrewStorage mStorage;
+    private Settings mSettings;
 
     public IngredientViewPopulator(Context context) {
         mStorage = new BrewStorage(context);
         mShowInventory = true;
+        mSettings = new Settings(context);
     }
 
     public void populateMalt(View parent, InventoryItem item) {
@@ -208,6 +212,19 @@ public class IngredientViewPopulator {
     }
 
     private String formatWeight(Weight weight, int significance) {
+        String string = "";
+        switch (mSettings.getUnits()) {
+            case IMPERIAL:
+                string = formatImperialWeight(weight, significance);
+                break;
+            case METRIC:
+                string = formatMetricWeight(weight, significance);
+                break;
+        }
+        return string;
+    }
+
+    private String formatImperialWeight(Weight weight, int significance) {
         StringBuilder builder = new StringBuilder();
         int pounds = weight.getPoundsPortion();
         if (pounds > 0) {
@@ -221,6 +238,17 @@ public class IngredientViewPopulator {
             }
             Util.fromDouble(ounces, 1, true);
             builder.append(Util.fromDouble(ounces, significance, true) + " oz.");
+        }
+        return builder.toString();
+    }
+
+    private String formatMetricWeight(Weight weight, int significance) {
+        StringBuilder builder = new StringBuilder();
+        double grams = weight.getGrams();
+        if (grams < 1000) {
+            builder.append(Util.fromDouble(grams, 1)).append(" g");
+        } else {
+            builder.append(Util.fromDouble(weight.getKilograms(), significance)).append(" kg");
         }
         return builder.toString();
     }

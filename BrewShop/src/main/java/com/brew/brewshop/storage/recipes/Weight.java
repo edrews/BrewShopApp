@@ -35,8 +35,16 @@ public class Weight implements Parcelable {
         ounces = kg * OUNCES_PER_KG;
     }
 
+    public void setGrams(double grams) {
+        setKilograms(grams / 1000.0);
+    }
+
     public double getKilograms() {
         return ounces / OUNCES_PER_KG;
+    }
+
+    public double getGrams() {
+        return getKilograms() * 1000;
     }
 
     public double getOunces() { return ounces; }

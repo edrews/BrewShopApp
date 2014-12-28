@@ -90,8 +90,9 @@
                     </EditText>
 
                 <TextView
+                    android:id="@+id/hops_weight_units"
                     style="@style/RecipeEditUnit"
-                    android:text="oz" />
+                    android:text="@string/oz" />
 
             </LinearLayout>
 

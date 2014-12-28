@@ -197,8 +197,9 @@
                             android:text="ABV" />
 
                         <TextView
+                            android:id="@+id/calories_label"
                             style="@style/RecipeStat"
-                            android:text="12oz. kCal" />
+                            android:text="@string/imperial_calories" />
                     </LinearLayout>
 
                     <LinearLayout

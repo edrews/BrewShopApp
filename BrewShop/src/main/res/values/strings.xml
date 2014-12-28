@@ -131,4 +131,12 @@
     <string name="save_recipe_progress">Saving recipe&#8230;</string>
     <string name="open_recipes_progress">Opening recipe %1$s of %2$s&#8230;</string>
     <string name="save_recipes_progress">Saving recipe %1$s of %2$s&#8230;</string>
+    <string name="imperial_calories">12oz. kCal</string>
+    <string name="metric_calories">330ml kCal</string>
+    <string name="gallon_abbrev">gal</string>
+    <string name="litres">litres</string>
+    <string name="grams">grams</string>
+    <string name="oz">oz</string>
+    <string name="kg">kg</string>
+    <string name="lb">lb</string>
 </resources>

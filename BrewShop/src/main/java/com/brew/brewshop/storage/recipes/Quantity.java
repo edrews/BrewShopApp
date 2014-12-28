@@ -1,12 +1,7 @@
 package com.brew.brewshop.storage.recipes;
 
-/**
- * Created by Doug Edey on 21/11/14.
- */
-
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class Quantity {
 

@@ -48,19 +48,21 @@ public class MaltFragment extends Fragment implements IngredientSelectionHandler
     private Settings mSettings;
 
     private TextView mDescription;
-    private EditText mWeightLbEdit;
+    private TextView mWeightUnits;
+    private EditText mWeightEdit;
     private EditText mWeightOzEdit;
     private EditText mGravityEdit;
     private EditText mColorEdit;
     private EditText mCustomName;
     private View mCustomMaltView;
     private View mDescriptionView;
+    private View mOuncesView;
     private CheckBox mMashedEdit;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
         View root = inflater.inflate(R.layout.fragment_edit_malt, container, false);
-        mWeightLbEdit = (EditText) root.findViewById(R.id.malt_weight_lb);
+        mWeightEdit = (EditText) root.findViewById(R.id.malt_weight);
         mWeightOzEdit = (EditText) root.findViewById(R.id.malt_weight_oz);
         mColorEdit = (EditText) root.findViewById(R.id.malt_color);
         mGravityEdit = (EditText) root.findViewById(R.id.malt_gravity);
@@ -68,7 +70,9 @@ public class MaltFragment extends Fragment implements IngredientSelectionHandler
         mCustomMaltView = root.findViewById(R.id.custom_malt_layout);
         mCustomName = (EditText) root.findViewById(R.id.custom_name);
         mMashedEdit = (CheckBox) root.findViewById(R.id.is_mashed);
+        mOuncesView = root.findViewById(R.id.ounces_layout);
         mDescriptionView = root.findViewById(R.id.description_layout);
+        mWeightUnits = (TextView) root.findViewById(R.id.malt_weight_units);
 
         mSettings = new Settings(getActivity());
         mStorage = new BrewStorage(getActivity());
@@ -309,12 +313,32 @@ public class MaltFragment extends Fragment implements IngredientSelectionHandler
     }
 
     private Weight getWeightData() {
-        return new Weight(Util.toDouble(mWeightLbEdit.getText()), Util.toDouble(mWeightOzEdit.getText()));
+        Weight weight = new Weight();
+        switch (mSettings.getUnits()) {
+            case IMPERIAL:
+                weight = new Weight(Util.toDouble(mWeightEdit.getText()), Util.toDouble(mWeightOzEdit.getText()));
+                break;
+            case METRIC:
+                weight.setKilograms(Util.toDouble(mWeightEdit.getText()));
+                break;
+        }
+        return weight;
     }
 
     private void setWeight(Weight weight) {
-        mWeightLbEdit.setText(String.valueOf(weight.getPoundsPortion()));
-        mWeightOzEdit.setText(Util.fromDouble(weight.getOuncesPortion(), 2));
+        switch (mSettings.getUnits()) {
+            case IMPERIAL:
+                mWeightUnits.setText(R.string.lb);
+                mOuncesView.setVisibility(View.VISIBLE);
+                mWeightEdit.setText(String.valueOf(weight.getPoundsPortion()));
+                mWeightOzEdit.setText(Util.fromDouble(weight.getOuncesPortion(), 2));
+                break;
+            case METRIC:
+                mWeightUnits.setText(R.string.kg);
+                mOuncesView.setVisibility(View.GONE);
+                mWeightEdit.setText(Util.fromDouble(weight.getKilograms(), 3));
+                break;
+        }
     }
 
     private Malt getMalt() {

@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.brew.brewshop.FragmentHandler;
 import com.brew.brewshop.R;
@@ -21,17 +20,12 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
     private FragmentHandler mFragmentHandler;
     private Spinner mUnitsSpinner;
     private ArrayAdapter<CharSequence> mUnitsAdapter;
-    private TextView mMessageView;
     private Settings mSettings;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
         mSettings = new Settings(getActivity());
-
         View root = inflater.inflate(R.layout.fragment_settings, container, false);
-        //mMessageView = (TextView) root.findViewById(R.id.settings_message_view);
-
         mUnitsSpinner = (Spinner) root.findViewById(R.id.units_spinner);
         mUnitsAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.units, R.layout.spinner_item);
         mUnitsAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);

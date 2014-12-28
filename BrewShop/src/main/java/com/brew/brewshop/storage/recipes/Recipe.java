@@ -177,11 +177,11 @@ public class Recipe implements Parcelable, Storeable {
         return (gravityPoints + 1);
     }
 
-    public double getCalories() {
+    public double getCaloriesPerOz() {
         double fg = getFg();
         double abw = (getAbv() * .79) / fg;
         double re = calculateRealExtract();
-        return ((6.9 * abw) + 4.0 * (re - 0.1)) * fg * 3.55;
+        return ((6.9 * abw) + 4.0 * (re - 0.1)) * fg * 3.55 / 12.0;
     }
 
     public double getAbv() {

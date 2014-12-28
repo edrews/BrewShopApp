@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.brew.brewshop.FragmentHandler;
 import com.brew.brewshop.R;
+import com.brew.brewshop.settings.Settings;
 import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.NameableAdapter;
 import com.brew.brewshop.storage.recipes.BeerStyle;
@@ -26,6 +27,7 @@ import com.brew.brewshop.storage.style.BjcpGuidelines;
 import com.brew.brewshop.storage.style.BjcpSubcategory;
 import com.brew.brewshop.storage.style.CommercialExample;
 import com.brew.brewshop.storage.style.VitalStatistics;
+import com.brew.brewshop.util.UnitConverter;
 import com.brew.brewshop.util.Util;
 
 import java.util.List;
@@ -49,9 +51,14 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
     private TextView mDescription;
     private BjcpCategoryList mBjcpCategoryList;
     private FragmentHandler mViewSwitcher;
+    private Settings mSettings;
+    private UnitConverter mConverter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
+        mSettings = new Settings(getActivity());
+        mConverter = new UnitConverter(getActivity());
+
         View root = inflater.inflate(R.layout.fragment_edit_recipe_stats, container, false);
 
         setHasOptionsMenu(true);
@@ -80,11 +87,24 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
             mSubstyleLayout = (ViewGroup) root.findViewById(R.id.substyle_layout);
             setStyle(mRecipe.getStyle());
 
+            TextView batchUnits = (TextView) root.findViewById(R.id.batch_units);
+            TextView boilUnits = (TextView) root.findViewById(R.id.boil_units);
+            switch (mSettings.getUnits()) {
+                case IMPERIAL:
+                    batchUnits.setText(getString(R.string.gallon_abbrev));
+                    boilUnits.setText(getString(R.string.gallon_abbrev));
+                    break;
+                case METRIC:
+                    batchUnits.setText(getString(R.string.litres));
+                    boilUnits.setText(getString(R.string.litres));
+                    break;
+            }
+
             mBatchVolume = (EditText) root.findViewById(R.id.batch_volume);
-            mBatchVolume.setText(Util.fromDouble(mRecipe.getBatchVolume(), 5));
+            mBatchVolume.setText(mConverter.fromGallons(mRecipe.getBatchVolume(), 5));
 
             mBoilVolume = (EditText) root.findViewById(R.id.boil_volume);
-            mBoilVolume.setText(Util.fromDouble(mRecipe.getBoilVolume(), 5));
+            mBoilVolume.setText(mConverter.fromGallons(mRecipe.getBoilVolume(), 5));
 
             mBoilTime = (EditText) root.findViewById(R.id.boil_time);
             mBoilTime.setText(Util.fromDouble(mRecipe.getBoilTime(), 0));
@@ -139,8 +159,8 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
             name = getActivity().getResources().getString(R.string.unnamed_recipe);
         }
         mRecipe.setName(name);
-        mRecipe.setBatchVolume(Util.toDouble(mBatchVolume.getText()));
-        mRecipe.setBoilVolume(Util.toDouble(mBoilVolume.getText()));
+        mRecipe.setBatchVolume(mConverter.toGallons(mBatchVolume.getText()));
+        mRecipe.setBoilVolume(mConverter.toGallons(mBoilVolume.getText()));
         mRecipe.setBoilTime(Util.toDouble(mBoilTime.getText()));
 
         double efficiency = Util.toDouble(mEfficiency.getText());

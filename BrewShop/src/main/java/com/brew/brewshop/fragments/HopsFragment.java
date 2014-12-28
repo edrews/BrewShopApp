@@ -52,6 +52,7 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
 
     private Spinner mHopUsageSpinner;
     private TextView mDescription;
+    private TextView mWeightUnits;
     private EditText mWeightEdit;
     private EditText mAlphaEdit;
     private EditText mTimeEdit;
@@ -78,6 +79,7 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
         mBoilTimeView = root.findViewById(R.id.boil_time_view);
         mDryHopView = root.findViewById(R.id.dry_hop_view);
         mAlphaAcidView = root.findViewById(R.id.alpha_acid_view);
+        mWeightUnits = (TextView) root.findViewById(R.id.hops_weight_units);
 
         mSettings = new Settings(getActivity());
         mStorage = new BrewStorage(getActivity());
@@ -371,11 +373,29 @@ public class HopsFragment extends Fragment implements AdapterView.OnItemSelected
     }
 
     private Weight getWeightData() {
-        return new Weight(0, Util.toDouble(mWeightEdit.getText()));
+        Weight weight = new Weight();
+        switch (mSettings.getUnits()) {
+            case IMPERIAL:
+                weight.setOunces(Util.toDouble(mWeightEdit.getText()));
+                break;
+            case METRIC:
+                weight.setGrams(Util.toDouble(mWeightEdit.getText()));
+                break;
+        }
+        return weight;
     }
 
     private void setWeight(Weight weight) {
-        mWeightEdit.setText(Util.fromDouble(weight.getOunces(), 3));
+        switch (mSettings.getUnits()) {
+            case IMPERIAL:
+                mWeightUnits.setText(R.string.oz);
+                mWeightEdit.setText(Util.fromDouble(weight.getOunces(), 3));
+                break;
+            case METRIC:
+                mWeightUnits.setText(R.string.grams);
+                mWeightEdit.setText(Util.fromDouble(weight.getGrams(), 1));
+                break;
+        }
     }
 
     private Hop getHop() {

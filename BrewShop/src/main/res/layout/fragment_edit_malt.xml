@@ -109,7 +109,7 @@
                     android:text="Weight" />
 
                 <EditText style="@style/RecipeEditValue"
-                    android:id="@+id/malt_weight_lb"
+                    android:id="@+id/malt_weight"
                     android:hint=""
                     android:inputType="numberDecimal"
                     android:maxLength="5">
@@ -117,8 +117,15 @@
 
                 <TextView
                     style="@style/RecipeEditUnit"
-                    android:text="lb"
+                    android:id="@+id/malt_weight_units"
+                    android:text="@string/lb"
                     android:layout_marginRight="10dp"/>
+
+                <LinearLayout
+                    android:id="@+id/ounces_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
                 <EditText style="@style/RecipeEditValue"
                     android:id="@+id/malt_weight_oz"
@@ -129,6 +136,8 @@
                 <TextView
                     style="@style/RecipeEditUnit"
                     android:text="oz" />
+
+              </LinearLayout>
 
             </LinearLayout>
 

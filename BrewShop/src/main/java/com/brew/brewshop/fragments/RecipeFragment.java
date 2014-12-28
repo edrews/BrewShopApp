@@ -36,6 +36,7 @@ import com.brew.brewshop.storage.recipes.MaltAddition;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.storage.recipes.Weight;
 import com.brew.brewshop.storage.recipes.Yeast;
+import com.brew.brewshop.util.UnitConverter;
 import com.brew.brewshop.util.Util;
 
 import java.util.Arrays;
@@ -50,7 +51,6 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
     private static final String ACTION_MODE = "ActionMode";
     private static final String SELECTED_INDEXES = "Selected";
     private static final String RECIPE = "Recipe";
-    private static final String UNIT_GALLON = " gal";
     private static final String UNIT_MINUTES = " min";
     private static final String UNIT_PERCENT = "%";
 
@@ -62,9 +62,12 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
     private IngredientListView mIngredientView;
     private View mRootView;
     private Settings mSettings;
+    private UnitConverter mConverter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
+        mSettings = new Settings(getActivity());
+
         View root = inflater.inflate(R.layout.fragment_edit_recipe, container, false);
         mRootView = root;
         root.findViewById(R.id.recipe_stats_layout).setOnClickListener(this);
@@ -73,6 +76,8 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
 
         setHasOptionsMenu(true);
         mStorage = new BrewStorage(getActivity());
+
+        mConverter = new UnitConverter(getActivity());
 
         if (state != null) {
             mRecipe = state.getParcelable(RECIPE);
@@ -100,10 +105,10 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
         textView.setText(styleName);
 
         textView = (TextView) root.findViewById(R.id.batch_volume);
-        textView.setText(Util.fromDouble(mRecipe.getBatchVolume(), 1) + UNIT_GALLON);
+        textView.setText(mConverter.fromGallonsWithUnits(mRecipe.getBatchVolume(), 1));
 
         textView = (TextView) root.findViewById(R.id.boil_volume);
-        textView.setText(Util.fromDouble(mRecipe.getBoilVolume(), 1) + UNIT_GALLON);
+        textView.setText(mConverter.fromGallonsWithUnits(mRecipe.getBoilVolume(), 1));
 
         textView = (TextView) root.findViewById(R.id.boil_time);
         textView.setText(Util.fromDouble(mRecipe.getBoilTime(), 0) + UNIT_MINUTES);
@@ -168,11 +173,8 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
             textView.setText(abv + UNIT_PERCENT);
         }
 
-        mSettings = new Settings(getActivity());
-        boolean showInventory = mSettings.getShowInventoryInRecipe();
-
         mIngredientView = new IngredientListView(getActivity(), root, mRecipe, this);
-        mIngredientView.getAdapter().showInventory(showInventory);
+        mIngredientView.getAdapter().showInventory(mSettings.getShowInventoryInRecipe());
         mIngredientView.drawList();
 
         textView = (TextView) root.findViewById(R.id.recipe_notes);
@@ -502,9 +504,19 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
             textView.setTextColor(getResources().getColor(R.color.text_dark_secondary));
         }
 
+        textView = (TextView) mRootView.findViewById(R.id.calories_label);
+        switch (mSettings.getUnits()) {
+            case IMPERIAL:
+                textView.setText(R.string.imperial_calories);
+                break;
+            case METRIC:
+                textView.setText(R.string.metric_calories);
+                break;
+        }
+
         textView = (TextView) mRootView.findViewById(R.id.recipe_calories);
         if (mRecipe.hasYeast()) {
-            textView.setText(Util.fromDouble(mRecipe.getCalories(), 1));
+            textView.setText(mConverter.fromCaloriesPerOz(mRecipe.getCaloriesPerOz(), 1));
             textView.setTextColor(getResources().getColor(R.color.text_dark_primary));
         } else {
             textView.setText("-");
