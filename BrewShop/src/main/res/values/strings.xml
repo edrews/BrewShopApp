@@ -69,6 +69,7 @@
     <string name="inventory_only">Inventory Only</string>
     <string name="show_all">Show All Types</string>
     <string name="malt_type">Malt Type</string>
+    <string name="settings">Settings</string>
 
     <!-- Navigation -->
     <string name="homebrew_tools">Homebrew Tools</string>
@@ -110,6 +111,13 @@
         <item>@string/boil</item>
         <item>@string/whirlpool</item>
         <item>@string/dry_hop</item>
+    </string-array>
+
+    <string name="imperial">Imperial</string>
+    <string name="metric">Metric</string>
+    <string-array name="units">
+        <item>@string/imperial</item>
+        <item>@string/metric</item>
     </string-array>
 
     <string name="no_recipe_type">Not a valid recipe file.</string>

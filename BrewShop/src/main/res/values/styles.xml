@@ -85,9 +85,11 @@
         <item name="android:textColor">@color/text_dark_primary</item>
     </style>
 
-    <style name="RecipeHeader" parent="FillParent">
+    <style name="CardTitle" parent="FillParent">
         <item name="android:textSize">22sp</item>
         <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginLeft">10dp</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
         <item name="android:textColor">@color/text_dark_primary</item>

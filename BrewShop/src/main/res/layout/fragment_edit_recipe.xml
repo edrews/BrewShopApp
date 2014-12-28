@@ -37,7 +37,8 @@
 
                         <TextView
                             android:id="@+id/recipe_name"
-                            style="@style/RecipeHeader"
+                            style="@style/CardTitle"
+                            android:layout_marginLeft="0dp"
                             android:gravity="top"
                             android:text="Recipe Name" />
 
@@ -291,8 +292,9 @@
                     android:layout_marginLeft="5dp">
 
                     <TextView
-                        style="@style/RecipeHeader"
+                        style="@style/CardTitle"
                         android:layout_height="48dp"
+                        android:layout_marginLeft="0dp"
                         android:gravity="center_vertical"
                         android:text="@string/ingredients" />
 
@@ -347,7 +349,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    style="@style/RecipeHeader"
+                    style="@style/CardTitle"
                     android:layout_height="48dp"
                     android:layout_marginLeft="5dp"
                     android:gravity="center_vertical"

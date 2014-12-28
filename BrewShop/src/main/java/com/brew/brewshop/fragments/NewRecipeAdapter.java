@@ -1,4 +1,4 @@
-package com.brew.brewshop.fragments.com.brew.brewshop.fragments;
+package com.brew.brewshop.fragments;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,9 +11,6 @@ import com.brew.brewshop.R;
 
 import java.util.List;
 
-/**
- * Created by Doug Edey on 17/11/14.
- */
 public class NewRecipeAdapter extends ArrayAdapter<String> {
     private Context mContext;
     private List<String> mRecipeTypes;

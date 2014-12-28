@@ -2,7 +2,6 @@ package com.brew.brewshop;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -25,6 +24,7 @@ import com.brew.brewshop.fragments.RecipeListFragment;
 import com.brew.brewshop.fragments.RecipeNotesFragment;
 import com.brew.brewshop.fragments.RecipeStatsFragment;
 import com.brew.brewshop.fragments.YeastFragment;
+import com.brew.brewshop.fragments.SettingsFragment;
 import com.brew.brewshop.navigation.NavDrawer;
 import com.brew.brewshop.navigation.NavDrawerAdapter;
 import com.brew.brewshop.navigation.NavDrawerConfig;
@@ -56,6 +56,8 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
     private static final String RECIPE_EDIT_FRAGMENT_TAG = "RecipeEditFragment";
     private static final String INVENTORY_LIST_FRAGMENT_TAG = "InventoryListFragment";
     private static final String INVENTORY_EDIT_FRAGMENT_TAG = "InventoryEditFragment";
+    private static final String SETTINGS_FRAGMENT_TAG = "SettingsFragment";
+
 
     private NavDrawer mNavDrawer;
     private Recipe mCurrentRecipe;
@@ -116,6 +118,7 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
         if (showInventory) {
             menu.add(factory.newEntry(102, R.string.my_inventory, R.drawable.folder));
         }
+        menu.add(factory.newEntry(103, R.string.settings, R.drawable.ic_action_settings));
 
         boolean showStore = getResources().getBoolean(R.bool.show_store_drawer_items);
         if (showStore) {
@@ -158,6 +161,9 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
                 break;
             case 102:
                 showInventoryManager();
+                break;
+            case 103:
+                showSettings();
                 break;
             case 201:
                 showProducts(ProductType.BEER);
@@ -389,6 +395,15 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
                 .commit();
     }
 
+    public void showSettings() {
+        setMessage(R.string.select_an_item);
+        Fragment fragment = new SettingsFragment();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, fragment, SETTINGS_FRAGMENT_TAG)
+                .commit();
+    }
+
     @Override
     public Recipe getCurrentRecipe() {
         return mCurrentRecipe;
@@ -451,6 +466,11 @@ public class HomeActivity extends ActionBarActivity implements FragmentHandler,
             InventoryFragment inventoryFragment = (InventoryFragment) manager.findFragmentByTag(INVENTORY_LIST_FRAGMENT_TAG);
             if (inventoryFragment != null) {
                 setTitle(inventoryFragment.getTitle());
+                setMessage(R.string.select_an_item);
+            }
+            SettingsFragment settingsFragment = (SettingsFragment) manager.findFragmentByTag(SETTINGS_FRAGMENT_TAG);
+            if (settingsFragment != null) {
+                setTitle(settingsFragment.getTitle());
                 setMessage(R.string.select_an_item);
             }
         }
