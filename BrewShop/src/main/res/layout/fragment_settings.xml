@@ -27,7 +27,7 @@
 
                     <TextView
                         style="@style/RecipeEditLabel"
-                        android:text="Measurements" />
+                        android:text="Measurement" />
 
                     <Spinner android:id="@+id/measurement_units_spinner"
                         style="@style/MySpinner"/>

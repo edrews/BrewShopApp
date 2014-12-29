@@ -12,6 +12,10 @@ import java.util.List;
 
 public class Recipe implements Parcelable, Storeable {
     private static final int VERSION = 1;
+    private static final double IMPERIAL_BATCH = 5;
+    private static final double IMPERIAL_BOIL = 6.5;
+    private static final double METRIC_BATCH = 6.07596;
+    private static final double METRIC_BOIL = 7.66099;
 
     private int id;
     private String name;
@@ -31,8 +35,8 @@ public class Recipe implements Parcelable, Storeable {
     public Recipe() {
         name = "New Recipe";
         style = new BeerStyle();
-        batchVolume = 5;
-        boilVolume = 6.5;
+        batchVolume = IMPERIAL_BATCH;
+        boilVolume = IMPERIAL_BOIL;
         boilTime = 60;
         efficiency = 70;
 
@@ -94,6 +98,11 @@ public class Recipe implements Parcelable, Storeable {
 
     @Override
     public void setId(int value) { id = value; }
+
+    public void setMetricDefaults() {
+        batchVolume = METRIC_BATCH;
+        boilVolume = METRIC_BOIL;
+    }
 
     public String getName() { return name; }
     public void setName(String value) { name = value; }

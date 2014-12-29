@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.brew.brewshop.FragmentHandler;
 import com.brew.brewshop.R;
 import com.brew.brewshop.ViewClickListener;
+import com.brew.brewshop.settings.Settings;
 import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.xml.BeerXMLReader;
@@ -63,10 +64,13 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
     private FragmentHandler mViewSwitcher;
     private ActionMode mActionMode;
     private RecipeListView mRecipeView;
-    private Dialog mSelectNewRecipe = null;
+    private Dialog mSelectNewRecipe;
+    private Settings mSettings;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
+        mSettings = new Settings(getActivity());
+
         View rootView = inflater.inflate(R.layout.fragment_recipes, container, false);
         setHasOptionsMenu(true);
 
@@ -173,6 +177,9 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.action_new_recipe && canCreateRecipe()) {
             Recipe recipe = new Recipe();
+            if (mSettings.getUnits().equals(Settings.Units.METRIC)) {
+                recipe.setMetricDefaults();
+            }
             mStorage.createRecipe(recipe);
             mRecipeView.drawRecipeList();
             showRecipe(recipe);
