@@ -53,6 +53,7 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
     private static final String RECIPE = "Recipe";
     private static final String UNIT_MINUTES = " min";
     private static final String UNIT_PERCENT = "%";
+    private static final String UNIT_PLATO = "°P";
 
     private Recipe mRecipe;
     private BrewStorage mStorage;
@@ -478,7 +479,14 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
         TextView textView;
 
         textView = (TextView) mRootView.findViewById(R.id.recipe_og);
-        textView.setText(Util.fromDouble(mRecipe.getOg(), 3, false));
+        switch (mSettings.getExtractUnits()) {
+            case SPECIFIC_GRAVITY:
+                textView.setText(Util.fromDouble(mRecipe.getOg(), 3, false));
+                break;
+            case DEGREES_PLATO:
+                textView.setText(Util.fromDouble(mRecipe.getOgPlato(), 1, false) + UNIT_PLATO);
+                break;
+        }
 
         textView = (TextView) mRootView.findViewById(R.id.recipe_srm);
         textView.setText(Util.fromDouble(mRecipe.getSrm(), 1));
@@ -488,7 +496,14 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
 
         textView = (TextView) mRootView.findViewById(R.id.recipe_fg);
         if (mRecipe.hasYeast()) {
-            textView.setText(Util.fromDouble(mRecipe.getFg(), 3, false));
+            switch (mSettings.getExtractUnits()) {
+                case SPECIFIC_GRAVITY:
+                    textView.setText(Util.fromDouble(mRecipe.getFg(), 3, false));
+                    break;
+                case DEGREES_PLATO:
+                    textView.setText(Util.fromDouble(mRecipe.getFgPlato(), 1, false) + UNIT_PLATO);
+                    break;
+            }
             textView.setTextColor(getResources().getColor(R.color.text_dark_primary));
         } else {
             textView.setText(getResources().getString(R.string.add_yeast));

@@ -164,6 +164,10 @@ public class Recipe implements Parcelable, Storeable {
         return og - (og - 1) * (attenuation * 0.01);
     }
 
+    public double getFgPlato() {
+        return gravityToPlato(getFg());
+    }
+
     public double getOg() {
         double gravityPoints = 0;
         for (MaltAddition addition : getMalts()) {
@@ -175,6 +179,10 @@ public class Recipe implements Parcelable, Storeable {
         }
         gravityPoints /= getBatchVolume();
         return (gravityPoints + 1);
+    }
+
+    public double getOgPlato() {
+        return gravityToPlato(getOg());
     }
 
     public double getCaloriesPerOz() {

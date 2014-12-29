@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class Settings {
-    public enum Units { IMPERIAL, METRIC };
+    public enum Units { IMPERIAL, METRIC }
+    public enum ExtractUnits { SPECIFIC_GRAVITY, DEGREES_PLATO }
 
     private static final String FILE_NAME = "preferences";
     private static final String UNITS_PREF = "Units";
+    private static final String EXTRACT_UNITS_PREF = "ExtractUnits";
     private static final String SHOW_INVENTORY_IN_RECIPE_PREF = "ShowInventoryInRecipe";
     private static final String SHOW_INVENTORY_IN_EDIT_PREF = "ShowInventoryInIngredientEdit";
 
@@ -40,5 +42,14 @@ public class Settings {
 
     public void setUnits(Units units) {
         mPrefs.edit().putString(UNITS_PREF, units.toString()).commit();
+    }
+
+    public ExtractUnits getExtractUnits() {
+        String unitsName =  mPrefs.getString(EXTRACT_UNITS_PREF, ExtractUnits.SPECIFIC_GRAVITY.toString());
+        return ExtractUnits.valueOf(unitsName);
+    }
+
+    public void setExtractUnits(ExtractUnits value) {
+        mPrefs.edit().putString(EXTRACT_UNITS_PREF, value.toString()).commit();
     }
 }

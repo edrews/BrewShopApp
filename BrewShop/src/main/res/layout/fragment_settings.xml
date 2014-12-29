@@ -27,9 +27,23 @@
 
                     <TextView
                         style="@style/RecipeEditLabel"
-                        android:text="Units" />
+                        android:text="Measurements" />
 
-                    <Spinner android:id="@+id/units_spinner"
+                    <Spinner android:id="@+id/measurement_units_spinner"
+                        style="@style/MySpinner"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/RecipeEditLabel"
+                        android:text="Extract Scale" />
+
+                    <Spinner android:id="@+id/extract_units_spinner"
                         style="@style/MySpinner"/>
 
                 </LinearLayout>
