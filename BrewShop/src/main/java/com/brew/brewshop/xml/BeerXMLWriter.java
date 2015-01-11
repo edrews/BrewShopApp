@@ -85,10 +85,10 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
 
     public int writeRecipes(File outputFile) throws IOException {
         FileOutputStream outputStream = new FileOutputStream(outputFile);
-        return writeRecipes(outputStream);
+        return writeRecipes(outputStream, false);
     }
 
-    public int writeRecipes(OutputStream recipeOutputStream) throws IOException {
+    public int writeRecipes(OutputStream recipeOutputStream, boolean publish) throws IOException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = null;
         try {
@@ -106,7 +106,9 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
 
         int success = 0;
         for (int i = 0; i < recipes.length; i++) {
-            publishProgress(i, recipes.length);
+            if (publish) {
+                publishProgress(i, recipes.length);
+            }
 
             Recipe recipe = recipes[i];
             try {
@@ -425,7 +427,7 @@ public class BeerXMLWriter extends AsyncTask<OutputStream, Integer, Integer> {
     @Override
     protected Integer doInBackground(OutputStream... outputStreams) {
         try {
-            return writeRecipes(outputStreams[0]);
+            return writeRecipes(outputStreams[0], true);
         } catch (IOException ioe) {
             return -1;
         }

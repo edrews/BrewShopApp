@@ -5,11 +5,10 @@
     android:background="@drawable/touchable"
     android:orientation="horizontal">
 
-    <TextView
+    <ImageView
         android:id="@+id/icon"
         style="@style/IngredientIcon"
-        android:background="@color/hop_color"
-        android:text="H" />
+        android:src="@drawable/hops_cap"/>
 
     <LinearLayout
         android:layout_width="fill_parent"

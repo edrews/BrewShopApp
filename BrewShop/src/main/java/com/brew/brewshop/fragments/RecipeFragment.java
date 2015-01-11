@@ -77,7 +77,6 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
 
         setHasOptionsMenu(true);
         mStorage = new BrewStorage(getActivity());
-
         mConverter = new UnitConverter(getActivity());
 
         if (state != null) {
@@ -96,7 +95,10 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
         textView.setText(mRecipe.getName());
 
         ImageView iconView = (ImageView) root.findViewById(R.id.recipe_stats_icon);
-        iconView.setBackgroundColor(Util.getColor(mRecipe.getSrm()));
+
+        //iconView.setBackgroundColor(Util.getColor(mRecipe.getSrm()));
+        iconView.setBackgroundColor(getResources().getColor(R.color.color_transparent));
+        iconView.setImageResource(style.getIconDrawable());
 
         textView = (TextView) root.findViewById(R.id.recipe_style);
         String styleName = style.getDisplayName();

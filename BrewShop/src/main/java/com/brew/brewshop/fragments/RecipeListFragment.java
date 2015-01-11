@@ -22,15 +22,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.brew.brewshop.BrewProvider;
 import com.brew.brewshop.FragmentHandler;
 import com.brew.brewshop.R;
 import com.brew.brewshop.ViewClickListener;
 import com.brew.brewshop.settings.Settings;
 import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.recipes.Recipe;
+import com.brew.brewshop.storage.recipes.RecipeList;
 import com.brew.brewshop.xml.BeerXMLReader;
 import com.brew.brewshop.xml.BeerXMLWriter;
 import com.brew.brewshop.xml.ParseXML;
@@ -41,6 +44,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -268,6 +272,9 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
             case R.id.action_save:
                 saveRecipes();
                 return true;
+            case R.id.action_share:
+                shareRecipes();
+                return true;
             default:
                 return false;
         }
@@ -284,6 +291,41 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         int deleted = deleteSelected();
         mActionMode.finish();
         toastDeleted(deleted);
+    }
+
+    private void shareRecipes() {
+        StringBuilder idsBuilder = new StringBuilder();
+        int[] ids = mRecipeView.getSelectedIds();
+        for (int i : ids) {
+            idsBuilder.append(i);
+            if (i != ids[ids.length-1]){
+                idsBuilder.append(BrewProvider.RECIPE_ID_DELIMITER);
+            }
+        }
+
+        Uri.Builder uriBuilder = new Uri.Builder();
+        uriBuilder.scheme(BrewProvider.SCHEME)
+                .authority(BrewProvider.AUTHORITY)
+                .appendPath(BrewProvider.RECIPES_XML)
+                .appendQueryParameter(BrewProvider.RECIPE_ID, idsBuilder.toString());
+
+        RecipeList recipeList = mStorage.retrieveRecipes();
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("application/xml");
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uriBuilder.build());
+        if (ids.length == 1) {
+            String name = recipeList.findById(ids[0]).getName();
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.brew_shop_recipe) + " \"" + name + "\"");
+        } else {
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.brew_shop_recipes));
+            StringBuilder bodyBuilder = new StringBuilder();
+            for (int id : ids) {
+                bodyBuilder.append("- ").append(recipeList.findById(id).getName()).append("\n");
+            }
+            shareIntent.putExtra(Intent.EXTRA_TEXT, bodyBuilder.toString());
+        }
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_via)));
     }
 
     private void checkResumeActionMode(Bundle bundle) {
@@ -406,9 +448,10 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
             int[] selectedIds = mRecipeView.getSelectedIds();
             ArrayList<Recipe> toSave = new ArrayList<Recipe>();
 
+            RecipeList recipeList = mStorage.retrieveRecipes();
             for (int i = 0; i < selectedIds.length; i++) {
                 int id = selectedIds[i];
-                toSave.add(mStorage.retrieveRecipes().findById(id));
+                toSave.add(recipeList.findById(id));
             }
 
             final Recipe[] recipeArray = toSave.toArray(new Recipe[toSave.size()]);

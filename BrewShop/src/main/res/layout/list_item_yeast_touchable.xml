@@ -4,10 +4,9 @@
     android:id="@+id/ingredient_layout"
     android:background="@drawable/touchable">
 
-    <TextView style="@style/IngredientIcon"
+    <ImageView style="@style/IngredientIcon"
         android:id="@+id/icon"
-        android:text="Y"
-        android:background="@color/yeast_color"/>
+        android:src="@drawable/yeast_cap"/>
 
     <LinearLayout
         android:layout_width="fill_parent"

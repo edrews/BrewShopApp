@@ -41,6 +41,13 @@
             </intent-filter>
         </activity>
 
+        <provider android:name=".BrewProvider"
+            android:exported="true"
+            android:readPermission="true"
+            android:writePermission="false"
+            android:grantUriPermissions="true"
+            android:authorities="com.brew.brewshop.brewprovider" />
+
         <service android:name="com.parse.PushService" />
 
         <receiver android:name="com.parse.ParseBroadcastReceiver">

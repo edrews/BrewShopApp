@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.brew.brewshop.R;
@@ -28,13 +29,11 @@ public class NewRecipeAdapter extends ArrayAdapter<String> {
 
         String newRecipeType = mRecipeTypes.get(position);
 
-        TextView icon = (TextView) rowView.findViewById(R.id.ingredient_icon);
+        ImageView icon = (ImageView) rowView.findViewById(R.id.ingredient_icon);
         if (mContext.getResources().getString(R.string.new_recipe).equals(newRecipeType)) {
             icon.setBackgroundResource(R.color.new_recipe);
-            icon.setText(mContext.getResources().getString(R.string.new_recipe).substring(0,1));
         } else if (mContext.getResources().getString(R.string.open).equals(newRecipeType)) {
             icon.setBackgroundResource(R.color.open);
-            icon.setText(mContext.getResources().getString(R.string.open).substring(0,1));
         }
 
         TextView nameView = (TextView) rowView.findViewById(R.id.ingredient_name);

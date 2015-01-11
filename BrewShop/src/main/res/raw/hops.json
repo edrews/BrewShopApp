@@ -121,6 +121,12 @@
       "description": "Mild wood and fruit characteristics"
     },
     {
+      "name": "Galaxy",
+      "alphaMin": 11,
+      "alphaMax": 16,
+      "description": "A unique hop aroma, described as a combination of citrus and passionfruit."
+    },
+    {
       "name": "Galena",
       "alphaMin": 12,
       "alphaMax": 14,
@@ -175,6 +181,12 @@
       "description": "A complex array of tropical fruit, citrus, berry, herbal, earthy and pine characteristics"
     },
     {
+      "name": "Motueka",
+      "alphaMin": 6.5,
+      "alphaMax": 7.5,
+      "description": "Citrus with lemon and lime followed by a background of tropical fruit."
+    },
+    {
       "name": "Mt. Hood",
       "alphaMin": 4,
       "alphaMax": 8,
@@ -185,6 +197,12 @@
       "alphaMin": 5,
       "alphaMax": 8.1,
       "description": "Excellent floral and noble aromas, with citrus and licorice overtones"
+    },
+    {
+      "name": "Nelson Sauvin",
+      "alphaMin": 12,
+      "alphaMax": 13,
+      "description": "Intensely fruity flavour and aroma with a strong suggestion of passionfruit."
     },
     {
       "name": "Newport",
@@ -251,6 +269,12 @@
       "alphaMin": 6,
       "alphaMax": 9,
       "description": "Herbal and spicy, with a hint of floral, citrus (lemon/pineapple) characteristics"
+    },
+    {
+      "name": "Styrian Golding",
+      "alphaMin": 2.8,
+      "alphaMax": 5.5,
+      "description": "AKA Savinjski or Savinja Golding. Very mild, noble hop flavor. Nearly identical to Fuggle."
     },
     {
       "name": "Summit™",

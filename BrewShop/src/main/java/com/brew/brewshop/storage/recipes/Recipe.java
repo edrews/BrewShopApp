@@ -33,6 +33,11 @@ public class Recipe implements Parcelable, Storeable {
     private String brewerName;
 
     public Recipe() {
+        this(0);
+    }
+
+    public Recipe(int inId) {
+        id = inId;
         name = "New Recipe";
         style = new BeerStyle();
         batchVolume = IMPERIAL_BATCH;

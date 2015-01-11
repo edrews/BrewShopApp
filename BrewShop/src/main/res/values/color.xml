@@ -4,7 +4,7 @@
     <!-- Material Design Choices-->
     <color name="color_primary">#5d4037</color>
     <color name="color_primary_light">#d7ccc8</color>
-    <color name="color_primary_dark">#2e1713</color>
+    <color name="color_primary_dark">#2d1302</color>
 
     <color name="color_accent">#fff080</color>
     <color name="color_accent_light">#fff8b0</color>

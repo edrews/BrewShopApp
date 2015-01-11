@@ -3,6 +3,8 @@ package com.brew.brewshop.storage.recipes;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.brew.brewshop.R;
+
 @SuppressWarnings("unused")
 public class BeerStyle implements Parcelable {
     public static final String BJCP_STYLE = "BJCP";
@@ -143,6 +145,21 @@ public class BeerStyle implements Parcelable {
     public String getType() { return type; }
 
     public void setType(String value) { type = value; }
+
+    public int getIconDrawable() {
+        if (style.startsWith("German Wheat")) {
+            return R.drawable.weizen_cap;
+        } else if (style.startsWith("American Ale") || substyle.startsWith("American IPA")) {
+            return R.drawable.american_cap;
+        } else if (style.startsWith("Belgian Strong Ale")) {
+            return R.drawable.goblet_cap;
+        } else if (style.startsWith("Pilsner") || style.startsWith("Bock") || style.toLowerCase().contains("lager")) {
+            return R.drawable.pilsner_cap;
+        } else if (style.startsWith("Sour Ale") || style.startsWith("Fruit Beer") || style.startsWith("Belgian and French Ale")) {
+            return R.drawable.tulip_cap;
+        }
+        return R.drawable.nonic_cap;
+    }
 
     @Override
     public int describeContents() {

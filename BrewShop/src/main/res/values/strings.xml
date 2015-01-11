@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Brew Shop</string>
+    <string name="app_name">@string/brew_shop</string>
+    <string name="brew_shop">Brew Shop</string>
     <string name="new_recipe">New Recipe</string>
     <string name="open">Open</string>
     <string name="new_malt">New Malt</string>
@@ -11,6 +12,7 @@
     <string name="action_refresh">Refresh</string>
     <string name="action_delete">Delete</string>
     <string name="action_save">Save</string>
+    <string name="action_share">Share</string>
     <string name="action_select_all">Select All</string>
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
@@ -126,6 +128,10 @@
         <item>@string/degrees_plato</item>
         <item>@string/specific_gravity</item>
     </string-array>
+
+    <string name="brew_shop_recipe">Brew Shop Recipe: </string>
+    <string name="brew_shop_recipes">Brew Shop: Shared Recipes</string>
+    <string name="share_via">Share via&#8230;</string>
 
     <string name="no_recipe_type">Not a valid recipe file.</string>
     <string name="open_recipe">Open Recipes</string>

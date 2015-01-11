@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.brew.brewshop.R;
@@ -28,16 +29,13 @@ public class IngredientTypeAdapter extends ArrayAdapter<String> {
 
         String ingredientType = mIngredients.get(position);
 
-        TextView icon = (TextView) rowView.findViewById(R.id.ingredient_icon);
+        ImageView icon = (ImageView) rowView.findViewById(R.id.ingredient_icon);
         if (mContext.getResources().getString(R.string.hops).equals(ingredientType)) {
-            icon.setBackgroundResource(R.color.hop_color);
-            icon.setText(mContext.getResources().getString(R.string.hops).substring(0,1));
+            icon.setImageResource(R.drawable.hops_cap);
         } else if (mContext.getResources().getString(R.string.malt).equals(ingredientType)) {
-            icon.setBackgroundResource(R.color.malt_color);
-            icon.setText(mContext.getResources().getString(R.string.malt).substring(0,1));
+            icon.setImageResource(R.drawable.barley_cap);
         } else if (mContext.getResources().getString(R.string.yeast).equals(ingredientType)) {
-            icon.setBackgroundResource(R.color.yeast_color);
-            icon.setText(mContext.getResources().getString(R.string.yeast).substring(0,1));
+            icon.setImageResource(R.drawable.yeast_cap);
         }
 
         TextView nameView = (TextView) rowView.findViewById(R.id.ingredient_name);

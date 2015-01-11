@@ -8,14 +8,12 @@ import android.widget.TextView;
 import com.brew.brewshop.R;
 import com.brew.brewshop.settings.Settings;
 import com.brew.brewshop.storage.inventory.InventoryItem;
-import com.brew.brewshop.storage.inventory.InventoryList;
 import com.brew.brewshop.storage.recipes.Hop;
 import com.brew.brewshop.storage.recipes.HopAddition;
 import com.brew.brewshop.storage.recipes.Malt;
 import com.brew.brewshop.storage.recipes.MaltAddition;
 import com.brew.brewshop.storage.recipes.Weight;
 import com.brew.brewshop.storage.recipes.Yeast;
-import com.brew.brewshop.util.UnitConverter;
 import com.brew.brewshop.util.Util;
 
 public class IngredientViewPopulator {
@@ -187,9 +185,11 @@ public class IngredientViewPopulator {
         TextView view = (TextView) parent.findViewById(R.id.name);
         view.setText(malt.getName());
 
+        /*
         double color = malt.getColor();
-        View icon = parent.findViewById(R.id.icon);
+        ImageView icon = (ImageView) parent.findViewById(R.id.icon);
         icon.setBackgroundColor(Util.getColor(color));
+        */
     }
 
     private void populateHops(View parent, Hop hop) {

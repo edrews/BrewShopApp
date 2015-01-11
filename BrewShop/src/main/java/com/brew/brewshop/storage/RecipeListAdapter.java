@@ -62,7 +62,11 @@ public class RecipeListAdapter extends BaseAdapter {
         }
 
         Recipe recipe = mStorage.retrieveRecipes().get(position);
-        holder.iconView.setBackgroundColor(Util.getColor(recipe.getSrm()));
+
+        //holder.iconView.setBackgroundColor(Util.getColor(recipe.getSrm()));
+        holder.iconView.setBackgroundColor(mContext.getResources().getColor(R.color.color_transparent));
+        holder.iconView.setImageResource(recipe.getStyle().getIconDrawable());
+
         holder.nameView.setText(recipe.getName());
 
         String styleName = recipe.getStyle().getDisplayName();
