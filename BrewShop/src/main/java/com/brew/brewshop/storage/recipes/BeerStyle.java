@@ -147,7 +147,9 @@ public class BeerStyle implements Parcelable {
     public void setType(String value) { type = value; }
 
     public int getIconDrawable() {
-        if (style.startsWith("German Wheat")) {
+        if (substyle.startsWith("Oktoberfest")) {
+            return R.drawable.das_boot_cap;
+        } else if (style.startsWith("German Wheat")) {
             return R.drawable.weizen_cap;
         } else if (style.startsWith("American Ale") || substyle.startsWith("American IPA")) {
             return R.drawable.american_cap;
