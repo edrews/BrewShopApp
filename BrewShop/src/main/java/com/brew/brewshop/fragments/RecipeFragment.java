@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -16,13 +18,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.brew.brewshop.FragmentHandler;
+import com.brew.brewshop.pdf.PdfRecipeWriter;
+import com.brew.brewshop.pdf.SavePdfClickListener;
+import com.brew.brewshop.pdf.WritePdfTask;
 import com.brew.brewshop.settings.Settings;
 import com.brew.brewshop.storage.inventory.InventoryItem;
 import com.brew.brewshop.storage.inventory.InventoryList;
@@ -39,6 +46,8 @@ import com.brew.brewshop.storage.recipes.Yeast;
 import com.brew.brewshop.util.UnitConverter;
 import com.brew.brewshop.util.Util;
 
+import java.io.FileNotFoundException;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,6 +57,8 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
 
     @SuppressWarnings("unused")
     private static final String TAG = RecipeFragment.class.getName();
+    private static final int SAVE_AS_PDF_CODE = 100;
+
     private static final String ACTION_MODE = "ActionMode";
     private static final String SELECTED_INDEXES = "Selected";
     private static final String RECIPE = "Recipe";
@@ -260,8 +271,56 @@ public class RecipeFragment extends Fragment implements ViewClickListener,
                         .setNegativeButton(R.string.no, null)
                         .show();
                 return true;
+            case R.id.action_save_as_pdf:
+                saveAsPdf();
+                return true;
         }
         return super.onOptionsItemSelected(menuItem);
+    }
+
+    private void saveAsPdf() {
+        Intent fileIntent;
+        fileIntent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        fileIntent.addCategory(Intent.CATEGORY_OPENABLE);
+        fileIntent.setType("*/*");
+
+        if (Util.isIntentAvailable(getActivity().getBaseContext(), fileIntent)) {
+            startActivityForResult(fileIntent, SAVE_AS_PDF_CODE);
+        } else {
+            manualSaveAsPdf();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        if (requestCode == SAVE_AS_PDF_CODE && resultCode == Activity.RESULT_OK) {
+            if (resultData != null) {
+                OutputStream pdfOutputStream;
+                try {
+                    Uri uri = resultData.getData();
+                    pdfOutputStream = getActivity().getContentResolver().openOutputStream(uri);
+                } catch (FileNotFoundException e) {
+                    Log.e(TAG, "Save to PDF file not found", e);
+                    return;
+                }
+                WritePdfTask task = new WritePdfTask(getActivity(), mRecipe, pdfOutputStream);
+                task.execute();
+            }
+        }
+    }
+
+    private void manualSaveAsPdf() {
+        final EditText input = new EditText(getActivity());
+        SavePdfClickListener listener = new SavePdfClickListener(getActivity(), input, mRecipe);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getString(R.string.enter_pdf_file_name));
+        builder.setView(input);
+        builder.setPositiveButton(getString(R.string.ok), listener);
+        builder.setNegativeButton(getString(R.string.cancel), null);
+        AlertDialog dialog = builder.create();
+        input.requestFocus();
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        dialog.show();
     }
 
     private void showInventory(boolean show) {

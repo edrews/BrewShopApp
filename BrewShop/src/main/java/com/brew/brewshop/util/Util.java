@@ -2,11 +2,17 @@ package com.brew.brewshop.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.brew.brewshop.storage.recipes.Weight;
+
 import java.math.BigDecimal;
+import java.util.List;
 
 public class Util {
     private static final String TAG = Util.class.getName();
@@ -129,5 +135,42 @@ public class Util {
 
     public static String separateSentences(String paragraph) {
         return paragraph.replace(". ", ".\n\n");
+    }
+
+    public static boolean isIntentAvailable(Context ctx, Intent intent) {
+        final PackageManager mgr = ctx.getPackageManager();
+        List<ResolveInfo> list =
+                mgr.queryIntentActivities(intent,
+                        PackageManager.MATCH_DEFAULT_ONLY);
+        return list.size() > 0;
+    }
+
+    public static String formatImperialWeight(Weight weight, int significance) {
+        StringBuilder builder = new StringBuilder();
+        int pounds = weight.getPoundsPortion();
+        if (pounds > 0) {
+            builder.append(String.format("%d lb.", pounds));
+        }
+        double ounces = weight.getOuncesPortion();
+        double min = Math.pow(10 ,-significance) * .5;
+        if (pounds == 0 || ounces > min) {
+            if (pounds > 0) {
+                builder.append(" ");
+            }
+            Util.fromDouble(ounces, 1, true);
+            builder.append(Util.fromDouble(ounces, significance, true) + " oz.");
+        }
+        return builder.toString();
+    }
+
+    public static String formatMetricWeight(Weight weight, int significance) {
+        StringBuilder builder = new StringBuilder();
+        double grams = weight.getGrams();
+        if (grams < 1000) {
+            builder.append(Util.fromDouble(grams, 1)).append(" g");
+        } else {
+            builder.append(Util.fromDouble(weight.getKilograms(), significance)).append(" kg");
+        }
+        return builder.toString();
     }
 }

@@ -10,15 +10,16 @@ import com.brew.brewshop.settings.Settings;
 import com.brew.brewshop.storage.inventory.InventoryItem;
 import com.brew.brewshop.storage.recipes.Hop;
 import com.brew.brewshop.storage.recipes.HopAddition;
+import com.brew.brewshop.storage.recipes.Ingredient;
 import com.brew.brewshop.storage.recipes.Malt;
 import com.brew.brewshop.storage.recipes.MaltAddition;
+import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.storage.recipes.Weight;
 import com.brew.brewshop.storage.recipes.Yeast;
+import com.brew.brewshop.util.IngredientInfo;
 import com.brew.brewshop.util.Util;
 
 public class IngredientViewPopulator {
-    private static final double MIN_MALT_WEIGHT = 0.0001; //ounces
-
     private boolean mShowInventory;
     private BrewStorage mStorage;
     private Settings mSettings;
@@ -47,7 +48,7 @@ public class IngredientViewPopulator {
         populateMalt(parent, item.getMalt());
     }
 
-    public void populateMalt(View parent, MaltAddition addition, Weight totalMaltWeight, Weight accountedFor) {
+    public void populateMalt(View parent, MaltAddition addition, Recipe recipe, Weight accountedFor) {
         TextView view = (TextView) parent.findViewById(R.id.quantity);
         view.setText(formatWeight(addition.getWeight(), 2));
 
@@ -64,13 +65,7 @@ public class IngredientViewPopulator {
         parent.findViewById(R.id.color).setVisibility(View.GONE);
 
         view = (TextView) parent.findViewById(R.id.percent);
-        double total = totalMaltWeight.getOunces();
-        if (total < MIN_MALT_WEIGHT) {
-            total = MIN_MALT_WEIGHT;
-        }
-        double percent = 100 * addition.getWeight().getOunces() / total;
-        view.setText(Util.fromDouble(percent, 1, true) + "% of grist");
-
+        view.setText(IngredientInfo.getInfo(addition, recipe));
         populateMalt(parent, addition.getMalt());
     }
 
@@ -92,22 +87,11 @@ public class IngredientViewPopulator {
         ibuView.setVisibility(View.GONE);
 
         view = (TextView) parent.findViewById(R.id.details);
-        double alpha = addition.getHop().getPercentAlpha();
+        view.setText(IngredientInfo.getInfo(addition));
         switch (addition.getUsage()) {
             case FIRST_WORT:
-                view.setText("First wort hop");// + Util.fromDouble(alpha, 1, true) + "% AA");
-                ibuView.setVisibility(View.VISIBLE);
-                break;
             case BOIL:
-                int minutes = addition.getBoilTime();
-                view.setText(String.format("%d minute addition", minutes));// + Util.fromDouble(alpha, 1, true) + "% AA");
                 ibuView.setVisibility(View.VISIBLE);
-                break;
-            case WHIRLPOOL:
-                view.setText("Whirlpool");
-                break;
-            case DRY_HOP:
-                view.setText(String.format("Dry hop %d days", addition.getDryHopDays()));
                 break;
         }
 
@@ -207,49 +191,19 @@ public class IngredientViewPopulator {
         view.setText(yeast.getName());
 
         view = (TextView) parent.findViewById(R.id.attenuation);
-        double attenuation = yeast.getAttenuation();
-        view.setText("~" + Util.fromDouble(attenuation, 1, true) + "% Attenuation");
+        view.setText(IngredientInfo.getInfo(yeast));
     }
 
     private String formatWeight(Weight weight, int significance) {
         String string = "";
         switch (mSettings.getUnits()) {
             case IMPERIAL:
-                string = formatImperialWeight(weight, significance);
+                string = Util.formatImperialWeight(weight, significance);
                 break;
             case METRIC:
-                string = formatMetricWeight(weight, significance);
+                string = Util.formatMetricWeight(weight, significance);
                 break;
         }
         return string;
-    }
-
-    private String formatImperialWeight(Weight weight, int significance) {
-        StringBuilder builder = new StringBuilder();
-        int pounds = weight.getPoundsPortion();
-        if (pounds > 0) {
-            builder.append(String.format("%d lb.", pounds));
-        }
-        double ounces = weight.getOuncesPortion();
-        double min = Math.pow(10 ,-significance) * .5;
-        if (pounds == 0 || ounces > min) {
-            if (pounds > 0) {
-                builder.append(" ");
-            }
-            Util.fromDouble(ounces, 1, true);
-            builder.append(Util.fromDouble(ounces, significance, true) + " oz.");
-        }
-        return builder.toString();
-    }
-
-    private String formatMetricWeight(Weight weight, int significance) {
-        StringBuilder builder = new StringBuilder();
-        double grams = weight.getGrams();
-        if (grams < 1000) {
-            builder.append(Util.fromDouble(grams, 1)).append(" g");
-        } else {
-            builder.append(Util.fromDouble(weight.getKilograms(), significance)).append(" kg");
-        }
-        return builder.toString();
     }
 }

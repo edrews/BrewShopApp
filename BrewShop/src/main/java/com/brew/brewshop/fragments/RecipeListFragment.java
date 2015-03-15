@@ -6,8 +6,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,7 +20,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -34,6 +31,7 @@ import com.brew.brewshop.settings.Settings;
 import com.brew.brewshop.storage.BrewStorage;
 import com.brew.brewshop.storage.recipes.Recipe;
 import com.brew.brewshop.storage.recipes.RecipeList;
+import com.brew.brewshop.util.Util;
 import com.brew.brewshop.xml.BeerXMLReader;
 import com.brew.brewshop.xml.BeerXMLWriter;
 import com.brew.brewshop.xml.ParseXML;
@@ -44,7 +42,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -316,7 +313,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         shareIntent.putExtra(Intent.EXTRA_STREAM, uriBuilder.build());
         if (ids.length == 1) {
             String name = recipeList.findById(ids[0]).getName();
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.brew_shop_recipe) + " \"" + name + "\"");
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.brew_shop_recipe_colon) + " \"" + name + "\"");
         } else {
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.brew_shop_recipes));
             StringBuilder bodyBuilder = new StringBuilder();
@@ -374,7 +371,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         fileIntent.addCategory(Intent.CATEGORY_OPENABLE);
         fileIntent.setType("*/*");
 
-        if (isAvailable(getActivity().getBaseContext(), fileIntent)) {
+        if (Util.isIntentAvailable(getActivity().getBaseContext(), fileIntent)) {
             startActivityForResult(fileIntent, WRITE_REQUEST_CODE);
         } else {
             manualSaveRecipes();
@@ -559,13 +556,7 @@ public class RecipeListFragment extends Fragment implements ViewClickListener,
         }).show();
     }
 
-    public static boolean isAvailable(Context ctx, Intent intent) {
-        final PackageManager mgr = ctx.getPackageManager();
-        List<ResolveInfo> list =
-                mgr.queryIntentActivities(intent,
-                        PackageManager.MATCH_DEFAULT_ONLY);
-        return list.size() > 0;
-    }
+
 
     public void addRecipes(Recipe[] recipes) {
         if (recipes != null && recipes.length > 0) {

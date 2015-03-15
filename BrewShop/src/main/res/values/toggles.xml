@@ -4,4 +4,5 @@
     <bool name="show_inventory">true</bool>
     <bool name="show_open_recipe">true</bool>
     <bool name="show_save_recipe">true</bool>
+    <bool name="show_save_as_pdf">true</bool>
 </resources>

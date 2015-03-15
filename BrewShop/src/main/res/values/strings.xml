@@ -72,6 +72,11 @@
     <string name="show_all">Show All Types</string>
     <string name="malt_type">Malt Type</string>
     <string name="settings">Settings</string>
+    <string name="save_as_pdf">Save as PDF</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="enter_pdf_file_name">Enter PDF File Name</string>
+    <string name="notes">Notes</string>
 
     <!-- Navigation -->
     <string name="homebrew_tools">Homebrew Tools</string>
@@ -129,7 +134,8 @@
         <item>@string/specific_gravity</item>
     </string-array>
 
-    <string name="brew_shop_recipe">Brew Shop Recipe: </string>
+    <string name="brew_shop_recipe_colon">Brew Shop Recipe: </string>
+    <string name="brew_shop_recipe">Brew Shop Recipe</string>
     <string name="brew_shop_recipes">Brew Shop: Shared Recipes</string>
     <string name="share_via">Share via&#8230;</string>
 

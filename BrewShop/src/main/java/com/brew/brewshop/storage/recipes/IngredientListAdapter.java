@@ -53,7 +53,7 @@ public class IngredientListAdapter extends BaseAdapter {
             rowView = inflater.inflate(R.layout.list_item_malt, parent, false);
             MaltAddition addition = (MaltAddition) ingredient;
             Weight weight = getWeightAccountedFor(addition);
-            mPopulator.populateMalt(rowView, addition, mRecipe.getTotalMaltWeight(), weight);
+            mPopulator.populateMalt(rowView, addition, mRecipe, weight);
         } else if (ingredient instanceof HopAddition) {
             rowView = inflater.inflate(R.layout.list_item_hops, parent, false);
             HopAddition addition = (HopAddition) ingredient;
