@@ -1,2 +1,1 @@
 include ':BrewShop'
-include ':BrewShop-UiAutomator'
