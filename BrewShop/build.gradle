@@ -12,7 +12,7 @@ android {
     defaultConfig {
         applicationId "com.brew.brewshop"
         minSdkVersion 8
-        targetSdkVersion 21
+        targetSdkVersion 24
         versionCode 23
         versionName "1.13"
     }
