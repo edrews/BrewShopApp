@@ -159,7 +159,10 @@ public class RecipeStatsFragment extends Fragment implements AdapterView.OnItemS
             name = getActivity().getResources().getString(R.string.unnamed_recipe);
         }
         mRecipe.setName(name);
-        mRecipe.setBatchVolume(mConverter.toGallons(mBatchVolume.getText()));
+        double mBatchVolumeGallons = mConverter.toGallons(mBatchVolume.getText());
+        if (mBatchVolumeGallons > 0) {
+            mRecipe.setBatchVolume(mBatchVolumeGallons);
+        }
         mRecipe.setBoilVolume(mConverter.toGallons(mBoilVolume.getText()));
         mRecipe.setBoilTime(Util.toDouble(mBoilTime.getText()));
 
