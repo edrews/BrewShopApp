@@ -12,6 +12,6 @@ allprojects {
     }
 }
 project.ext {
-    compileSdkVersion = 21
+    compileSdkVersion = 24
     buildToolsVersion = "25.0.2"
 }
