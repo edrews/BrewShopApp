@@ -13,8 +13,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <permission android:protectionLevel="signature"
-        android:name="com.brew.brewshop.permission.C2D_MESSAGE" />
-    <uses-permission android:name="com.brew.brewshop.permission.C2D_MESSAGE" />
+        android:name="${finalPackage}.permission.C2D_MESSAGE" />
+    <uses-permission android:name="${finalPackage}.permission.C2D_MESSAGE" />
 
     <application
         android:allowBackup="true"
@@ -46,7 +46,7 @@
             android:readPermission="true"
             android:writePermission="false"
             android:grantUriPermissions="true"
-            android:authorities="com.brew.brewshop.brewprovider" />
+            android:authorities="${finalPackage}.brewprovider" />
 
         <service android:name="com.parse.PushService" />
 
